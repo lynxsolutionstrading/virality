@@ -1035,26 +1035,22 @@
     color: var(--text-secondary);
     font-weight: 500;
   }
-  .eyebrow::before {
+  /* Symmetric strokes on both sides of every eyebrow */
+  .eyebrow::before,
+  .eyebrow::after {
     content: '';
     width: 24px;
     height: 1px;
     background: rgba(255, 255, 255, 0.2);
   }
   .eyebrow.dark { color: var(--text-dark-secondary); }
-  .eyebrow.dark::before { background: rgba(0, 0, 0, 0.18); }
+  .eyebrow.dark::before,
+  .eyebrow.dark::after { background: rgba(0, 0, 0, 0.18); }
 
   .eyebrow.center {
     display: flex;
     justify-content: center;
   }
-  .eyebrow.center::after {
-    content: '';
-    width: 24px;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.2);
-  }
-  .eyebrow.center.dark::after { background: rgba(0, 0, 0, 0.18); }
 
   .section-head {
     text-align: center;
