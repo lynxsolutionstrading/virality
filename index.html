@@ -3979,8 +3979,8 @@
         if (rotationTween) rotationTween.pause();
         document.body.classList.remove('pre-dive');
         document.body.classList.add('diving');
-        /* Release CSS overflow-lock so we can programmatically scroll later */
-        document.documentElement.classList.remove('scroll-locked');
+        /* Keep scroll-locked active during the entire dive so the
+           scrollbar doesn't appear and reflow the page mid-animation. */
       },
       /* GSAP does not have an onReverseStart event — reverse setup is
          done imperatively in attemptReverse() before .reverse() is called. */
@@ -3994,9 +3994,11 @@
       onComplete: function () {
         document.body.classList.remove('diving', 'pre-dive', 'reversing');
         document.body.classList.add('post-dive');
-        /* Hide hero in the same frame the timeline finishes — no flash
-           of particles or background between dive end and Problem reveal */
+        /* Hide hero, release scroll-lock and snap to top — all in the
+           same frame so the scrollbar only appears once the Problem
+           section is actually in view. */
         heroSection.style.display = 'none';
+        document.documentElement.classList.remove('scroll-locked');
         window.scrollTo(0, 0);
         isDiving = false;
         isDived = true;
@@ -4120,8 +4122,9 @@
       setTimeout(function () { sfx.powerDown(); }, reverseDur - 700);
       setTimeout(function () { sfx.shatter(); }, reverseDur - 350);
       setTimeout(function () { sfx.click(); }, reverseDur - 50);
-      /* Restore the hero BEFORE starting reverse — GSAP has no
-         onReverseStart event, so we set up state manually here. */
+      /* Lock scroll FIRST so the scrollbar disappears immediately, then
+         restore hero — prevents any scrollbar-flash during the reverse. */
+      document.documentElement.classList.add('scroll-locked');
       heroSection.style.display = '';
       document.body.classList.remove('post-dive');
       document.body.classList.add('reversing');
