@@ -367,6 +367,7 @@
       radial-gradient(ellipse at 70% 70%, rgba(232, 121, 249, 0.4), transparent 60%),
       linear-gradient(180deg, #0a0a14 0%, #1a0a28 40%, #0a0a14 100%);
     overflow: hidden;
+    transition: background 0.18s ease-out;
   }
   .hero-phone-screen::before {
     content: '';
@@ -374,6 +375,15 @@
     inset: 0;
     background:
       linear-gradient(135deg, transparent 30%, rgba(255, 255, 255, 0.06) 50%, transparent 70%);
+    pointer-events: none;
+    transition: opacity 0.18s ease-out;
+  }
+  /* "Off" state — flat single colour, no reflection sheen, no radial glow */
+  .hero-phone-screen.is-off {
+    background: #0b0d12;
+  }
+  .hero-phone-screen.is-off::before {
+    opacity: 0;
   }
 
   /* Instagram screenshot mockup on phone screen
@@ -3767,19 +3777,27 @@
       }
     });
 
-    /* ---- Phase 1: Logo letters explode (T = 0 → ~0.7s) ---- */
+    /* ---- Phase 1: Logo letters explode in 8 fixed compass directions ---- */
+    /* Letter index → direction (in degrees, CSS coords: 0=right, 90=down):
+       0:V → 225° top-left   1:I → 270° top      2:R → 315° top-right
+       3:A →   0° right      4:L →  45° bottom-right
+       5:I →  90° bottom     6:T → 135° bottom-left   7:Y → 180° left      */
     var letters = gsap.utils.toArray('.hero-letter');
-    var letterCount = letters.length;
+    var directionAngles = [225, 270, 315, 0, 45, 90, 135, 180];
+
     letters.forEach(function (letter, i) {
-      /* Each letter gets a roughly evenly distributed angle with random jitter */
-      var baseAngle = (i / letterCount) * Math.PI * 2;
-      var angle = baseAngle + (Math.random() - 0.5) * 0.7;
-      var distance = 360 + Math.random() * 360;
-      var dx = Math.cos(angle) * distance;
-      var dy = Math.sin(angle) * distance - 80; /* slight upward bias for natural "flying" feel */
-      var rot = (Math.random() - 0.5) * 1080;   /* up to ±540° spin */
-      var skew = (Math.random() - 0.5) * 30;
-      var endScale = 0.25 + Math.random() * 0.55;
+      var angleDeg = directionAngles[i] || (i * 45);
+      var rad = angleDeg * Math.PI / 180;
+      /* Slight per-letter distance variation so it doesn't look mechanical */
+      var distance = 280 + Math.random() * 80;
+      var dx = Math.cos(rad) * distance;
+      var dy = Math.sin(rad) * distance;
+      /* Natural rotation: ±120° (less than a full spin), random direction */
+      var rot = (Math.random() < 0.5 ? -1 : 1) * (60 + Math.random() * 80);
+      /* Subtle skew for tilt feel */
+      var skew = (Math.random() - 0.5) * 14;
+      /* Mild shrink so letters fade into distance */
+      var endScale = 0.55 + Math.random() * 0.25;
 
       diveTl.to(letter, {
         x: dx,
@@ -3788,43 +3806,70 @@
         skewX: skew,
         scale: endScale,
         opacity: 0,
-        duration: 0.55 + Math.random() * 0.2,
-        ease: 'power3.out'
-      }, 0.02 + i * 0.022);
+        duration: 0.65,
+        ease: 'power2.out'
+      }, 0.04 + i * 0.018);
     });
 
     /* DIVE IN button fades early so it doesn't compete with the explosion */
     diveTl.to('.dive-btn', {
       opacity: 0,
-      scale: 0.78,
-      duration: 0.25,
+      scale: 0.82,
+      duration: 0.22,
       ease: 'power2.in'
     }, 0);
 
-    /* ---- Phase 2: Screen glitch (T = 0.22 → 0.42s) ---- */
+    /* ---- Phase 2: Screen glitch — analog-tape / dying-signal vibe (T ≈ 0.20 → 0.43s) ---- */
     if (phoneScreenImg) {
-      diveTl.to(phoneScreenImg, { x: 8,  filter: 'brightness(0.8) hue-rotate(120deg) saturate(2.2)',     duration: 0.04, ease: 'none' }, 0.22)
-            .to(phoneScreenImg, { x: -10, filter: 'brightness(0.8) hue-rotate(-100deg) saturate(2.5)',   duration: 0.04, ease: 'none' }, 0.27)
-            .to(phoneScreenImg, { x: 6,  filter: 'brightness(0.8) hue-rotate(180deg) contrast(1.8)',    duration: 0.04, ease: 'none' }, 0.32)
-            .to(phoneScreenImg, { x: -4, filter: 'brightness(0.95) invert(1) hue-rotate(0deg)',          duration: 0.04, ease: 'none' }, 0.37)
-            .to(phoneScreenImg, { x: 0,  filter: 'brightness(0.8)',                                       duration: 0.04, ease: 'none' }, 0.41);
+      var gT = 0.20;
+      diveTl
+        /* F1: stretch right, slight skew, brightness pop */
+        .to(phoneScreenImg, {
+          x: 7, scaleY: 1.04, skewX: 2.5,
+          filter: 'brightness(1.05) saturate(1.5) contrast(1.2)',
+          duration: 0.035, ease: 'none'
+        }, gT)
+        /* F2: opposite jitter, vertical squash (CRT pinch) */
+        .to(phoneScreenImg, {
+          x: -6, scaleY: 0.94, skewX: -1.5,
+          filter: 'brightness(0.65) saturate(1.8) hue-rotate(-12deg)',
+          duration: 0.035, ease: 'none'
+        }, gT + 0.04)
+        /* F3: tape-tear with sharp skew */
+        .to(phoneScreenImg, {
+          x: 9, scaleY: 1.02, skewX: 4,
+          filter: 'brightness(0.9) saturate(0.6) hue-rotate(8deg)',
+          duration: 0.035, ease: 'none'
+        }, gT + 0.085)
+        /* F4: brief negative flash (one frame) */
+        .to(phoneScreenImg, {
+          x: 3, scaleY: 1, skewX: 0,
+          filter: 'brightness(1.3) contrast(1.6) invert(0.85)',
+          duration: 0.025, ease: 'none'
+        }, gT + 0.13)
+        /* F5: dim recovery with slight horizontal slip */
+        .to(phoneScreenImg, {
+          x: -3, scaleY: 0.98, skewX: -2,
+          filter: 'brightness(0.55) saturate(1.4) hue-rotate(15deg)',
+          duration: 0.035, ease: 'none'
+        }, gT + 0.16)
+        /* F6: snap back to baseline */
+        .to(phoneScreenImg, {
+          x: 0, scaleY: 1, skewX: 0,
+          filter: 'brightness(0.8) saturate(1)',
+          duration: 0.035, ease: 'none'
+        }, gT + 0.20);
     }
 
-    /* ---- Phase 3: Screen turns OFF — switches to #0b0d12 (T = 0.42 → 0.55s) ---- */
-    if (phoneScreen) {
-      diveTl.to(phoneScreen, {
-        backgroundColor: '#0b0d12',
-        background: '#0b0d12',
-        duration: 0.13,
-        ease: 'power2.inOut'
-      }, 0.45);
-    }
+    /* ---- Phase 3: Screen turns OFF — solid #0b0d12, no reflection sheen.
+       Implemented via class toggle so CSS transition + ::before opacity
+       both happen together (forward AND reverse). ---- */
     if (phoneScreenImg) {
       diveTl.to(phoneScreenImg, {
         opacity: 0,
         duration: 0.13,
         ease: 'power2.in'
-      }, 0.45);
+      }, 0.43);
     }
 
     /* ---- Phase 4: Existing phone dive (T = 0.55 → 1.65s) ---- */
@@ -3853,6 +3898,18 @@
       boxShadow: '0 0 0 rgba(0,0,0,0)',
       duration: 0.4
     }, 0.95);
+
+    /* Toggle ".is-off" on the phone screen at progress ~0.26 (≈ T=0.43s
+       relative to total 1.65s timeline). This handles both forward and
+       reverse cleanly because it's reactive to current progress. */
+    diveTl.eventCallback('onUpdate', function () {
+      if (!phoneScreen) return;
+      var progress = this.progress();
+      var shouldBeOff = progress > 0.27;
+      var isOff = phoneScreen.classList.contains('is-off');
+      if (shouldBeOff && !isOff) phoneScreen.classList.add('is-off');
+      else if (!shouldBeOff && isOff) phoneScreen.classList.remove('is-off');
+    });
 
     /* ============================================================
        CLICK HANDLER — play dive forward
