@@ -4783,25 +4783,39 @@
       if (!isDived || isDiving || isReversing) return false;
       isReversing = true;
       upScrollAccum = 0;
-      /* SFX for reverse — mirrors forward in opposite order */
-      sfx.unlock();
-      sfx.whoosh(true);                                    /* reverse whoosh */
       var reverseDur = DIVE_DURATION_MS / 1.2;
-      setTimeout(function () { sfx.powerDown(); }, reverseDur - 700);
-      setTimeout(function () { sfx.shatter(); }, reverseDur - 350);
-      setTimeout(function () { sfx.click(); }, reverseDur - 50);
-      /* Lock scroll FIRST so the scrollbar disappears immediately, then
-         restore hero — prevents any scrollbar-flash during the reverse. */
+
+      /* All the disruptive DOM/style work first: scroll-lock, restore
+         hero, body class swap, scroll snap. These cause layout reflows
+         (page height changes, hero re-enters layout). */
       document.documentElement.classList.add('scroll-locked');
       heroSection.style.display = '';
       document.body.classList.remove('post-dive');
       document.body.classList.add('reversing');
       window.scrollTo(0, 0);
-      diveTl.timeScale(1.2).reverse();
-      setTimeout(function () {
-        isReversing = false;
-        isDived = false;
-      }, reverseDur + 50);
+
+      /* Force the browser to lay out and paint the hero in its
+         end-of-forward state (huge phone, screen off, etc.) BEFORE
+         GSAP starts animating it. Double rAF guarantees one full
+         render cycle has completed — the GPU layers are warm and
+         the first reverse frame is smooth instead of janky. */
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          /* SFX fires now, perfectly aligned with the visible reverse */
+          sfx.unlock();
+          sfx.whoosh(true);
+          setTimeout(function () { sfx.powerDown(); }, reverseDur - 700);
+          setTimeout(function () { sfx.shatter(); }, reverseDur - 350);
+          setTimeout(function () { sfx.click(); }, reverseDur - 50);
+          diveTl.timeScale(1.2).reverse();
+          /* Release the locks once the reverse actually finishes */
+          setTimeout(function () {
+            isReversing = false;
+            isDived = false;
+          }, reverseDur + 50);
+        });
+      });
+
       return true;
     }
 
