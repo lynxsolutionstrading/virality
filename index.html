@@ -132,15 +132,24 @@
 
   .grad {
     background: var(--gradient-text);
+    background-size: 220% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    animation: gradShimmer 7s ease-in-out infinite;
   }
   .grad-blue {
     background: linear-gradient(120deg, #38BDF8 0%, #6FE3FF 50%, #A78BFA 100%);
+    background-size: 220% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    animation: gradShimmer 7s ease-in-out infinite;
+  }
+  /* Subtle gradient shimmer applied to every coloured headline part */
+  @keyframes gradShimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
   }
 
   /* ============================================================
@@ -1186,11 +1195,13 @@
     font-size: clamp(34px, 5vw, 56px);
     font-weight: 800;
     background: linear-gradient(120deg, #38BDF8 0%, #A78BFA 50%, #E879F9 100%);
+    background-size: 220% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 18px;
     letter-spacing: -0.02em;
+    animation: gradShimmer 8s ease-in-out infinite;
   }
   .press-desc {
     font-size: clamp(14.5px, 1.4vw, 17px);
@@ -2805,6 +2816,12 @@
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="7" cy="6" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 17c0-3 2-5 5-5s5 2 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="14" cy="7" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M12 13c2-1 5 0 6 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </div>
           <div class="problem-card-text">Followers that don't turn into real opportunities</div>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10M5 17h10M6 3v2.2L10 10l-4 4.8V17M14 3v2.2L10 10l4 4.8V17"/><path d="M7.6 14.6h4.8L10 11.6z" fill="currentColor" stroke="none"/></svg>
+          </div>
+          <div class="problem-card-text">Time wasted on strategies that don't deliver</div>
         </div>
       </div>
 
