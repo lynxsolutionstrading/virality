@@ -1665,6 +1665,12 @@
     border: 1px solid rgba(217, 70, 239, 0.25);
     border-radius: 999px;
     padding: 5px 12px;
+    transform-origin: center;
+    will-change: transform;
+  }
+  /* On card hover: badge jitters once briefly (same effect as service-card tags) */
+  .journey-card:hover .journey-step-badge {
+    animation: tagShake 0.55s ease-in-out;
   }
   .journey-step-badge::before {
     content: '';
@@ -4340,10 +4346,11 @@
       var VBH = 60;
       var BASE_Y = 30;
       var GRIP_X_REL = 0.10;   /* mouse must be within 10% of wave width horizontally */
-      var GRIP_Y = 55;          /* mouse must be within 55px of the actual line vertically */
-      var MAX_PUSH = 50;         /* line follows mouse up to this displacement (px) */
-      var BREAK_PUSH = 65;       /* beyond this stretch, line releases and snaps back */
-      var TREMBLE_START = 42;    /* tremble kicks in just before the cap */
+      var GRIP_Y = 65;          /* mouse must be within 65px of the actual line vertically */
+      var BUFFER = 5;            /* line stays at least this many px away from the mouse */
+      var MAX_PUSH = 100;        /* line can be pushed up to this displacement from baseline */
+      var BREAK_PUSH = 130;      /* beyond this stretch, line releases and snaps back */
+      var TREMBLE_START = 85;    /* tremble kicks in just before the cap */
 
       var pts = [];
       for (var i = 0; i < NUM; i++) {
@@ -4398,8 +4405,15 @@
 
           if (!p.released && dxRel < GRIP_X_REL && Math.abs(dyFromLine) < GRIP_Y) {
             var proxX = 1 - dxRel / GRIP_X_REL;
-            /* Line wants to be at the mouse's Y position (relative to baseline) */
-            var rawTarget = dyFromBase * proxX;
+            /* Line keeps a 5px buffer from the mouse — never sticks to it.
+               Line is pushed AHEAD of the mouse on the same side as the
+               cursor, leaving exactly BUFFER px between cursor and line. */
+            var rawTarget;
+            if (Math.abs(dyFromBase) <= BUFFER) {
+              rawTarget = 0;
+            } else {
+              rawTarget = (dyFromBase - BUFFER * (dyFromBase > 0 ? 1 : -1)) * proxX;
+            }
 
             if (rawTarget > BREAK_PUSH || rawTarget < -BREAK_PUSH) {
               /* Mouse pushed past the breaking point — slip and snap */
