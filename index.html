@@ -507,36 +507,36 @@
   }
   /* #contact (final-cta) keeps its decorative gradient */
 
-  /* Per-section glow gradient (peak strength = 0.12; the pulse scales
-     opacity 0.333 → 1 → 0.333, so effective range = 0.04 ↔ 0.12) */
+  /* Per-section glow — every section uses a SINGLE radial at the
+     same peak opacity (0.08) so they all read at equal strength.
+     The pulse scales opacity 0.5 → 1 → 0.5 (effective 0.04 ↔ 0.08). */
   #problem::before {
-    background:
-      radial-gradient(1100px 800px at 0% 30%, rgba(111, 227, 255, 0.12), transparent 72%),
-      radial-gradient(1000px 750px at 0% 75%, rgba(192, 132, 252, 0.12), transparent 72%);
+    /* One large radial covering the entire left flank top-to-bottom */
+    background: radial-gradient(1200px 1100px at 0% 50%, rgba(111, 227, 255, 0.08), transparent 72%);
   }
   #solution::before {
-    background: radial-gradient(900px 620px at 100% 75%, rgba(192, 132, 252, 0.12), transparent 72%);
+    background: radial-gradient(900px 620px at 100% 75%, rgba(192, 132, 252, 0.08), transparent 72%);
     animation-delay: -1.3s;
   }
   #partners::before {
-    background: radial-gradient(900px 620px at 0% 35%, rgba(217, 70, 239, 0.12), transparent 72%);
+    background: radial-gradient(900px 620px at 0% 35%, rgba(217, 70, 239, 0.08), transparent 72%);
     animation-delay: -2.6s;
   }
   #cases::before {
-    background: radial-gradient(900px 620px at 100% 60%, rgba(111, 227, 255, 0.12), transparent 72%);
+    background: radial-gradient(900px 620px at 100% 60%, rgba(111, 227, 255, 0.08), transparent 72%);
     animation-delay: -3.9s;
   }
   #results::before {
-    background: radial-gradient(900px 620px at 0% 70%, rgba(192, 132, 252, 0.12), transparent 72%);
+    background: radial-gradient(900px 620px at 0% 70%, rgba(192, 132, 252, 0.08), transparent 72%);
     animation-delay: -6.4s;
   }
   #about::before {
-    background: radial-gradient(900px 620px at 100% 30%, rgba(217, 70, 239, 0.12), transparent 72%);
+    background: radial-gradient(900px 620px at 100% 30%, rgba(217, 70, 239, 0.08), transparent 72%);
     animation-delay: -7.7s;
   }
   @keyframes glowPulse {
-    0%, 100% { opacity: 0.333; }   /* effective 0.04 */
-    50%      { opacity: 1; }       /* effective 0.12 */
+    0%, 100% { opacity: 0.5; }   /* effective 0.04 */
+    50%      { opacity: 1; }     /* effective 0.08 */
   }
 
   /* ============================================================
@@ -1866,8 +1866,8 @@
     inset: 0;
     pointer-events: none;
     background:
-      radial-gradient(700px 500px at 0% 20%, rgba(111, 227, 255, 0.12), transparent 70%),
-      radial-gradient(700px 500px at 100% 90%, rgba(217, 70, 239, 0.12), transparent 70%);
+      radial-gradient(700px 500px at 0% 20%, rgba(111, 227, 255, 0.08), transparent 70%),
+      radial-gradient(700px 500px at 100% 90%, rgba(217, 70, 239, 0.08), transparent 70%);
     /* Same smooth pulse as the other sections, with its own phase offset */
     animation: glowPulse 9s cubic-bezier(0.45, 0.05, 0.55, 0.95) -5.1s infinite;
   }
