@@ -376,25 +376,22 @@
       linear-gradient(135deg, transparent 30%, rgba(255, 255, 255, 0.06) 50%, transparent 70%);
   }
 
-  /* Brand orb on screen */
-  .phone-screen-orb {
+  /* Instagram screenshot mockup on phone screen */
+  .phone-screen-image {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100px;
-    height: 100px;
-    background: var(--gradient-cta);
-    border-radius: 50%;
-    filter: blur(2px);
-    box-shadow:
-      0 0 40px rgba(192, 132, 252, 0.6),
-      0 0 80px rgba(217, 70, 239, 0.4);
-    animation: orbFloat 4s ease-in-out infinite;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    will-change: opacity;
   }
-  @keyframes orbFloat {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); }
-    50%      { transform: translate(-50%, -55%) scale(1.05); }
+  /* Fallback when image is missing — subtle dark gradient */
+  .phone-screen-fallback {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
+    z-index: -1;
   }
 
   /* Dynamic Island */
@@ -442,7 +439,97 @@
     height: 50px;
   }
 
-  /* === GO VIRAL Glitch Headline === */
+  /* === Logo + DIVE IN overlay (in front of phone) === */
+  .hero-cta-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    pointer-events: none; /* let particles/phone stage receive non-overlay events */
+    width: max-content;
+  }
+  .hero-cta-overlay > * { pointer-events: auto; }
+
+  .logo-svg--hero {
+    height: clamp(36px, 5vw, 56px);
+    width: auto;
+    color: white;
+    filter:
+      drop-shadow(0 0 24px rgba(192, 132, 252, 0.55))
+      drop-shadow(0 0 48px rgba(232, 121, 249, 0.35));
+    display: block;
+  }
+
+  .dive-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 32px;
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #0A0A10;
+    background: var(--gradient-cta);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow:
+      0 12px 40px -8px rgba(192, 132, 252, 0.55),
+      0 4px 16px -4px rgba(111, 227, 255, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    animation: diveBtnVibrate 3s ease-in-out infinite;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    will-change: transform;
+  }
+  .dive-btn:hover {
+    box-shadow:
+      0 16px 50px -8px rgba(192, 132, 252, 0.7),
+      0 6px 20px -4px rgba(111, 227, 255, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+  }
+  .dive-btn:active { transform: scale(0.97); }
+  .dive-btn::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 999px;
+    background: var(--gradient-cta);
+    filter: blur(20px);
+    opacity: 0.4;
+    z-index: -1;
+    animation: diveBtnGlow 3s ease-in-out infinite;
+  }
+  .dive-btn svg { transition: transform 0.2s ease; }
+  .dive-btn:hover svg { transform: translateX(3px); }
+
+  /* Vibrate every 3s (last ~300ms of cycle has the shake) */
+  @keyframes diveBtnVibrate {
+    0%, 89%, 100% { transform: translate3d(0, 0, 0); }
+    90% { transform: translate3d(-2px, 1px, 0); }
+    91% { transform: translate3d(3px, -1px, 0); }
+    92% { transform: translate3d(-3px, 2px, 0); }
+    93% { transform: translate3d(2px, -2px, 0); }
+    94% { transform: translate3d(-2px, -1px, 0); }
+    95% { transform: translate3d(3px, 2px, 0); }
+    96% { transform: translate3d(-1px, -2px, 0); }
+    97% { transform: translate3d(2px, 1px, 0); }
+    98% { transform: translate3d(-2px, 1px, 0); }
+    99% { transform: translate3d(1px, 0, 0); }
+  }
+  @keyframes diveBtnGlow {
+    0%, 89%, 100% { opacity: 0.4; transform: scale(1); }
+    93%           { opacity: 0.85; transform: scale(1.15); }
+  }
+
+  /* === GO VIRAL Glitch Headline (now hidden — kept for reverse compat) === */
   .hero-glitch {
     position: absolute;
     top: 13%;
@@ -699,8 +786,33 @@
   .section-desc + .section-desc { margin-top: 14px; }
 
   /* ============================================================
-     PROBLEM SECTION
+     PROBLEM SECTION — matches Instagram dark background
+     so dive-in transition is seamless.
      ============================================================ */
+  #problem {
+    background: #000000;
+    position: relative;
+    z-index: 1;
+  }
+  /* Children of #problem fade in after dive completes */
+  #problem .section-head,
+  #problem .problem-cards,
+  #problem .problem-callout {
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  body.pre-dive #problem .section-head,
+  body.pre-dive #problem .problem-cards,
+  body.pre-dive #problem .problem-callout {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  body.post-dive #problem .section-head,
+  body.post-dive #problem .problem-cards,
+  body.post-dive #problem .problem-callout {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   .problem-cards {
     display: grid;
     grid-template-columns: 1fr;
@@ -2550,13 +2662,14 @@
     <!-- Particle field (populated by JS) -->
     <div class="hero-particles" aria-hidden="true" data-particles></div>
 
-    <!-- 3D phone -->
+    <!-- 3D phone with Instagram screenshot -->
     <div class="hero-phone-stage" aria-hidden="true">
       <div class="hero-phone" data-hero-phone>
         <div class="hero-phone-glow" data-hero-phone-glow></div>
         <div class="hero-phone-frame">
-          <div class="hero-phone-screen">
-            <div class="phone-screen-orb"></div>
+          <div class="hero-phone-screen" data-hero-phone-screen>
+            <div class="phone-screen-fallback"></div>
+            <img class="phone-screen-image" src="assets/ig-mockup.png" alt="" data-phone-screen-img>
           </div>
           <div class="hero-phone-island"></div>
           <div class="hero-phone-btn hero-phone-btn--action"></div>
@@ -2567,37 +2680,18 @@
       </div>
     </div>
 
-    <!-- Glitch headline -->
-    <h1 class="hero-glitch" aria-label="Go Viral">
-      <span class="hero-glitch-row">
-        <span class="hero-glitch-layer hero-glitch-layer--cyan" aria-hidden="true">
-          <span class="hero-glitch-letter">G</span><span class="hero-glitch-letter">O</span><span class="hero-glitch-letter hero-glitch-space">&nbsp;</span><span class="hero-glitch-letter">V</span><span class="hero-glitch-letter">I</span><span class="hero-glitch-letter">R</span><span class="hero-glitch-letter">A</span><span class="hero-glitch-letter">L</span>
-        </span>
-        <span class="hero-glitch-layer hero-glitch-layer--magenta" aria-hidden="true">
-          <span class="hero-glitch-letter">G</span><span class="hero-glitch-letter">O</span><span class="hero-glitch-letter hero-glitch-space">&nbsp;</span><span class="hero-glitch-letter">V</span><span class="hero-glitch-letter">I</span><span class="hero-glitch-letter">R</span><span class="hero-glitch-letter">A</span><span class="hero-glitch-letter">L</span>
-        </span>
-        <span class="hero-glitch-layer hero-glitch-layer--main" data-glitch-main>
-          <span class="hero-glitch-letter">G</span><span class="hero-glitch-letter">O</span><span class="hero-glitch-letter hero-glitch-space">&nbsp;</span><span class="hero-glitch-letter">V</span><span class="hero-glitch-letter">I</span><span class="hero-glitch-letter">R</span><span class="hero-glitch-letter">A</span><span class="hero-glitch-letter">L</span>
-        </span>
-      </span>
-    </h1>
-
-    <!-- Tagline + CTA stack -->
-    <div class="hero-tagline">
-      <p class="hero-tagline-text">Build Digital Authority · <span class="grad">Real followers</span> · Zero bots</p>
-      <div class="hero-cta-row">
-        <a class="cta-primary" href="#contact" data-open-contact>
-          Start Growing
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-        <a class="cta-ghost" href="#how-it-works">
-          See how it works
-        </a>
-      </div>
+    <!-- Centered overlay: VIRALITY logo + DIVE IN button -->
+    <div class="hero-cta-overlay" data-hero-overlay>
+      <svg class="logo-svg logo-svg--hero" viewBox="0 0 800 130" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-label="Virality" focusable="false">
+        <use href="#logo-virality" xlink:href="#logo-virality"/>
+      </svg>
+      <button type="button" class="dive-btn" data-dive-in aria-label="Dive into Virality">
+        DIVE IN
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
     </div>
-
-    <!-- Scroll hint -->
-    <div class="hero-scroll-hint" aria-hidden="true">Scroll</div>
   </section>
 
   <!-- ========== PROBLEM ========== -->
@@ -3519,7 +3613,7 @@
     if (prefersReduce) return; /* reduce-motion: skip cinematics */
 
     /* ============================================================
-       PHONE — continuous slow rotation (separate from dive)
+       PHONE — continuous slow rotation (paused during dive)
        ============================================================ */
     var phone = document.querySelector('[data-hero-phone]');
     var rotationTween = null;
@@ -3537,180 +3631,154 @@
     }
 
     /* ============================================================
-       CINEMATIC TIMELINE (driven by ScrollTrigger scrub)
-       Phase 1 (0 → 0.30): letters fly up & dissolve
-       Phase 2 (0.30 → 1.0): phone dive (scroll-locked auto-play)
+       DIVE TIMELINE — triggered by DIVE IN button click.
+       No scroll involvement during dive itself.
        ============================================================ */
     var heroSection = document.querySelector('[data-cinematic-hero]');
-    if (!heroSection) return;
+    var diveBtn = document.querySelector('[data-dive-in]');
+    var overlay = document.querySelector('[data-hero-overlay]');
+    var phoneScreen = document.querySelector('[data-hero-phone-screen]');
+    var phoneScreenImg = document.querySelector('[data-phone-screen-img]');
+    if (!heroSection || !diveBtn || !phone) return;
 
-    var letters = gsap.utils.toArray('.hero-glitch-layer--main .hero-glitch-letter');
+    document.body.classList.add('pre-dive');
 
-    var heroTl = gsap.timeline({ paused: true });
+    var diveTl = gsap.timeline({
+      paused: true,
+      onStart: function () {
+        if (rotationTween) rotationTween.pause();
+        document.body.classList.add('diving');
+      },
+      onReverseComplete: function () {
+        if (rotationTween) rotationTween.resume();
+        document.body.classList.remove('diving', 'post-dive');
+        document.body.classList.add('pre-dive');
+      },
+      onComplete: function () {
+        document.body.classList.remove('diving', 'pre-dive');
+        document.body.classList.add('post-dive');
+      }
+    });
 
-    /* Phase 1 — Letters fly upward and dissolve */
-    if (letters.length) {
-      heroTl.to(letters, {
-        opacity: 0,
-        yPercent: -300,
-        filter: 'blur(20px)',
-        stagger: 0.04,
-        duration: 0.3,
-        ease: 'power2.in'
-      }, 0);
-      heroTl.to('.hero-glitch-layer--cyan, .hero-glitch-layer--magenta', {
-        opacity: 0,
-        duration: 0.25,
-        ease: 'power2.in'
-      }, 0);
-      heroTl.to('.hero-tagline, .hero-scroll-hint', {
-        opacity: 0,
-        y: 20,
-        duration: 0.25
-      }, 0.05);
-    }
-
-    /* Phase 2 — Phone dive (camera flies INTO the screen) */
-    if (phone) {
-      heroTl.to(phone, {
-        rotateY: 0,
-        rotateX: 0,
-        scale: 7,
-        z: 1500,
-        duration: 0.7,
-        ease: 'power2.in',
-        onStart: function () { if (rotationTween) rotationTween.pause(); },
-        onReverseComplete: function () { if (rotationTween) rotationTween.resume(); }
-      }, 0.3);
-    }
-    heroTl.to('[data-hero-phone-glow]', {
-      scale: 9,
+    /* Overlay (logo + button) fades fast */
+    diveTl.to(overlay, {
       opacity: 0,
-      duration: 0.5
-    }, 0.3);
-    heroTl.to('.hero-phone-frame', {
-      boxShadow: '0 0 0 rgba(0,0,0,0)',
+      scale: 0.85,
       duration: 0.35,
       ease: 'power2.in'
-    }, 0.55);
-    heroTl.to('.hero-edge', {
+    }, 0);
+
+    /* Phone scales massively, locks rotation to 0 */
+    diveTl.to(phone, {
+      rotateY: 0,
+      rotateX: 0,
+      scale: 9,
+      z: 1800,
+      duration: 1.1,
+      ease: 'power2.in'
+    }, 0.05);
+
+    /* Phone glow expands & fades */
+    diveTl.to('[data-hero-phone-glow]', {
+      scale: 12,
       opacity: 0,
+      duration: 0.6,
+      ease: 'power2.out'
+    }, 0.1);
+
+    /* IG screenshot fades out as we get close */
+    if (phoneScreenImg) {
+      diveTl.to(phoneScreenImg, {
+        opacity: 0,
+        duration: 0.45,
+        ease: 'power2.in'
+      }, 0.55);
+    }
+    /* Screen background animates to pure black to match Instagram dark */
+    if (phoneScreen) {
+      diveTl.to(phoneScreen, {
+        background: '#000000',
+        duration: 0.5,
+        ease: 'power2.inOut'
+      }, 0.6);
+    }
+
+    /* Side neon edges + cyberpunk grid fade */
+    diveTl.to('.hero-edge', { opacity: 0, duration: 0.5 }, 0.2);
+    diveTl.to('.hero-grid', { opacity: 0, duration: 0.5 }, 0.3);
+
+    /* Phone frame highlights/shadows fade so we can "go through" */
+    diveTl.to('.hero-phone-frame', {
+      boxShadow: '0 0 0 rgba(0,0,0,0)',
       duration: 0.4
-    }, 0.3);
-    heroTl.to('.hero-grid', {
-      opacity: 0,
-      duration: 0.4
-    }, 0.4);
+    }, 0.7);
 
     /* ============================================================
-       SCROLL TRIGGER + AUTO-LOCK
-       Pin for 85% viewport. When user crosses Phase 2 boundary
-       in either direction, force-scroll to opposite boundary
-       and block input. After completion, normal scroll resumes.
+       CLICK HANDLER — play dive forward
        ============================================================ */
-    var PHASE2_START = 0.30;
-    var PHASE2_NEAR_END = 0.95;
-    var isAutoPlaying = false;
-    var prevProgress = 0;
+    var DIVE_DURATION_MS = 1400;
+    var isDiving = false;
+    var isDived = false;
 
-    /* Smooth timeline progress (own scrub-equivalent) */
-    var targetProgress = 0;
-    var currentProgress = 0;
-    gsap.ticker.add(function () {
-      currentProgress += (targetProgress - currentProgress) * 0.12;
-      if (Math.abs(currentProgress - targetProgress) < 0.001) currentProgress = targetProgress;
-      heroTl.progress(currentProgress);
+    diveBtn.addEventListener('click', function () {
+      if (isDiving || isDived) return;
+      isDiving = true;
+      diveTl.timeScale(1).play();
+      /* near end of dive, smooth-scroll to Problem section so it's in view when fade-in starts */
+      setTimeout(function () {
+        var problem = document.getElementById('problem');
+        if (problem) {
+          smoothScrollTo(problem.offsetTop, 700);
+        }
+      }, DIVE_DURATION_MS - 350);
+      /* mark complete */
+      setTimeout(function () {
+        isDiving = false;
+        isDived = true;
+      }, DIVE_DURATION_MS + 50);
     });
 
-    var pinST = ScrollTrigger.create({
-      trigger: heroSection,
-      start: 'top top',
-      end: '+=85%',
-      pin: true,
-      anticipatePin: 1,
-      onUpdate: function (self) {
-        var progress = self.progress;
-        targetProgress = progress;
+    /* ============================================================
+       REVERSE TRIGGER — when user scrolls back UP past anchor
+       Anchor: when scrollY drops below 60% of hero height (i.e., they're
+       near the top of Problem section heading back up).
+       ============================================================ */
+    var reverseAnchor = function () {
+      return window.innerHeight * 0.55;
+    };
+    var lastScrollY = window.scrollY;
+    var isReversing = false;
 
-        if (isAutoPlaying) { prevProgress = progress; return; }
-
-        /* Forward: just crossed PHASE2_START going down */
-        if (prevProgress < PHASE2_START && progress >= PHASE2_START) {
-          autoScrollTo(self.end + 30);
-        }
-        /* Reverse: just crossed PHASE2_NEAR_END going up */
-        else if (prevProgress > PHASE2_NEAR_END && progress <= PHASE2_NEAR_END) {
-          var phase2StartScrollY = self.start + (PHASE2_START - 0.005) * (self.end - self.start);
-          autoScrollTo(phase2StartScrollY);
-        }
-
-        prevProgress = progress;
+    window.addEventListener('scroll', function () {
+      var y = window.scrollY;
+      var goingUp = y < lastScrollY;
+      lastScrollY = y;
+      if (!isDived || isDiving || isReversing) return;
+      if (goingUp && y < reverseAnchor()) {
+        isReversing = true;
+        diveTl.timeScale(1.2).reverse();
+        smoothScrollTo(0, 700);
+        setTimeout(function () {
+          isReversing = false;
+          isDived = false;
+        }, DIVE_DURATION_MS / 1.2 + 50);
       }
-    });
+    }, { passive: true });
 
-    /* Native RAF-based scroll lock — bypasses any plugin issues with window-tweens */
-    function autoScrollTo(targetY, duration) {
-      duration = duration || 1300;
-      isAutoPlaying = true;
+    /* RAF-based smooth scroll (no plugin dependency) */
+    function smoothScrollTo(targetY, duration) {
+      duration = duration || 700;
       var startY = window.scrollY;
-      var distance = targetY - startY;
+      var dist = targetY - startY;
       var startTime = performance.now();
-
-      function easeInOut(t) {
-        return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-      }
+      function easeInOut(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
       function step(now) {
-        var elapsed = now - startTime;
-        var t = Math.min(elapsed / duration, 1);
-        window.scrollTo(0, startY + distance * easeInOut(t));
-        if (t < 1) {
-          requestAnimationFrame(step);
-        } else {
-          isAutoPlaying = false;
-          prevProgress = pinST.progress;
-        }
+        var t = Math.min((now - startTime) / duration, 1);
+        window.scrollTo(0, startY + dist * easeInOut(t));
+        if (t < 1) requestAnimationFrame(step);
       }
       requestAnimationFrame(step);
     }
-
-    /* Block user scroll input while auto-play is active */
-    function blockIfLocked(e) {
-      if (isAutoPlaying) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    }
-    window.addEventListener('wheel', blockIfLocked, { passive: false });
-    window.addEventListener('touchmove', blockIfLocked, { passive: false });
-    window.addEventListener('keydown', function (e) {
-      if (!isAutoPlaying) return;
-      var blocked = ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Space', ' ', 'Home', 'End'];
-      if (blocked.indexOf(e.key) !== -1) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    });
-
-    /* ============================================================
-       Periodic glitch jitter on letters (continuous cyberpunk feel)
-       ============================================================ */
-    function glitchJitter() {
-      if (!letters.length || isAutoPlaying) return;
-      if (pinST.progress > PHASE2_START) return; /* hide jitter once letters are gone */
-      if (Math.random() > 0.7) {
-        var target = letters[Math.floor(Math.random() * letters.length)];
-        if (target) {
-          gsap.to(target, {
-            x: (Math.random() - 0.5) * 10,
-            duration: 0.06,
-            yoyo: true,
-            repeat: 1,
-            onComplete: function () { gsap.set(target, { x: 0 }); }
-          });
-        }
-      }
-    }
-    setInterval(glitchJitter, 700);
   });
 </script>
 
