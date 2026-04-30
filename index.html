@@ -1,0 +1,2717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Virality — build digital authority and grow your Instagram with real followers through strategic campaigns, positioning, and social proof." />
+<meta name="theme-color" content="#050507" />
+<meta property="og:title" content="Virality — Grow Your Digital Authority" />
+<meta property="og:description" content="Real, organic Instagram growth through strategic campaigns and positioning." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="Logo/Logo.png" />
+<title>Virality — Grow Your Digital Authority</title>
+<link rel="icon" type="image/svg+xml" href="Logo/Logo.svg" />
+<link rel="alternate icon" type="image/png" href="Logo/Logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;0,800&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     DESIGN TOKENS
+     ============================================================ */
+  :root {
+    --bg-deep: #050507;
+    --bg-page: #0A0A10;
+    --bg-card: #131319;
+    --bg-card-elevated: #18181F;
+    --bg-light: #FFFFFF;
+    --bg-light-soft: #F7F7F9;
+
+    --text-primary: #FFFFFF;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+    --text-dark: #0A0A10;
+    --text-dark-secondary: #52525B;
+
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-card: rgba(255, 255, 255, 0.08);
+    --border-light: rgba(0, 0, 0, 0.08);
+
+    --accent-cyan: #6FE3FF;
+    --accent-blue: #7DA8FF;
+    --accent-purple: #C084FC;
+    --accent-pink: #E879F9;
+    --accent-magenta: #D946EF;
+
+    --gradient-brand: linear-gradient(135deg, #6FE3FF 0%, #B388FF 50%, #E879F9 100%);
+    --gradient-text: linear-gradient(120deg, #6FE3FF 0%, #C084FC 100%);
+    --gradient-cta: linear-gradient(135deg, #6FE3FF 0%, #C084FC 60%, #E879F9 100%);
+    --gradient-card-glow: radial-gradient(120% 80% at 100% 0%, rgba(217, 70, 239, 0.06) 0%, transparent 60%);
+
+    --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+    --shadow-cta: 0 12px 40px -8px rgba(192, 132, 252, 0.5), 0 4px 16px -4px rgba(111, 227, 255, 0.3);
+
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+
+    --container: 1200px;
+    --container-narrow: 880px;
+  }
+
+  /* ============================================================
+     RESET & BASE
+     ============================================================ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  html, body {
+    background: var(--bg-deep);
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  body {
+    background:
+      radial-gradient(800px 600px at 20% 10%, rgba(111, 227, 255, 0.05), transparent 70%),
+      radial-gradient(700px 500px at 80% 90%, rgba(217, 70, 239, 0.04), transparent 70%),
+      radial-gradient(600px 400px at 50% 50%, rgba(192, 132, 252, 0.03), transparent 70%),
+      linear-gradient(180deg, #050507 0%, #0A0A10 100%);
+  }
+
+  img, svg { display: block; max-width: 100%; }
+  button { font: inherit; cursor: pointer; }
+  a { color: inherit; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: rgba(192, 132, 252, 0.35);
+    color: white;
+  }
+
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--bg-card);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 0 0 8px 0;
+    z-index: 100;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .skip-link:focus { left: 0; }
+
+  .container {
+    width: 100%;
+    max-width: var(--container);
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+  .container-narrow {
+    width: 100%;
+    max-width: var(--container-narrow);
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+
+  .grad {
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .grad-blue {
+    background: linear-gradient(120deg, #38BDF8 0%, #6FE3FF 50%, #A78BFA 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* ============================================================
+     HEADER / NAV
+     ============================================================ */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 14px 16px;
+    background: linear-gradient(180deg, rgba(10, 10, 16, 0.85), rgba(10, 10, 16, 0.55));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: rgba(20, 20, 26, 0.7);
+    border: 1px solid var(--border-card);
+    border-radius: 22px;
+    padding: 12px 18px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    line-height: 0;
+    transition: opacity 0.2s ease;
+  }
+  .logo:hover { opacity: 0.85; }
+  .logo-svg {
+    height: 22px;
+    width: auto;
+    color: currentColor;
+    display: block;
+  }
+  .logo-svg.logo-svg--lg { height: 32px; }
+  .nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .nav-menu a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .nav-menu a:hover,
+  .nav-menu a:focus-visible { color: white; }
+  .nav-menu a.active { color: white; }
+  .nav-cta {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border-card);
+    color: white !important;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .nav-cta:hover { background: rgba(255, 255, 255, 0.12); transform: translateY(-1px); }
+
+  @media (max-width: 640px) {
+    .nav-menu { gap: 12px; font-size: 11px; }
+    .nav-menu a:not(.nav-cta) { display: none; }
+    .nav-menu a.always-show { display: inline; }
+  }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero {
+    padding: 64px 0 56px;
+    background:
+      radial-gradient(600px 400px at 50% 0%, rgba(111, 227, 255, 0.08), transparent 70%),
+      radial-gradient(700px 500px at 50% 100%, rgba(192, 132, 252, 0.08), transparent 70%);
+    position: relative;
+  }
+  .hero-inner {
+    display: grid;
+    gap: 40px;
+    align-items: center;
+  }
+  .hero h1 {
+    font-size: clamp(34px, 6vw, 64px);
+    line-height: 1.05;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: 28px;
+  }
+  .hero-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .hero-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: clamp(15px, 1.6vw, 17px);
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 400;
+  }
+  .check-icon {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent-magenta);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-magenta);
+  }
+  .hero-sub {
+    color: var(--text-secondary);
+    font-size: clamp(14.5px, 1.6vw, 17px);
+    line-height: 1.6;
+    margin-bottom: 24px;
+    max-width: 60ch;
+  }
+
+  /* social proof */
+  .social-proof {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .avatars { display: flex; }
+  .avatars .av {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--bg-page);
+    margin-left: -8px;
+  }
+  .avatars .av:first-child { margin-left: 0; }
+  .avatars .av:nth-child(1) { background: linear-gradient(135deg, #9CA3AF, #4B5563); }
+  .avatars .av:nth-child(2) { background: linear-gradient(135deg, #6FE3FF, #3B82F6); }
+  .avatars .av:nth-child(3) { background: linear-gradient(135deg, #C084FC, #7C3AED); }
+  .avatars .av:nth-child(4) { background: linear-gradient(135deg, #E879F9, #A21CAF); }
+  .avatars .av:nth-child(5) { background: linear-gradient(135deg, #FCD34D, #D97706); }
+  .social-text { font-size: 13px; line-height: 1.4; color: var(--text-secondary); }
+  .social-text strong { color: white; font-weight: 600; }
+
+  /* CTA */
+  .cta-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 420px;
+    padding: 18px 24px;
+    background: var(--gradient-cta);
+    color: #0A0A10;
+    border: none;
+    border-radius: 16px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    box-shadow: var(--shadow-cta);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+  }
+  .cta-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 50px -8px rgba(192, 132, 252, 0.65), 0 4px 16px -4px rgba(111, 227, 255, 0.4);
+  }
+  .cta-primary svg { transition: transform 0.2s ease; }
+  .cta-primary:hover svg { transform: translateX(2px); }
+  .cta-meta {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* hero illustration (desktop only) */
+  .hero-art {
+    display: none;
+    position: relative;
+    height: 480px;
+  }
+  .hero-art .illu-phone {
+    width: 220px;
+    height: 440px;
+    margin: 0 auto;
+    background: linear-gradient(160deg, #1F2937 0%, #0A0A10 100%);
+    border-radius: 38px;
+    border: 3px solid #18181F;
+    box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.05) inset;
+    position: relative;
+    overflow: hidden;
+    z-index: 2;
+  }
+  .hero-art .illu-phone::after {
+    content: '';
+    position: absolute;
+    top: 16px; left: 50%;
+    transform: translateX(-50%);
+    width: 72px; height: 18px;
+    background: #000;
+    border-radius: 12px;
+  }
+  .hero-art .illu-phone-screen {
+    position: absolute;
+    inset: 10px;
+    border-radius: 30px;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.08), transparent 60%),
+      linear-gradient(160deg, #2A2A38, #0F0F18 80%);
+    overflow: hidden;
+  }
+  .hero-art .illu-phone-screen::before {
+    content: '';
+    position: absolute;
+    top: 35%; left: 20%;
+    width: 60%; height: 35%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+    border-radius: 50%;
+    filter: blur(18px);
+  }
+  .hero-art .illu-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(2px);
+    opacity: 0.85;
+    z-index: 1;
+  }
+  .hero-art .illu-blob-1 {
+    width: 110px; height: 110px;
+    background: radial-gradient(circle at 35% 35%, #FF6BD5, #B388FF 60%, #6FE3FF);
+    top: 8%; left: 6%;
+    box-shadow: 0 10px 40px -5px rgba(217, 70, 239, 0.5);
+  }
+  .hero-art .illu-blob-2 {
+    width: 95px; height: 95px;
+    background: radial-gradient(circle at 35% 35%, #6FE3FF, #B388FF 60%, #FF6BD5);
+    top: 38%; left: 0%;
+    box-shadow: 0 10px 40px -5px rgba(111, 227, 255, 0.5);
+    z-index: 3;
+  }
+  .hero-art .illu-blob-3 {
+    width: 130px; height: 130px;
+    background: radial-gradient(circle at 35% 35%, #C084FC, #FF6BD5 60%, #FFC56F);
+    bottom: 10%; right: 4%;
+    box-shadow: 0 10px 40px -5px rgba(192, 132, 252, 0.5);
+    z-index: 3;
+  }
+  .hero-art .illu-blob-4 {
+    width: 80px; height: 80px;
+    background: radial-gradient(circle at 35% 35%, #6FE3FF, #4DA1FF 60%, #C084FC);
+    top: 12%; right: 6%;
+    box-shadow: 0 10px 40px -5px rgba(111, 227, 255, 0.4);
+  }
+
+  @media (min-width: 960px) {
+    .hero { padding: 96px 0 88px; }
+    .hero-inner { grid-template-columns: 1.1fr 0.9fr; gap: 64px; }
+    .hero-art { display: block; }
+    .cta-primary { width: auto; }
+  }
+
+  /* ============================================================
+     SECTION COMMON
+     ============================================================ */
+  .section { padding: 72px 0; }
+  @media (min-width: 960px) { .section { padding: 112px 0; } }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+  }
+  .eyebrow.dark { color: var(--text-dark-secondary); }
+  .eyebrow.dark::before { background: rgba(0, 0, 0, 0.18); }
+
+  .eyebrow.center {
+    display: flex;
+    justify-content: center;
+  }
+  .eyebrow.center::after {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+  }
+  .eyebrow.center.dark::after { background: rgba(0, 0, 0, 0.18); }
+
+  .section-head {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .section-head .eyebrow { display: inline-flex; }
+
+  .section-title {
+    font-size: clamp(28px, 4vw, 48px);
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+  }
+  .section-desc {
+    font-size: clamp(14.5px, 1.4vw, 17px);
+    line-height: 1.65;
+    color: var(--text-secondary);
+    max-width: 60ch;
+    margin-inline: auto;
+  }
+  .section-desc + .section-desc { margin-top: 14px; }
+
+  /* ============================================================
+     PROBLEM SECTION
+     ============================================================ */
+  .problem-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  @media (min-width: 720px) { .problem-cards { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .problem-cards { grid-template-columns: repeat(3, 1fr); } }
+
+  .problem-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .problem-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+  .problem-icon {
+    flex-shrink: 0;
+    width: 44px; height: 44px;
+    background: var(--bg-card-elevated);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .problem-card-text {
+    font-size: 14.5px;
+    font-weight: 500;
+    line-height: 1.35;
+    color: white;
+  }
+  .problem-callout {
+    background: linear-gradient(180deg, rgba(192, 132, 252, 0.08), rgba(217, 70, 239, 0.04));
+    border: 1px solid rgba(192, 132, 252, 0.18);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.82);
+    text-align: center;
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
+  /* ============================================================
+     SOLUTION SECTION
+     ============================================================ */
+  .service-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  @media (min-width: 720px) { .service-cards { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .service-cards { grid-template-columns: repeat(3, 1fr); } }
+
+  .service-card {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .service-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(192, 132, 252, 0.25);
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-card-glow);
+    pointer-events: none;
+  }
+  .service-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .service-icon {
+    width: 42px; height: 42px;
+    background: var(--bg-card-elevated);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-card);
+    border-radius: 999px;
+    padding: 5px 11px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.78);
+  }
+  .tag-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent-magenta);
+    box-shadow: 0 0 8px var(--accent-magenta);
+  }
+  .service-card h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+    position: relative;
+  }
+  .service-card p {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .service-card-line {
+    width: 28px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-cyan), transparent);
+    border-radius: 2px;
+    position: relative;
+  }
+
+  /* ============================================================
+     WHITE BAND (BRAND + PRESS)
+     ============================================================ */
+  .white-band {
+    background: var(--bg-light);
+    color: var(--text-dark);
+    position: relative;
+    overflow: hidden;
+  }
+  .white-band-decor {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(400px 300px at 0% 0%, rgba(111, 227, 255, 0.12), transparent 70%),
+      radial-gradient(400px 300px at 100% 100%, rgba(217, 70, 239, 0.08), transparent 70%);
+  }
+  .white-band > * { position: relative; }
+
+  .brand-section { padding: 80px 0 40px; }
+  .brand-grid {
+    display: grid;
+    gap: 32px;
+    align-items: center;
+  }
+  @media (min-width: 960px) {
+    .brand-section { padding: 120px 0 60px; }
+    .brand-grid { grid-template-columns: 1fr 1fr; gap: 64px; }
+  }
+
+  .brand-title {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+    color: var(--text-dark);
+  }
+  .brand-desc {
+    font-size: clamp(14.5px, 1.4vw, 17px);
+    line-height: 1.6;
+    color: var(--text-dark-secondary);
+    max-width: 50ch;
+  }
+
+  .illustration {
+    height: 360px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .illu-phone-mini {
+    width: 160px;
+    height: 320px;
+    background: linear-gradient(160deg, #1F2937 0%, #0A0A10 100%);
+    border-radius: 32px;
+    border: 3px solid #18181F;
+    box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255,255,255,0.05) inset;
+    position: relative;
+    overflow: hidden;
+    z-index: 2;
+  }
+  .illu-phone-mini::after {
+    content: '';
+    position: absolute;
+    top: 14px; left: 50%;
+    transform: translateX(-50%);
+    width: 56px; height: 16px;
+    background: #000;
+    border-radius: 8px;
+  }
+  .illu-phone-mini-screen {
+    position: absolute;
+    inset: 8px;
+    border-radius: 24px;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.08), transparent 60%),
+      linear-gradient(160deg, #2A2A38, #0F0F18 80%);
+    overflow: hidden;
+  }
+  .illu-phone-mini-screen::before {
+    content: '';
+    position: absolute;
+    top: 35%; left: 20%;
+    width: 60%; height: 35%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+    border-radius: 50%;
+    filter: blur(14px);
+  }
+  .illu-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(2px);
+    opacity: 0.85;
+    z-index: 1;
+  }
+  .illu-blob.b1 {
+    width: 90px; height: 90px;
+    background: radial-gradient(circle at 35% 35%, #FF6BD5, #B388FF 60%, #6FE3FF);
+    top: 8%; left: 6%;
+    box-shadow: 0 10px 40px -5px rgba(217, 70, 239, 0.5);
+  }
+  .illu-blob.b2 {
+    width: 78px; height: 78px;
+    background: radial-gradient(circle at 35% 35%, #6FE3FF, #B388FF 60%, #FF6BD5);
+    top: 38%; left: 4%;
+    box-shadow: 0 10px 40px -5px rgba(111, 227, 255, 0.5);
+    z-index: 3;
+  }
+  .illu-blob.b3 {
+    width: 100px; height: 100px;
+    background: radial-gradient(circle at 35% 35%, #C084FC, #FF6BD5 60%, #FFC56F);
+    bottom: 10%; right: 6%;
+    box-shadow: 0 10px 40px -5px rgba(192, 132, 252, 0.5);
+    z-index: 3;
+  }
+  .illu-blob.b4 {
+    width: 70px; height: 70px;
+    background: radial-gradient(circle at 35% 35%, #6FE3FF, #4DA1FF 60%, #C084FC);
+    top: 18%; right: 8%;
+    box-shadow: 0 10px 40px -5px rgba(111, 227, 255, 0.4);
+  }
+
+  .iridescent-wave {
+    height: 60px;
+    background: linear-gradient(90deg,
+      rgba(111, 227, 255, 0.4) 0%,
+      rgba(192, 132, 252, 0.4) 33%,
+      rgba(217, 70, 239, 0.3) 66%,
+      rgba(111, 227, 255, 0.3) 100%);
+    filter: blur(20px);
+    transform: scaleY(0.5);
+    margin: -30px 0;
+    position: relative;
+  }
+
+  .press-section {
+    padding: 32px 0 80px;
+    text-align: center;
+  }
+  @media (min-width: 960px) { .press-section { padding: 32px 0 120px; } }
+
+  .press-logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .press-logo {
+    font-weight: 700;
+    color: var(--text-dark);
+    font-size: 24px;
+    letter-spacing: -0.02em;
+  }
+  .press-logo.serif { font-family: 'Playfair Display', Georgia, serif; font-style: italic; }
+  .press-logo.purple { color: #6B21A8; font-weight: 800; }
+  .press-title {
+    font-size: clamp(34px, 5vw, 56px);
+    font-weight: 800;
+    background: linear-gradient(120deg, #38BDF8 0%, #A78BFA 50%, #E879F9 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 18px;
+    letter-spacing: -0.02em;
+  }
+  .press-desc {
+    font-size: clamp(14.5px, 1.4vw, 17px);
+    line-height: 1.6;
+    color: var(--text-dark-secondary);
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  /* ============================================================
+     PARTNERS
+     ============================================================ */
+  .partners { padding: 80px 0 64px; }
+  @media (min-width: 960px) { .partners { padding: 120px 0 96px; } }
+
+  .partners-title {
+    font-size: clamp(30px, 4vw, 48px);
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+    margin-bottom: 40px;
+    letter-spacing: -0.02em;
+  }
+  .partner-track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 240px;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 0 24px 12px;
+    scrollbar-width: thin;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .partner-track::-webkit-scrollbar { height: 6px; }
+  .partner-track::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+  @media (min-width: 1024px) {
+    .partner-track {
+      grid-auto-flow: initial;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-columns: initial;
+      max-width: var(--container);
+      margin-inline: auto;
+      padding: 0 24px;
+    }
+  }
+
+  .partner-card {
+    width: 100%;
+    height: 320px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    position: relative;
+    scroll-snap-align: start;
+    border: 1px solid var(--border-card);
+    transition: transform 0.25s ease;
+  }
+  .partner-card:hover { transform: translateY(-3px); }
+  .partner-bg {
+    position: absolute;
+    inset: 0;
+  }
+  .partner-bg-1 { background: linear-gradient(160deg, #6B7280 0%, #374151 50%, #111827 100%); }
+  .partner-bg-2 { background: linear-gradient(160deg, #92400E 0%, #1F2937 50%, #0A0A10 100%); }
+  .partner-bg-3 { background: linear-gradient(160deg, #1E40AF 0%, #581C87 50%, #0A0A10 100%); }
+  .partner-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 30%, rgba(0, 0, 0, 0.85) 100%);
+  }
+  .partner-followers {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    z-index: 2;
+  }
+  .partner-info {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    z-index: 2;
+  }
+  .partner-name { font-size: 16px; font-weight: 700; margin-bottom: 2px; color: white; }
+  .partner-handle { font-size: 11px; color: rgba(255, 255, 255, 0.7); margin-bottom: 8px; }
+  .partner-bio { font-size: 12px; line-height: 1.4; color: rgba(255, 255, 255, 0.7); }
+  .partner-icon-overlay {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    width: 24px; height: 24px;
+    background: rgba(217, 70, 239, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    font-size: 13px;
+    color: white;
+  }
+
+  .partner-cta {
+    text-align: center;
+    margin-top: 32px;
+  }
+
+  /* ============================================================
+     CASE STUDIES
+     ============================================================ */
+  .cases { padding: 80px 0; }
+  @media (min-width: 960px) { .cases { padding: 120px 0; } }
+
+  .cases-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    max-width: 960px;
+    margin-inline: auto;
+  }
+  @media (min-width: 720px) { .cases-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; } }
+
+  .case-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .case-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+  .case-brand {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .case-brand.finanzguru { color: white; }
+  .case-brand.finanzguru::before {
+    content: '◇';
+    margin-right: 4px;
+    background: linear-gradient(135deg, #6FE3FF, #C084FC);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 18px;
+  }
+  .case-brand.getlvl { color: white; font-style: italic; letter-spacing: 0.02em; font-weight: 800; font-size: 12px; }
+  .case-brand.dubai { color: #FCA5A5; font-size: 11px; letter-spacing: 0.1em; }
+  .case-brand.momox {
+    background: #2563EB;
+    color: white;
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-size: 13px;
+    font-style: italic;
+    height: 26px;
+    align-self: center;
+  }
+  .case-brand.wildbrau {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: #FCD34D;
+    color: #422006;
+    font-size: 9px;
+    font-weight: 800;
+    text-align: center;
+    line-height: 1.05;
+    padding: 6px 4px;
+    align-self: center;
+  }
+  .case-brand.gymtastic { color: white; font-weight: 800; letter-spacing: 0.02em; font-size: 14px; }
+  .case-brand.gymtastic::after { content: '®'; font-size: 8px; vertical-align: super; }
+
+  .case-divider { height: 1px; background: rgba(255, 255, 255, 0.08); }
+  .case-mockup {
+    aspect-ratio: 1 / 1.05;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    padding: 8px;
+    background: linear-gradient(135deg, #1F1F28, #0F0F18);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+  }
+  .case-mockup.fg { background: linear-gradient(160deg, #1E3A8A, #0F172A); }
+  .case-mockup.lvl { background: linear-gradient(160deg, #DC2626, #FBBF24); color: #1F2937; }
+  .case-mockup.dubai { background: linear-gradient(160deg, #FBBF24, #DC2626); color: #1F2937; font-weight: 700; }
+  .case-mockup.momox { background: linear-gradient(160deg, #FFFFFF, #F3F4F6); color: #1F2937; }
+  .case-mockup.wildbrau { background: linear-gradient(160deg, #92400E, #1F2937); }
+  .case-mockup.gymtastic { background: linear-gradient(160deg, #FBBF24, #1F2937); color: #1F2937; }
+
+  .case-stats { display: flex; flex-direction: column; gap: 4px; padding-top: 4px; }
+  .case-stat {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11.5px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .case-stat-label { color: var(--text-secondary); }
+  .case-stat-value { font-weight: 600; }
+  .case-stat-value.green { color: #34D399; }
+  .case-stat-value.cyan { color: #6FE3FF; }
+
+  /* ============================================================
+     JOURNEY (HOW IT WORKS)
+     ============================================================ */
+  .journey-section {
+    background: linear-gradient(180deg, var(--bg-page) 0%, #0D0D14 100%);
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  @media (min-width: 960px) { .journey-section { padding: 140px 0; } }
+  .journey-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(700px 500px at 0% 20%, rgba(111, 227, 255, 0.06), transparent 70%),
+      radial-gradient(700px 500px at 100% 90%, rgba(217, 70, 239, 0.05), transparent 70%);
+    pointer-events: none;
+  }
+  .journey-section > * { position: relative; }
+
+  /* ---- Top Process Strip ---- */
+  .journey-progress {
+    display: flex;
+    align-items: center;
+    margin: 48px auto 64px;
+    max-width: 720px;
+    padding: 0 8px;
+  }
+  .journey-progress-node {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .journey-progress-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-card-elevated);
+    border: 1.5px solid rgba(192, 132, 252, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent-purple);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  .journey-progress-node.active .journey-progress-circle {
+    background: var(--gradient-cta);
+    border-color: transparent;
+    color: #0A0A10;
+    box-shadow: 0 0 28px rgba(217, 70, 239, 0.45);
+  }
+  .journey-progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .journey-progress-node.active .journey-progress-label { color: white; }
+  .journey-progress-line {
+    flex: 1;
+    height: 1.5px;
+    background: linear-gradient(90deg,
+      rgba(232, 121, 249, 0.5),
+      rgba(192, 132, 252, 0.3),
+      rgba(192, 132, 252, 0.15));
+    margin-bottom: 24px;
+    margin-inline: -2px;
+  }
+  @media (max-width: 600px) {
+    .journey-progress-label { display: none; }
+    .journey-progress-circle { width: 34px; height: 34px; font-size: 11px; }
+    .journey-progress-line { margin-bottom: 0; }
+  }
+
+  /* ---- Cards ---- */
+  .journey-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 980px;
+    margin-inline: auto;
+    list-style: none;
+  }
+  .journey-card {
+    position: relative;
+    background: linear-gradient(180deg, rgba(20, 20, 26, 0.85), rgba(15, 15, 22, 0.9));
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-xl);
+    padding: 28px 24px;
+    overflow: hidden;
+    display: grid;
+    gap: 24px;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .journey-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(80% 60% at 100% 0%, rgba(192, 132, 252, 0.08), transparent 60%);
+    pointer-events: none;
+  }
+  .journey-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(192, 132, 252, 0.3);
+    box-shadow: 0 24px 48px -24px rgba(192, 132, 252, 0.25);
+  }
+  @media (min-width: 760px) {
+    .journey-card {
+      grid-template-columns: 1fr 280px;
+      align-items: center;
+      padding: 36px 40px;
+      gap: 40px;
+    }
+  }
+
+  .journey-card-num {
+    position: absolute;
+    top: -28px;
+    right: 16px;
+    font-size: clamp(120px, 18vw, 180px);
+    font-weight: 800;
+    line-height: 1;
+    background: var(--gradient-cta);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.07;
+    pointer-events: none;
+    letter-spacing: -0.04em;
+  }
+
+  .journey-card-body { position: relative; z-index: 2; }
+
+  .journey-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .journey-step-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: var(--accent-pink);
+    background: rgba(217, 70, 239, 0.1);
+    border: 1px solid rgba(217, 70, 239, 0.25);
+    border-radius: 999px;
+    padding: 5px 12px;
+  }
+  .journey-step-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-pink);
+    box-shadow: 0 0 8px var(--accent-pink);
+  }
+  .journey-duration {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .journey-card-title {
+    font-size: clamp(22px, 2.6vw, 28px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+  .journey-card-desc {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    max-width: 50ch;
+  }
+  .journey-outcomes {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .journey-outcomes li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .journey-outcomes li::before {
+    content: '';
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+    margin-top: 7px;
+    box-shadow: 0 0 8px rgba(111, 227, 255, 0.6);
+  }
+
+  /* ---- Visual side ---- */
+  .journey-card-visual {
+    position: relative;
+    z-index: 2;
+    aspect-ratio: 1;
+    width: 100%;
+    max-width: 280px;
+    margin-inline: auto;
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(80% 60% at 50% 0%, rgba(192, 132, 252, 0.08), transparent 60%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.3));
+    border: 1px solid var(--border-card);
+    padding: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* === Visual 01: AUDIT DASHBOARD === */
+  .viz-audit { width: 100%; display: flex; flex-direction: column; gap: 14px; }
+  .viz-audit-row { display: flex; align-items: center; gap: 10px; }
+  .viz-audit-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    width: 56px;
+    flex-shrink: 0;
+  }
+  .viz-audit-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .viz-audit-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+    border-radius: 3px;
+  }
+  .viz-audit-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: white;
+    font-weight: 600;
+    width: 28px;
+    text-align: right;
+  }
+  .viz-audit-status {
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-card);
+  }
+  .viz-audit-status-label,
+  .viz-audit-status-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .viz-audit-status-label { color: var(--text-muted); }
+  .viz-audit-status-value {
+    color: #34D399;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .viz-audit-status-value::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #34D399;
+    box-shadow: 0 0 10px #34D399;
+  }
+
+  /* === Visual 02: ROADMAP === */
+  .viz-roadmap { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+  .viz-roadmap svg { width: 100%; height: auto; max-height: 200px; }
+
+  /* === Visual 03: BROADCAST === */
+  .viz-broadcast {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .viz-broadcast-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1.5px solid;
+    opacity: 0;
+    animation: broadcast-pulse 2.6s ease-out infinite;
+  }
+  .viz-broadcast-ring:nth-child(1) { border-color: rgba(217, 70, 239, 0.6); animation-delay: 0s; }
+  .viz-broadcast-ring:nth-child(2) { border-color: rgba(192, 132, 252, 0.5); animation-delay: 0.65s; }
+  .viz-broadcast-ring:nth-child(3) { border-color: rgba(111, 227, 255, 0.4); animation-delay: 1.3s; }
+  @keyframes broadcast-pulse {
+    0%   { transform: scale(0.4); opacity: 0; }
+    20%  { opacity: 0.9; }
+    100% { transform: scale(1.3); opacity: 0; }
+  }
+  .viz-broadcast-core {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: var(--gradient-cta);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0A0A10;
+    z-index: 2;
+    box-shadow: 0 0 36px rgba(217, 70, 239, 0.55);
+  }
+
+  /* === Visual 04: TUNING SLIDERS === */
+  .viz-tuning { width: 100%; display: flex; flex-direction: column; gap: 16px; }
+  .viz-tune-row { display: flex; flex-direction: column; gap: 6px; }
+  .viz-tune-head {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .viz-tune-label { color: var(--text-muted); }
+  .viz-tune-value { color: white; font-weight: 600; }
+  .viz-tune-track {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 2px;
+    position: relative;
+  }
+  .viz-tune-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-pink));
+    border-radius: 2px;
+  }
+  .viz-tune-thumb {
+    position: absolute;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: white;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 2px rgba(217, 70, 239, 0.55), 0 0 18px rgba(217, 70, 239, 0.5);
+  }
+
+  /* === Visual 05: AUTHORITY GRAPH === */
+  .viz-authority {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: center;
+  }
+  .viz-auth-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 7px;
+    height: 120px;
+  }
+  .viz-auth-bar {
+    flex: 1;
+    background: linear-gradient(180deg, var(--accent-cyan), var(--accent-purple));
+    border-radius: 4px 4px 0 0;
+    transition: opacity 0.3s ease;
+  }
+  .viz-auth-bar:nth-child(1) { height: 22%; opacity: 0.4; }
+  .viz-auth-bar:nth-child(2) { height: 36%; opacity: 0.55; }
+  .viz-auth-bar:nth-child(3) { height: 54%; opacity: 0.7; }
+  .viz-auth-bar:nth-child(4) { height: 74%; opacity: 0.85; }
+  .viz-auth-bar:nth-child(5) {
+    height: 100%;
+    background: linear-gradient(180deg, var(--accent-pink), var(--accent-magenta));
+    box-shadow: 0 0 24px rgba(217, 70, 239, 0.45);
+    opacity: 1;
+  }
+  .viz-auth-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-card);
+  }
+  .viz-auth-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--accent-pink);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .viz-auth-score {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* ============================================================
+     STEP VISUALIZATION ANIMATIONS
+     Each step's animation matches the semantic meaning of that step.
+     ============================================================ */
+
+  /* --- Step 01 · Audit: scanning shimmer + pulsing status dot --- */
+  .viz-audit-fill {
+    position: relative;
+    overflow: hidden;
+  }
+  .viz-audit-fill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 25%, rgba(255, 255, 255, 0.55) 50%, transparent 75%);
+    transform: translateX(-100%);
+    animation: audit-shimmer 2.8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .viz-audit-row:nth-child(1) .viz-audit-fill::after { animation-delay: 0s; }
+  .viz-audit-row:nth-child(2) .viz-audit-fill::after { animation-delay: 0.4s; }
+  .viz-audit-row:nth-child(3) .viz-audit-fill::after { animation-delay: 0.8s; }
+  @keyframes audit-shimmer {
+    0%   { transform: translateX(-100%); }
+    55%  { transform: translateX(100%); }
+    100% { transform: translateX(100%); }
+  }
+  .viz-audit-status-value::before {
+    animation: status-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes status-pulse {
+    0%, 100% { box-shadow: 0 0 8px #34D399; }
+    50%      { box-shadow: 0 0 16px #34D399, 0 0 26px rgba(52, 211, 153, 0.55); }
+  }
+
+  /* --- Step 02 · Roadmap: dashes flow along the path, milestone wave, endpoint halo ripples --- */
+  .viz-roadmap-path {
+    stroke-dasharray: 5 5;
+    animation: roadmap-dash 1.6s linear infinite;
+  }
+  @keyframes roadmap-dash {
+    to { stroke-dashoffset: -10; }
+  }
+  .viz-roadmap-node,
+  .viz-roadmap-halo {
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+  .viz-roadmap-node {
+    animation: node-pulse 3.6s ease-in-out infinite;
+  }
+  .viz-roadmap-node-1 { animation-delay: 0s; }
+  .viz-roadmap-node-2 { animation-delay: 0.6s; }
+  .viz-roadmap-node-3 { animation-delay: 1.2s; }
+  .viz-roadmap-node-4 { animation-delay: 1.8s; }
+  @keyframes node-pulse {
+    0%, 75%, 100% { transform: scale(1); filter: brightness(1); }
+    35%           { transform: scale(1.4); filter: brightness(1.3); }
+  }
+  .viz-roadmap-halo-end {
+    animation: halo-ripple 2.6s ease-out infinite;
+  }
+  @keyframes halo-ripple {
+    0%   { transform: scale(0.7); opacity: 0.55; }
+    100% { transform: scale(1.5); opacity: 0; }
+  }
+
+  /* --- Step 03 · Broadcast: rings already animated above --- */
+
+  /* --- Step 04 · Tuning: glowing thumbs + shimmer flowing through each fill --- */
+  .viz-tune-thumb {
+    animation: thumb-glow 2.6s ease-in-out infinite;
+  }
+  .viz-tune-row:nth-child(1) .viz-tune-thumb { animation-delay: 0s; }
+  .viz-tune-row:nth-child(2) .viz-tune-thumb { animation-delay: 0.4s; }
+  .viz-tune-row:nth-child(3) .viz-tune-thumb { animation-delay: 0.8s; }
+  @keyframes thumb-glow {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(217, 70, 239, 0.55), 0 0 18px rgba(217, 70, 239, 0.5); }
+    50%      { box-shadow: 0 0 0 3px rgba(217, 70, 239, 0.75), 0 0 32px rgba(217, 70, 239, 0.85); }
+  }
+  .viz-tune-fill {
+    position: relative;
+    overflow: hidden;
+  }
+  .viz-tune-fill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 25%, rgba(255, 255, 255, 0.4) 50%, transparent 75%);
+    transform: translateX(-100%);
+    animation: audit-shimmer 3.2s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .viz-tune-row:nth-child(1) .viz-tune-fill::after { animation-delay: 0.1s; }
+  .viz-tune-row:nth-child(2) .viz-tune-fill::after { animation-delay: 0.5s; }
+  .viz-tune-row:nth-child(3) .viz-tune-fill::after { animation-delay: 0.9s; }
+
+  /* --- Step 05 · Authority: light rises through every bar, peak bar pulses, badge bobs --- */
+  .viz-auth-bar {
+    position: relative;
+    overflow: hidden;
+  }
+  .viz-auth-bar::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+    animation: bar-rise 2.8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .viz-auth-bar:nth-child(1)::after { animation-delay: 0s; }
+  .viz-auth-bar:nth-child(2)::after { animation-delay: 0.15s; }
+  .viz-auth-bar:nth-child(3)::after { animation-delay: 0.3s; }
+  .viz-auth-bar:nth-child(4)::after { animation-delay: 0.45s; }
+  .viz-auth-bar:nth-child(5)::after { animation-delay: 0.6s; }
+  @keyframes bar-rise {
+    0%   { top: 100%; opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { top: -40%; opacity: 0; }
+  }
+  .viz-auth-bar:nth-child(5) {
+    animation: peak-glow 2.4s ease-in-out infinite;
+  }
+  @keyframes peak-glow {
+    0%, 100% { box-shadow: 0 0 24px rgba(217, 70, 239, 0.45); }
+    50%      { box-shadow: 0 0 42px rgba(217, 70, 239, 0.85), 0 0 64px rgba(232, 121, 249, 0.4); }
+  }
+  .viz-auth-badge {
+    animation: badge-bob 2.4s ease-in-out infinite;
+  }
+  @keyframes badge-bob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-2px); }
+  }
+
+  /* Respect users who don't want motion */
+  @media (prefers-reduced-motion: reduce) {
+    .viz-broadcast-ring,
+    .viz-audit-fill::after,
+    .viz-audit-status-value::before,
+    .viz-roadmap-path,
+    .viz-roadmap-node,
+    .viz-roadmap-halo-end,
+    .viz-tune-thumb,
+    .viz-tune-fill::after,
+    .viz-auth-bar::after,
+    .viz-auth-bar:nth-child(5),
+    .viz-auth-badge {
+      animation: none !important;
+    }
+    .viz-broadcast-ring { opacity: 0.4; }
+  }
+
+  /* ============================================================
+     RESULTS
+     ============================================================ */
+  .results-section { padding: 80px 0; }
+  @media (min-width: 960px) { .results-section { padding: 120px 0; } }
+
+  .results-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 40px;
+    max-width: 960px;
+    margin-inline: auto;
+  }
+  @media (min-width: 720px) { .results-cards { grid-template-columns: repeat(3, 1fr); } }
+
+  .result-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+  }
+  .result-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .result-value {
+    font-size: clamp(36px, 4vw, 48px);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: 16px;
+    line-height: 1;
+  }
+  .result-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .result-bar-fill {
+    height: 100%;
+    background: var(--gradient-cta);
+    border-radius: 3px;
+  }
+  .result-segments { display: flex; gap: 4px; }
+  .result-segments span { flex: 1; height: 6px; border-radius: 3px; }
+  .result-segments span:nth-child(1) { background: #E879F9; }
+  .result-segments span:nth-child(2) { background: #C084FC; }
+  .result-segments span:nth-child(3) { background: #B388FF; }
+  .result-segments span:nth-child(4) { background: #6FE3FF; }
+  .result-segments span:nth-child(5) { background: #E879F9; }
+  .result-segments span:nth-child(6) { background: #C084FC; }
+  .result-segments span:nth-child(7) { background: #B388FF; }
+  .result-segments span:nth-child(8) { background: #6FE3FF; }
+  .result-segments span:nth-child(9) { background: #E879F9; }
+  .result-segments span:nth-child(10) { background: rgba(255, 255, 255, 0.08); }
+
+  /* ============================================================
+     ABOUT
+     ============================================================ */
+  .about-section { padding: 0 0 80px; background: var(--bg-page); }
+  @media (min-width: 960px) { .about-section { padding-bottom: 120px; } }
+
+  .about-hero {
+    position: relative;
+    height: 280px;
+    overflow: hidden;
+    margin-bottom: 80px;
+    background:
+      radial-gradient(ellipse 60% 80% at 50% 60%, rgba(99, 102, 241, 0.5), transparent 65%),
+      radial-gradient(ellipse 40% 50% at 30% 30%, rgba(217, 70, 239, 0.35), transparent 60%),
+      radial-gradient(ellipse 50% 50% at 75% 40%, rgba(111, 227, 255, 0.3), transparent 60%),
+      linear-gradient(135deg, #1E1B4B 0%, #0A0A10 70%);
+  }
+  @media (min-width: 720px) { .about-hero { height: 360px; } }
+
+  .about-hero::before {
+    content: '';
+    position: absolute;
+    top: 38%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-12deg);
+    width: 130px; height: 130px;
+    background: linear-gradient(135deg, #6FE3FF, #C084FC, #E879F9);
+    clip-path: polygon(50% 0%, 60% 35%, 100% 50%, 60% 65%, 50% 100%, 40% 65%, 0% 50%, 40% 35%);
+    filter: blur(0.5px) drop-shadow(0 0 30px rgba(217, 70, 239, 0.6));
+    opacity: 0.85;
+  }
+  .about-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 90%, rgba(10, 10, 16, 0.95), transparent 60%),
+      linear-gradient(180deg, transparent 50%, rgba(10, 10, 16, 0.4) 100%);
+  }
+  .about-avatars {
+    position: absolute;
+    bottom: -40px;
+    left: 24px;
+    display: flex;
+    z-index: 2;
+  }
+  .about-avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    border: 4px solid var(--bg-page);
+    background-size: cover;
+    background-position: center;
+    margin-left: -16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+  .about-avatar:first-child { margin-left: 0; }
+  .about-avatar.a1 { background: radial-gradient(circle at 50% 30%, #FCA5A5 0%, #B45309 40%, #1F2937 90%); }
+  .about-avatar.a2 { background: radial-gradient(circle at 50% 30%, #F59E0B 0%, #92400E 50%, #1F2937 90%); }
+
+  .about-content {
+    display: grid;
+    gap: 24px;
+  }
+  @media (min-width: 960px) {
+    .about-content { grid-template-columns: 1fr 1.4fr; gap: 64px; align-items: start; }
+  }
+  .about-title {
+    font-size: clamp(30px, 4vw, 44px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+  }
+  .about-text {
+    font-size: clamp(14.5px, 1.4vw, 16.5px);
+    line-height: 1.65;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* ============================================================
+     FINAL CTA
+     ============================================================ */
+  .final-cta {
+    position: relative;
+    padding: 80px 0;
+    overflow: hidden;
+    background:
+      radial-gradient(800px 500px at 50% 50%, rgba(99, 102, 241, 0.15), transparent 70%),
+      linear-gradient(135deg, #0A0F1F 0%, #1E1B4B 50%, #0A0A10 100%);
+    text-align: center;
+  }
+  @media (min-width: 960px) { .final-cta { padding: 120px 0; } }
+  .final-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 100% 60% at 30% 0%, rgba(255, 119, 65, 0.08), transparent 60%),
+      radial-gradient(ellipse 100% 60% at 70% 100%, rgba(99, 102, 241, 0.15), transparent 60%);
+    pointer-events: none;
+  }
+  .final-cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, transparent 30%, rgba(255, 165, 100, 0.04) 60%, transparent 100%),
+      repeating-linear-gradient(135deg, transparent 0px, transparent 30px, rgba(255,255,255,0.02) 30px, rgba(255,255,255,0.02) 31px);
+    pointer-events: none;
+  }
+  .final-cta > * { position: relative; }
+  .final-title {
+    font-size: clamp(30px, 4.5vw, 52px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+  }
+  .final-desc {
+    font-size: clamp(14.5px, 1.4vw, 17px);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 0 auto 32px;
+    max-width: 520px;
+  }
+  .cta-white {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 18px 28px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #0A0A10;
+    border: none;
+    border-radius: 16px;
+    font-size: 15px;
+    font-weight: 700;
+    backdrop-filter: blur(20px);
+    transition: transform 0.2s ease, background 0.2s ease;
+    box-shadow: 0 12px 40px -12px rgba(255, 255, 255, 0.2);
+    text-decoration: none;
+  }
+  .cta-white:hover { transform: translateY(-1px); background: white; }
+  .cta-bolt { color: var(--accent-magenta); }
+  .trust-line {
+    margin-top: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+  .trust-line .dot {
+    width: 3px; height: 3px;
+    background: var(--text-muted);
+    border-radius: 50%;
+  }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  footer {
+    background: var(--bg-deep);
+    padding: 56px 0 32px;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  @media (min-width: 720px) {
+    .footer-grid { grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; }
+  }
+  .footer-logo { margin-bottom: 14px; }
+  .footer-brand p {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 32ch;
+  }
+  .footer-col h6 {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-size: 13.5px;
+    transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .footer-col a:hover { color: white; }
+  .footer-col svg { color: var(--text-secondary); }
+
+  .footer-bottom {
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .footer-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+  .footer-legal {
+    display: flex;
+    gap: 20px;
+    font-size: 12px;
+  }
+  .footer-legal a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+  }
+  .footer-legal a:hover { color: white; }
+
+  /* ============================================================
+     ANIMATIONS / MOTION SAFETY
+     ============================================================ */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-content,
+  .hero-art { animation: fadeUp 0.6s ease both; }
+  .hero-art { animation-delay: 0.1s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    .problem-card:hover,
+    .service-card:hover,
+    .case-card:hover,
+    .partner-card:hover,
+    .cta-primary:hover,
+    .cta-white:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<!-- ============================================================
+     VIRALITY LOGO — SVG Symbol (referenced via <use href="#logo-virality">)
+     Letters use currentColor so they tint to whatever color the parent sets.
+     The bildmark keeps its original brand gradients.
+     ============================================================ -->
+<svg width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="vir-grad-1" x1="675.5079346" y1="404.3818817" x2="742.7286065" y2="404.3818817" gradientUnits="userSpaceOnUse">
+      <stop offset=".15" stop-color="#898ef5"/>
+      <stop offset=".8" stop-color="#cf64f3"/>
+    </linearGradient>
+    <linearGradient id="vir-grad-2" x1="622.2343452" y1="414.2628174" x2="682.4815063" y2="414.2628174" gradientUnits="userSpaceOnUse">
+      <stop offset=".2" stop-color="#39dce9"/>
+      <stop offset=".85" stop-color="#898ef5"/>
+    </linearGradient>
+    <symbol id="logo-virality" viewBox="320 340 800 130">
+      <g fill="currentColor">
+        <rect x="468.8518677" y="345.2592773" width="16.2962646" height="118.888855" rx="2" ry="2"/>
+        <rect x="859.3703613" y="345.2592773" width="16.2963257" height="118.888855" rx="2" ry="2"/>
+        <path d="M991,345.2592773h-92.2963257c-1.1045532,0-2,.8953857-2,2v11.4074097c0,1.1045532.8954468,2,2,2h38v101.4814453c0,1.1046143.8954468,2,2,2h12.2963257c1.1045532,0,2-.8953857,2-2v-101.4814453h38c1.1045532,0,2-.8954468,2-2v-11.4074097c0-1.1046143-.8954468-2-2-2Z"/>
+        <path d="M838.777771,448.666687h-65.0370483v-101.4074097c0-1.1046143-.8953857-2-2-2h-12.2962646c-1.1045532,0-2,.8953857-2,2v114.888855c0,1.1046143.8954468,2,2,2h79.333313c1.1045532,0,2-.8953857,2-2v-11.4814453c0-1.1046143-.8954468-2-2-2Z"/>
+        <path d="M444.3200073,345.2592773h-12.576416c-.7871704,0-1.5019531.4567261-1.8291016,1.1687012l-42.960083,93.4979248-42.960144-93.4979248c-.3271484-.7119751-1.0419312-1.1687012-1.8290405-1.1687012h-12.576416c-1.460083,0-2.4335327,1.4987183-1.8331909,2.8223877l52.1102905,114.888855c.3251343.7167969,1.0424194,1.1776123,1.8331299,1.1776123h10.5107422c.7907104,0,1.5079956-.4608154,1.8331299-1.1776123l52.1102295-114.888855c.6004028-1.3236694-.3730469-2.8223877-1.8331299-2.8223877Z"/>
+        <path d="M573.3248901,416.862915c19.3030396-.5458374,34.7861938-16.3538208,34.7861938-35.7888184v-.000061c0-19.7799683-16.03479-35.8147583-35.8147583-35.8147583h-61c-1.1046143,0-2,.8953857-2,2v10.9629517c0,1.1045532.8953857,2,2,2h60.5925903c11.4138794,0,20.666626,9.2527466,20.666626,20.666626v.000061c0,11.4138794-9.2527466,20.666626-20.666626,20.666626h-60.5925903c-1.1046143,0-2,.8954468-2,2v58.5925903c0,1.1045532.8953857,2,2,2h11.555542c1.1045532,0,2-.8954468,2-2v-45.2592163h27.111084l39.7124023,45.8994141c.7471313.8635864,1.8327026,1.3598022,2.9746704,1.3598022h11.9502563c2.8088379,0,4.3260498-3.2927246,2.5010986-5.4279175l-35.7764893-41.8572998Z"/>
+        <path d="M1107.444458,345.2592773h-9.6327515c-.6893311,0-1.3300171.3549194-1.6956177.9393311l-36.5975952,58.5050659-36.5975342-58.5050659c-.3656006-.5844116-1.0062866-.9393311-1.6956177-.9393311h-9.6327515c-1.1045532,0-2,.8953857-2,2v8.9588013c0,.3893433.1136475.7702026.3269653,1.0958862l41.4508057,63.2786255v41.555542c0,1.1046143.8954468,2,2,2h12.2963257c1.1045532,0,2-.8953857,2-2v-41.555542l41.4507446-63.2786255c.2133789-.3256836.3270264-.706543.3270264-1.0958862v-8.9588013c0-1.1046143-.8954468-2-2-2Z"/>
+      </g>
+      <g>
+        <path fill="url(#vir-grad-1)" d="M742.5146484,461.2532959l-57.6026611-115.1359253c-1.001709-2.0023193-3.8592529-2.0023193-4.8609619,0l-4.5430908,9.0807495,49.9523315,97.9129639-42.9787598-36.1481323v14.2592773l38.7793579,32.4595337c.3599243.3012695.8143311.4663696,1.2836914.4663696h18.1814575c1.4869995,0,2.4539795-1.5650024,1.7886353-2.8948364Z"/>
+        <polygon fill="#898ef5" points="665.6101074 423.1865234 682.4815063 388.2963257 682.4815063 388.2962646 678.6732788 380.4208984 678.6732788 388.2963257 678.6732788 380.4208984 639.222229 451.777771 682.4815063 416.9629517 682.4815063 411.333313 665.6101074 423.1865234"/>
+        <path fill="url(#vir-grad-2)" d="M639.222229,451.777771l39.4510498-71.3568726-7.7578735-16.043396-48.4671021,96.8757935c-.6653442,1.329834.3016357,2.8948364,1.7886353,2.8948364h18.1814575c.4693604,0,.9237671-.1651001,1.2836914-.4663696l38.7794189-32.4595337v-14.2592773l-43.2592773,34.8148193Z"/>
+        <polygon fill="#898ef5" points="682.4815063 388.2962646 682.4815063 388.2963257 699.3528442 423.1865234 682.4815063 411.333313 682.4815063 416.9629517 725.4602661 453.111084 675.5079346 355.1981201 670.9154053 364.3775024 678.6732788 380.4208984 682.4815063 388.2962646"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="site-header">
+  <div class="container">
+    <div class="nav">
+      <a href="#" class="logo" aria-label="Virality — back to top">
+        <svg class="logo-svg" aria-hidden="true" focusable="false"><use href="#logo-virality"/></svg>
+      </a>
+      <nav class="nav-menu" aria-label="Main">
+        <a href="#hero" class="active">Home</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#results">Results</a>
+        <a href="#contact" class="nav-cta always-show">Get Started</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ========== HERO ========== -->
+  <section class="hero" id="hero">
+    <div class="container hero-inner">
+      <div class="hero-content">
+        <h1>Build Digital Authority and <span class="grad">Grow Your Instagram</span> with Real Followers</h1>
+
+        <ul class="hero-list">
+          <li>
+            <span class="check-icon" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Real and organic growth
+          </li>
+          <li>
+            <span class="check-icon" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Zero bots or fake profiles
+          </li>
+          <li>
+            <span class="check-icon" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Strategies used by top influencers
+          </li>
+          <li>
+            <span class="check-icon" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Rapid growth in social proof
+          </li>
+          <li>
+            <span class="check-icon" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Strategic positioning for your brand
+          </li>
+        </ul>
+
+        <p class="hero-sub">Virality was developed to help brands, entrepreneurs, and influencers accelerate their growth through intelligent strategies focused on positioning, visibility, and social proof.</p>
+
+        <div class="social-proof">
+          <div class="avatars" aria-hidden="true">
+            <div class="av"></div>
+            <div class="av"></div>
+            <div class="av"></div>
+            <div class="av"></div>
+            <div class="av"></div>
+          </div>
+          <div class="social-text">
+            <strong>500+ profiles joined Virality</strong><br>
+            and turned growth into strategy.
+          </div>
+        </div>
+
+        <a class="cta-primary" href="#contact">
+          I Want to Grow My Digital Authority
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+
+        <div class="cta-meta">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3 5V3.5a3 3 0 0 1 6 0V5m-7 0h8v6H2V5z" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Access Virality's exclusive strategy
+        </div>
+      </div>
+
+      <div class="hero-art" aria-hidden="true">
+        <div class="illu-blob illu-blob-1"></div>
+        <div class="illu-blob illu-blob-4"></div>
+        <div class="illu-phone">
+          <div class="illu-phone-screen"></div>
+        </div>
+        <div class="illu-blob illu-blob-2"></div>
+        <div class="illu-blob illu-blob-3"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PROBLEM ========== -->
+  <section class="section" id="problem">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow center">The Problem</div>
+        <h2 class="section-title">
+          Growing on Instagram today requires <span class="grad">more than just posting content</span>
+        </h2>
+        <p class="section-desc">Many people believe growth depends only on posting frequently. However, real and consistent growth happens when three elements work together: visibility, social proof, and strategic positioning.</p>
+        <p class="section-desc">Without these elements, even good content can be ignored by both the algorithm and the audience. That's why many profiles spend months or years trying to grow without consistent results.</p>
+      </div>
+
+      <div class="problem-cards">
+        <div class="problem-card">
+          <div class="problem-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5l5 5 3-3 6 6m0 0V8m0 5h-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="problem-card-text">Slow growth</div>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 17s-6-3.5-6-9a4 4 0 0 1 6-3.5A4 4 0 0 1 16 8c0 5.5-6 9-6 9z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 9l1 1.5L11 7l1 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="problem-card-text">Low engagement</div>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L3 5v5c0 4 3 7 7 8 4-1 7-4 7-8V5l-7-3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 7v3m0 2v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="problem-card-text">Difficulty becoming a recognized authority in the niche</div>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3l14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M2 10s3-5 8-5c1.7 0 3.2.6 4.5 1.5M18 10s-3 5-8 5c-1.7 0-3.2-.6-4.5-1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="problem-card-text">Limited reach</div>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="7" cy="6" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 17c0-3 2-5 5-5s5 2 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="14" cy="7" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M12 13c2-1 5 0 6 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="problem-card-text">Followers that don't turn into real opportunities</div>
+        </div>
+      </div>
+
+      <div class="problem-callout">
+        It's not a lack of effort. Most of the time, the real problem is simply the absence of a clear and structured growth strategy.
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SOLUTION ========== -->
+  <section class="section" id="solution">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow center">The Solution</div>
+        <h2 class="section-title">
+          Virality was <span class="grad">developed to accelerate</span> your digital authority
+        </h2>
+        <p class="section-desc">Virality is a consultancy focused on helping profiles grow strategically in the digital space.</p>
+        <p class="section-desc">Instead of artificial methods that harm engagement and credibility, Virality uses strategies that connect your profile with new real audiences, increase visibility, and strengthen your digital presence.</p>
+      </div>
+
+      <div class="service-cards">
+        <article class="service-card">
+          <div class="service-card-top">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2l2.4 5 5.6.5-4.2 3.7 1.3 5.5L10 14l-5.1 2.7 1.3-5.5L2 7.5 7.6 7 10 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="tag"><span class="tag-dot" aria-hidden="true"></span>CAMPAIGNS</div>
+          </div>
+          <h3>Strategic Giveaways</h3>
+          <p>High-reach campaigns that connect your profile with new audiences.</p>
+          <div class="service-card-line" aria-hidden="true"></div>
+        </article>
+
+        <article class="service-card">
+          <div class="service-card-top">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M7 10l-2 7 5-3 5 3-2-7" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="tag"><span class="tag-dot" aria-hidden="true"></span>AUTHORITY</div>
+          </div>
+          <h3>Digital Authority</h3>
+          <p>Strategies that strengthen your brand positioning.</p>
+          <div class="service-card-line" aria-hidden="true"></div>
+        </article>
+
+        <article class="service-card">
+          <div class="service-card-top">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="1.5" fill="currentColor"/></svg>
+            </div>
+            <div class="tag"><span class="tag-dot" aria-hidden="true"></span>ORGANIC</div>
+          </div>
+          <h3>Organic Growth</h3>
+          <p>Real followers who are interested in your content.</p>
+          <div class="service-card-line" aria-hidden="true"></div>
+        </article>
+
+        <article class="service-card">
+          <div class="service-card-top">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="7" cy="7" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 16c0-3 2-5 5-5s5 2 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13 7l2 2 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="tag"><span class="tag-dot" aria-hidden="true"></span>CREDIBILITY</div>
+          </div>
+          <h3>Social Proof</h3>
+          <p>More credibility and authority in your niche.</p>
+          <div class="service-card-line" aria-hidden="true"></div>
+        </article>
+
+        <article class="service-card">
+          <div class="service-card-top">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M11 2L4 11h5l-1 7 7-9h-5l1-7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="tag"><span class="tag-dot" aria-hidden="true"></span>POSITIONING</div>
+          </div>
+          <h3>Strategic Positioning</h3>
+          <p>Strategies that strengthen your presence and highlight your profile in the market.</p>
+          <div class="service-card-line" aria-hidden="true"></div>
+        </article>
+
+        <article class="service-card">
+          <div class="service-card-top">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="7" cy="6" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="13" cy="6" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M2 16c0-3 2-5 5-5s5 2 5 5M11 11c2-1 5 0 6 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="tag"><span class="tag-dot" aria-hidden="true"></span>AUDIENCE</div>
+          </div>
+          <h3>Qualified Audience</h3>
+          <p>Real people who follow your content and connect with your brand.</p>
+          <div class="service-card-line" aria-hidden="true"></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== WHITE BAND: BRAND POSITIONING + PRESS ========== -->
+  <section class="white-band" aria-label="Brand positioning and press">
+    <div class="white-band-decor" aria-hidden="true"></div>
+
+    <div class="brand-section">
+      <div class="container brand-grid">
+        <div>
+          <div class="eyebrow dark">Brand &amp; Positioning</div>
+          <h2 class="brand-title">
+            We build a presence that <span class="grad-blue">commands respect before it generates sales.</span>
+          </h2>
+          <p class="brand-desc">Clear positioning, a consistent brand image, and purposeful content will make you the go-to resource in your niche.</p>
+        </div>
+        <div class="illustration" aria-hidden="true">
+          <div class="illu-blob b1"></div>
+          <div class="illu-blob b4"></div>
+          <div class="illu-phone-mini">
+            <div class="illu-phone-mini-screen"></div>
+          </div>
+          <div class="illu-blob b2"></div>
+          <div class="illu-blob b3"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="iridescent-wave" aria-hidden="true"></div>
+
+    <div class="press-section">
+      <div class="container">
+        <div class="press-logos" aria-label="Featured press">
+          <span class="press-logo serif">Forbes</span>
+          <span class="press-logo purple">yahoo<span style="color: #7C3AED;">!</span></span>
+        </div>
+        <h2 class="press-title">Press Features</h2>
+        <p class="press-desc">We transform credibility into social proof. Media features strengthen trust, accelerate decision-making, and increase the perceived value of your brand.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PARTNERS & CREATORS ========== -->
+  <section class="partners" id="partners">
+    <h2 class="partners-title"><span class="grad">Partner</span> &amp; Creator Network</h2>
+
+    <div class="partner-track" aria-label="Featured partners">
+      <article class="partner-card">
+        <div class="partner-bg partner-bg-1" aria-hidden="true"></div>
+        <div class="partner-icon-overlay" aria-hidden="true">✻</div>
+        <div class="partner-followers">41.2M</div>
+        <div class="partner-info">
+          <div class="partner-name">Jason Derulo</div>
+          <div class="partner-handle">@jasonderulo</div>
+          <div class="partner-bio">Bekannter Musiker und Entertainer. Riesige Social-Media-Reichweite. Begeistert Millionen Fans.</div>
+        </div>
+      </article>
+      <article class="partner-card">
+        <div class="partner-bg partner-bg-2" aria-hidden="true"></div>
+        <div class="partner-icon-overlay" aria-hidden="true">✻</div>
+        <div class="partner-followers">29.2M</div>
+        <div class="partner-info">
+          <div class="partner-name">Floyd Mayweather</div>
+          <div class="partner-handle">@floydmayweather</div>
+          <div class="partner-bio">Internationale Sportboxlegende und Lifestyle-Ikone. Steht für Erfolg, Luxus und globale Aufmerksamkeit.</div>
+        </div>
+      </article>
+      <article class="partner-card">
+        <div class="partner-bg partner-bg-3" aria-hidden="true"></div>
+        <div class="partner-icon-overlay" aria-hidden="true">✻</div>
+        <div class="partner-followers">3.1M</div>
+        <div class="partner-info">
+          <div class="partner-name">GetOnMyLvL</div>
+          <div class="partner-handle">@montanablack</div>
+          <div class="partner-bio">Einer der beliebtesten Gaming-Streamer und YouTuber Deutschlands. Bekannt für seine Twitch-Streams.</div>
+        </div>
+      </article>
+    </div>
+
+    <div class="partner-cta">
+      <a class="cta-primary" href="#contact">
+        I Want to Grow My Digital Authority
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ========== CASE STUDIES ========== -->
+  <section class="cases" id="cases">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title"><span class="grad">Case Studies</span> &amp; Kampagnen</h2>
+      </div>
+
+      <div class="cases-grid">
+        <article class="case-card">
+          <div class="case-brand finanzguru">Finanzguru</div>
+          <div class="case-divider" aria-hidden="true"></div>
+          <div class="case-mockup fg">App Promo Ads</div>
+          <div class="case-stats">
+            <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 8€</span></div>
+            <div class="case-stat"><span class="case-stat-label">CPI</span><span class="case-stat-value">: 7€</span></div>
+            <div class="case-stat"><span class="case-stat-label">Downloads</span><span class="case-stat-value green">: +1.000</span></div>
+          </div>
+        </article>
+        <article class="case-card">
+          <div class="case-brand getlvl">GET ON MY LVL</div>
+          <div class="case-divider" aria-hidden="true"></div>
+          <div class="case-mockup lvl">PS5 Giveaway</div>
+          <div class="case-stats">
+            <div class="case-stat"><span class="case-stat-label">Posts</span><span class="case-stat-value">: 15</span></div>
+            <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 4€</span></div>
+            <div class="case-stat"><span class="case-stat-label">Follower</span><span class="case-stat-value green">: +8.500</span></div>
+          </div>
+        </article>
+        <article class="case-card">
+          <div class="case-brand dubai">DUBAI STORE</div>
+          <div class="case-divider" aria-hidden="true"></div>
+          <div class="case-mockup dubai">Schokolade Direct</div>
+          <div class="case-stats">
+            <div class="case-stat"><span class="case-stat-label">Posts</span><span class="case-stat-value">: 1</span></div>
+            <div class="case-stat"><span class="case-stat-label">Besucher</span><span class="case-stat-value">: 1.700</span></div>
+            <div class="case-stat"><span class="case-stat-label">Sales</span><span class="case-stat-value green">: +100</span></div>
+          </div>
+        </article>
+        <article class="case-card">
+          <div class="case-brand momox">momox</div>
+          <div class="case-divider" aria-hidden="true"></div>
+          <div class="case-mockup momox">Reseller App</div>
+          <div class="case-stats">
+            <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 4€</span></div>
+            <div class="case-stat"><span class="case-stat-label">CPI</span><span class="case-stat-value">: 1€</span></div>
+            <div class="case-stat"><span class="case-stat-label">Installs</span><span class="case-stat-value green">: +10.000</span></div>
+          </div>
+        </article>
+        <article class="case-card">
+          <div class="case-brand wildbrau">WILD BRÄU</div>
+          <div class="case-divider" aria-hidden="true"></div>
+          <div class="case-mockup wildbrau">1 Jahr Freibier</div>
+          <div class="case-stats">
+            <div class="case-stat"><span class="case-stat-label">Posts</span><span class="case-stat-value">: 1</span></div>
+            <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 4€</span></div>
+            <div class="case-stat"><span class="case-stat-label">Followers</span><span class="case-stat-value green">: +1.500</span></div>
+          </div>
+        </article>
+        <article class="case-card">
+          <div class="case-brand gymtastic">GYMTASTIC</div>
+          <div class="case-divider" aria-hidden="true"></div>
+          <div class="case-mockup gymtastic">Rabatt Promo</div>
+          <div class="case-stats">
+            <div class="case-stat"><span class="case-stat-label">Posts</span><span class="case-stat-value">: 10</span></div>
+            <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 6€</span></div>
+            <div class="case-stat"><span class="case-stat-label">Sales</span><span class="case-stat-value green">: 45×99€</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== JOURNEY (HOW IT WORKS) ========== -->
+  <section class="journey-section" id="how-it-works">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow center">The Process</div>
+        <h2 class="section-title">How Does Growth with <span class="grad">Virality Work?</span></h2>
+        <p class="section-desc">A structured 5-step journey — from baseline audit to recognized authority. Every phase compounds on the previous one. No guesswork, no fluff.</p>
+      </div>
+
+      <!-- Top progress strip -->
+      <div class="journey-progress" aria-hidden="true">
+        <div class="journey-progress-node active">
+          <div class="journey-progress-circle">01</div>
+          <div class="journey-progress-label">Audit</div>
+        </div>
+        <div class="journey-progress-line"></div>
+        <div class="journey-progress-node">
+          <div class="journey-progress-circle">02</div>
+          <div class="journey-progress-label">Plan</div>
+        </div>
+        <div class="journey-progress-line"></div>
+        <div class="journey-progress-node">
+          <div class="journey-progress-circle">03</div>
+          <div class="journey-progress-label">Launch</div>
+        </div>
+        <div class="journey-progress-line"></div>
+        <div class="journey-progress-node">
+          <div class="journey-progress-circle">04</div>
+          <div class="journey-progress-label">Tune</div>
+        </div>
+        <div class="journey-progress-line"></div>
+        <div class="journey-progress-node">
+          <div class="journey-progress-circle">05</div>
+          <div class="journey-progress-label">Lead</div>
+        </div>
+      </div>
+
+      <ol class="journey-cards">
+
+        <!-- STEP 01 — Profile Analysis -->
+        <li class="journey-card">
+          <div class="journey-card-num" aria-hidden="true">01</div>
+          <div class="journey-card-body">
+            <div class="journey-card-meta">
+              <span class="journey-step-badge">STEP 01 · DISCOVERY</span>
+              <span class="journey-duration">Day 1–3</span>
+            </div>
+            <h3 class="journey-card-title">Profile Analysis &amp; Audit</h3>
+            <p class="journey-card-desc">We dig into your current positioning, audience signals, and content patterns to find exactly where the friction is — and where the leverage is hiding.</p>
+            <ul class="journey-outcomes">
+              <li>Baseline metrics: reach, engagement, authority score</li>
+              <li>Niche &amp; competitor positioning map</li>
+              <li>Top 3 unlock opportunities, ranked by impact</li>
+            </ul>
+          </div>
+          <div class="journey-card-visual" aria-hidden="true">
+            <div class="viz-audit">
+              <div class="viz-audit-row">
+                <span class="viz-audit-label">Reach</span>
+                <div class="viz-audit-bar"><div class="viz-audit-fill" style="width: 42%;"></div></div>
+                <span class="viz-audit-value">42</span>
+              </div>
+              <div class="viz-audit-row">
+                <span class="viz-audit-label">Engage</span>
+                <div class="viz-audit-bar"><div class="viz-audit-fill" style="width: 28%;"></div></div>
+                <span class="viz-audit-value">28</span>
+              </div>
+              <div class="viz-audit-row">
+                <span class="viz-audit-label">Auth.</span>
+                <div class="viz-audit-bar"><div class="viz-audit-fill" style="width: 18%;"></div></div>
+                <span class="viz-audit-value">18</span>
+              </div>
+              <div class="viz-audit-status">
+                <span class="viz-audit-status-label">Audit</span>
+                <span class="viz-audit-status-value">Complete</span>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- STEP 02 — Strategic Planning -->
+        <li class="journey-card">
+          <div class="journey-card-num" aria-hidden="true">02</div>
+          <div class="journey-card-body">
+            <div class="journey-card-meta">
+              <span class="journey-step-badge">STEP 02 · BLUEPRINT</span>
+              <span class="journey-duration">Week 1</span>
+            </div>
+            <h3 class="journey-card-title">Strategic Planning &amp; Roadmap</h3>
+            <p class="journey-card-desc">Every campaign, content pillar, and partnership is mapped to a positioning thesis with measurable milestones across 30, 60, and 90 days.</p>
+            <ul class="journey-outcomes">
+              <li>Campaign calendar with reach &amp; conversion targets</li>
+              <li>Content pillars and brand voice guidelines</li>
+              <li>Partnership shortlist for amplification</li>
+            </ul>
+          </div>
+          <div class="journey-card-visual" aria-hidden="true">
+            <div class="viz-roadmap">
+              <svg viewBox="0 0 220 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="rmGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#6FE3FF"/>
+                    <stop offset="50%" stop-color="#C084FC"/>
+                    <stop offset="100%" stop-color="#E879F9"/>
+                  </linearGradient>
+                </defs>
+                <path class="viz-roadmap-path" d="M 20 40 Q 70 40 80 90 Q 90 140 150 140 Q 200 140 195 90" stroke="url(#rmGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <circle class="viz-roadmap-halo" cx="20" cy="40" r="14" fill="#6FE3FF" opacity="0.18"/>
+                <circle class="viz-roadmap-node viz-roadmap-node-1" cx="20" cy="40" r="7" fill="#6FE3FF"/>
+                <circle class="viz-roadmap-node viz-roadmap-node-2" cx="80" cy="90" r="6" fill="#C084FC"/>
+                <circle class="viz-roadmap-node viz-roadmap-node-3" cx="150" cy="140" r="6" fill="#C084FC"/>
+                <circle class="viz-roadmap-halo viz-roadmap-halo-end" cx="195" cy="90" r="18" fill="#E879F9" opacity="0.22"/>
+                <circle class="viz-roadmap-node viz-roadmap-node-4" cx="195" cy="90" r="9" fill="#E879F9"/>
+                <text x="38" y="44" fill="#A1A1AA" font-family="JetBrains Mono, monospace" font-size="8" letter-spacing="1.2">START</text>
+                <text x="170" y="93" fill="#fff" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.2" font-weight="700">D90</text>
+                <text x="92" y="94" fill="#71717A" font-family="JetBrains Mono, monospace" font-size="7" letter-spacing="1">D30</text>
+                <text x="158" y="135" fill="#71717A" font-family="JetBrains Mono, monospace" font-size="7" letter-spacing="1">D60</text>
+              </svg>
+            </div>
+          </div>
+        </li>
+
+        <!-- STEP 03 — Growth Campaigns -->
+        <li class="journey-card">
+          <div class="journey-card-num" aria-hidden="true">03</div>
+          <div class="journey-card-body">
+            <div class="journey-card-meta">
+              <span class="journey-step-badge">STEP 03 · LAUNCH</span>
+              <span class="journey-duration">Week 2–6</span>
+            </div>
+            <h3 class="journey-card-title">Growth Campaigns Go Live</h3>
+            <p class="journey-card-desc">High-reach giveaways, partner placements, and visibility campaigns connect your profile with new real audiences in your niche — at scale.</p>
+            <ul class="journey-outcomes">
+              <li>Audience-matched giveaway campaigns</li>
+              <li>Partner co-posts &amp; cross-promotions</li>
+              <li>First waves of qualified followers</li>
+            </ul>
+          </div>
+          <div class="journey-card-visual" aria-hidden="true">
+            <div class="viz-broadcast">
+              <div class="viz-broadcast-ring"></div>
+              <div class="viz-broadcast-ring"></div>
+              <div class="viz-broadcast-ring"></div>
+              <div class="viz-broadcast-core">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z" fill="currentColor"/></svg>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- STEP 04 — Positioning Optimization -->
+        <li class="journey-card">
+          <div class="journey-card-num" aria-hidden="true">04</div>
+          <div class="journey-card-body">
+            <div class="journey-card-meta">
+              <span class="journey-step-badge">STEP 04 · TUNE</span>
+              <span class="journey-duration">Ongoing</span>
+            </div>
+            <h3 class="journey-card-title">Positioning Optimization</h3>
+            <p class="journey-card-desc">Real-time tuning of your bio, content hooks, and brand narrative — based on which signals are actually converting attention into authority.</p>
+            <ul class="journey-outcomes">
+              <li>Bio &amp; profile architecture refined</li>
+              <li>Hook patterns A/B tested per format</li>
+              <li>Narrative sharpened around proven traction</li>
+            </ul>
+          </div>
+          <div class="journey-card-visual" aria-hidden="true">
+            <div class="viz-tuning">
+              <div class="viz-tune-row">
+                <div class="viz-tune-head"><span class="viz-tune-label">Bio</span><span class="viz-tune-value">94%</span></div>
+                <div class="viz-tune-track"><div class="viz-tune-fill" style="width: 94%;"></div><span class="viz-tune-thumb" style="left: 94%;"></span></div>
+              </div>
+              <div class="viz-tune-row">
+                <div class="viz-tune-head"><span class="viz-tune-label">Content</span><span class="viz-tune-value">87%</span></div>
+                <div class="viz-tune-track"><div class="viz-tune-fill" style="width: 87%;"></div><span class="viz-tune-thumb" style="left: 87%;"></span></div>
+              </div>
+              <div class="viz-tune-row">
+                <div class="viz-tune-head"><span class="viz-tune-label">Narrative</span><span class="viz-tune-value">76%</span></div>
+                <div class="viz-tune-track"><div class="viz-tune-fill" style="width: 76%;"></div><span class="viz-tune-thumb" style="left: 76%;"></span></div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- STEP 05 — Authority Building -->
+        <li class="journey-card">
+          <div class="journey-card-num" aria-hidden="true">05</div>
+          <div class="journey-card-body">
+            <div class="journey-card-meta">
+              <span class="journey-step-badge">STEP 05 · COMPOUND</span>
+              <span class="journey-duration">Day 90+</span>
+            </div>
+            <h3 class="journey-card-title">Authority &amp; Compounding Growth</h3>
+            <p class="journey-card-desc">Your profile becomes the recognized reference in your niche — partnerships come inbound, content compounds, and growth becomes self-sustaining.</p>
+            <ul class="journey-outcomes">
+              <li>Inbound partnership &amp; press requests</li>
+              <li>Sustained organic reach &amp; engagement</li>
+              <li>Authority score trending toward 90+</li>
+            </ul>
+          </div>
+          <div class="journey-card-visual" aria-hidden="true">
+            <div class="viz-authority">
+              <div class="viz-auth-bars">
+                <div class="viz-auth-bar"></div>
+                <div class="viz-auth-bar"></div>
+                <div class="viz-auth-bar"></div>
+                <div class="viz-auth-bar"></div>
+                <div class="viz-auth-bar"></div>
+              </div>
+              <div class="viz-auth-meta">
+                <span class="viz-auth-badge">▲ AUTHORITY</span>
+                <span class="viz-auth-score">94/100</span>
+              </div>
+            </div>
+          </div>
+        </li>
+
+      </ol>
+    </div>
+  </section>
+
+  <!-- ========== RESULTS ========== -->
+  <section class="results-section" id="results">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow center">Results</div>
+        <h2 class="section-title">
+          Profiles Already Accelerating <span class="grad">Their Digital Authority</span>
+        </h2>
+        <p class="section-desc">By participating in strategic campaigns and strengthening their positioning, profiles attract new audiences and increase their relevance.</p>
+      </div>
+
+      <div class="results-cards">
+        <article class="result-card">
+          <div class="result-label">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="5" cy="4" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M1 12c0-2 2-4 4-4s4 2 4 4M9 4a2 2 0 1 1 0 4M11 12c0-1.5-1-3-3-3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            Follower Growth
+          </div>
+          <div class="result-value">+312%</div>
+          <div class="result-bar"><div class="result-bar-fill" style="width: 90%;"></div></div>
+        </article>
+        <article class="result-card">
+          <div class="result-label">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1l4 8-4 4-4-4 4-8z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+            Engagement Rate
+          </div>
+          <div class="result-value">+187%</div>
+          <div class="result-bar"><div class="result-bar-fill" style="width: 75%;"></div></div>
+        </article>
+        <article class="result-card">
+          <div class="result-label">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l-1 5 3-2 3 2-1-5" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+            Authority Score
+          </div>
+          <div class="result-value">94/100</div>
+          <div class="result-segments" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ABOUT ========== -->
+  <section class="about-section" id="about">
+    <div class="about-hero" aria-hidden="true">
+      <div class="about-avatars">
+        <div class="about-avatar a1"></div>
+        <div class="about-avatar a2"></div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="about-content">
+        <div>
+          <div class="eyebrow">About Virality</div>
+          <h2 class="about-title">Built by operators who scaled their own brands first.</h2>
+        </div>
+        <div class="about-text">
+          <p>Virality was founded by a small team of growth strategists, performance marketers, and creators who built and scaled multi-million-follower accounts before turning it into a service.</p>
+          <p>We don't sell engagement — we engineer authority. Every campaign is mapped to a positioning thesis, every strategy is grounded in real platform data, and every result is something you'd be comfortable explaining to your CFO.</p>
+          <p>Our work has powered campaigns for finance apps, retail brands, lifestyle creators, and gaming personalities — anywhere visibility, social proof, and trust drive outcomes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FINAL CTA ========== -->
+  <section class="final-cta" id="contact">
+    <div class="container">
+      <h2 class="final-title">Ready to turn growth into <span class="grad">strategy?</span></h2>
+      <p class="final-desc">Join 500+ brands and creators who stopped guessing and started compounding. We'll audit your profile, map a strategy, and run the campaigns — you stay focused on the content.</p>
+
+      <a class="cta-white" href="mailto:hello@virality.example">
+        <span class="cta-bolt" aria-hidden="true">⚡</span>
+        Get Your Free Strategy Audit
+      </a>
+
+      <div class="trust-line">
+        <span>NO BOTS</span>
+        <span class="dot" aria-hidden="true"></span>
+        <span>NO FAKE FOLLOWERS</span>
+        <span class="dot" aria-hidden="true"></span>
+        <span>RESULTS IN 30 DAYS</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo footer-logo" aria-label="Virality home">
+          <svg class="logo-svg logo-svg--lg" aria-hidden="true" focusable="false"><use href="#logo-virality"/></svg>
+        </a>
+        <p>Real, organic Instagram growth through strategic campaigns, positioning, and social proof.</p>
+      </div>
+      <div class="footer-col">
+        <h6>Product</h6>
+        <ul>
+          <li><a href="#solution">Services</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#cases">Case Studies</a></li>
+          <li><a href="#results">Results</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Company</h6>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#partners">Partners</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Connect</h6>
+        <ul>
+          <li><a href="#" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="2" width="12" height="12" rx="3" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.4"/><circle cx="11.5" cy="4.5" r="0.7" fill="currentColor"/></svg>
+            Instagram
+          </a></li>
+          <li><a href="#" aria-label="LinkedIn">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M5 7v5M5 5v.01M8 12V8c0-.5.5-1 1.5-1s1.5.5 1.5 1.5V12M8 9v3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            LinkedIn
+          </a></li>
+          <li><a href="mailto:hello@virality.example">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M3 5l5 4 5-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Email
+          </a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-meta">© 2026 VIRALITY · All rights reserved</div>
+      <div class="footer-legal">
+        <a href="#">Imprint</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

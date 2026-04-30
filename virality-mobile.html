@@ -1,0 +1,1964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Virality — Mobile Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;0,800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg-deep: #050507;
+    --bg-page: #0A0A10;
+    --bg-card: #131319;
+    --bg-card-elevated: #18181F;
+    --bg-light: #FFFFFF;
+    --bg-light-soft: #F7F7F9;
+
+    --text-primary: #FFFFFF;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+    --text-dark: #0A0A10;
+    --text-dark-secondary: #52525B;
+
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-card: rgba(255, 255, 255, 0.08);
+    --border-light: rgba(0, 0, 0, 0.08);
+
+    --accent-cyan: #6FE3FF;
+    --accent-blue: #7DA8FF;
+    --accent-purple: #C084FC;
+    --accent-pink: #E879F9;
+    --accent-magenta: #D946EF;
+
+    --gradient-brand: linear-gradient(135deg, #6FE3FF 0%, #B388FF 50%, #E879F9 100%);
+    --gradient-text: linear-gradient(120deg, #6FE3FF 0%, #C084FC 100%);
+    --gradient-cta: linear-gradient(135deg, #6FE3FF 0%, #C084FC 60%, #E879F9 100%);
+    --gradient-card-glow: radial-gradient(120% 80% at 100% 0%, rgba(217, 70, 239, 0.06) 0%, transparent 60%);
+
+    --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+    --shadow-cta: 0 12px 40px -8px rgba(192, 132, 252, 0.5), 0 4px 16px -4px rgba(111, 227, 255, 0.3);
+
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg-deep);
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ========== STAGE / PRESENTATION BACKGROUND ========== */
+  .stage {
+    min-height: 100vh;
+    width: 100%;
+    background:
+      radial-gradient(800px 600px at 20% 10%, rgba(111, 227, 255, 0.08), transparent 70%),
+      radial-gradient(700px 500px at 80% 90%, rgba(217, 70, 239, 0.06), transparent 70%),
+      radial-gradient(600px 400px at 50% 50%, rgba(192, 132, 252, 0.04), transparent 70%),
+      linear-gradient(180deg, #050507 0%, #0A0A10 100%);
+    padding: 48px 16px 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .stage-label {
+    color: var(--text-muted);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 500;
+    text-align: center;
+  }
+  .stage-label span {
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 600;
+  }
+
+  /* ========== iPHONE-LIKE FRAME ========== */
+  .device {
+    width: 100%;
+    max-width: 414px;
+    background: #1C1C1F;
+    border-radius: 56px;
+    padding: 12px;
+    box-shadow:
+      0 0 0 2px rgba(255, 255, 255, 0.04),
+      0 30px 80px -10px rgba(0, 0, 0, 0.7),
+      0 0 80px -20px rgba(192, 132, 252, 0.15);
+    position: relative;
+  }
+  .device::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: 52px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.06), transparent 30%, transparent 70%, rgba(255,255,255,0.04));
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .screen {
+    background: var(--bg-page);
+    border-radius: 44px;
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* iOS status bar */
+  .status-bar {
+    height: 44px;
+    padding: 0 28px 0 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    position: relative;
+    background: var(--bg-page);
+  }
+  .status-bar .time { letter-spacing: -0.01em; }
+  .status-bar .indicators { display: flex; align-items: center; gap: 5px; }
+  .status-bar .notch {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 28px;
+    background: #000;
+    border-radius: 14px;
+  }
+
+  /* ========== NAV ========== */
+  .nav-wrap {
+    padding: 16px 16px 8px;
+    background: var(--bg-page);
+    position: relative;
+  }
+  .nav {
+    background: rgba(20, 20, 26, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-card);
+    border-radius: 22px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo { display: flex; align-items: center; gap: 1px; }
+  .logo-text-v {
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.04em;
+    color: white;
+  }
+  .logo-mark {
+    width: 12px; height: 14px;
+    background: var(--gradient-brand);
+    clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+    margin: 0 2px;
+  }
+  .logo-text {
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.04em;
+    color: white;
+  }
+  .nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+  .nav-menu a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .nav-menu a:hover { color: white; }
+  .nav-menu a:first-child { color: white; }
+
+  /* ========== HERO ========== */
+  .hero {
+    padding: 56px 24px 48px;
+    background:
+      radial-gradient(400px 300px at 50% 10%, rgba(111, 227, 255, 0.08), transparent 70%),
+      radial-gradient(500px 400px at 50% 100%, rgba(192, 132, 252, 0.08), transparent 70%),
+      var(--bg-page);
+    position: relative;
+  }
+  .hero h1 {
+    font-size: 38px;
+    line-height: 1.05;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 28px;
+  }
+  .grad {
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .hero-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 400;
+  }
+  .check-icon {
+    flex-shrink: 0;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent-magenta);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-magenta);
+  }
+
+  .hero-sub {
+    color: var(--text-secondary);
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  /* social proof */
+  .social-proof {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .avatars {
+    display: flex;
+  }
+  .avatars .av {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4B5563, #1F2937);
+    border: 2px solid var(--bg-page);
+    margin-left: -8px;
+  }
+  .avatars .av:first-child { margin-left: 0; }
+  .avatars .av:nth-child(1) { background: linear-gradient(135deg, #9CA3AF, #4B5563); }
+  .avatars .av:nth-child(2) { background: linear-gradient(135deg, #6FE3FF, #3B82F6); }
+  .avatars .av:nth-child(3) { background: linear-gradient(135deg, #C084FC, #7C3AED); }
+  .avatars .av:nth-child(4) { background: linear-gradient(135deg, #E879F9, #A21CAF); }
+  .avatars .av:nth-child(5) { background: linear-gradient(135deg, #FCD34D, #D97706); }
+  .social-text {
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--text-secondary);
+  }
+  .social-text strong { color: white; font-weight: 600; }
+
+  /* CTA */
+  .cta-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 18px 20px;
+    background: var(--gradient-cta);
+    color: #0A0A10;
+    border: none;
+    border-radius: 16px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    box-shadow: var(--shadow-cta);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .cta-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 50px -8px rgba(192, 132, 252, 0.65), 0 4px 16px -4px rgba(111, 227, 255, 0.4);
+  }
+  .cta-primary svg { transition: transform 0.2s ease; }
+  .cta-primary:hover svg { transform: translateX(2px); }
+
+  .cta-meta {
+    margin-top: 14px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  /* ========== SECTION COMMON ========== */
+  .section { padding: 64px 24px; }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  .eyebrow::before, .eyebrow::after {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+  }
+  .eyebrow.dark { color: var(--text-dark-secondary); }
+  .eyebrow.dark::before, .eyebrow.dark::after { background: rgba(0, 0, 0, 0.18); }
+  .eyebrow-left { justify-content: flex-start; }
+  .eyebrow-left::after { display: none; }
+
+  .section-title {
+    font-size: 32px;
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  .section-desc {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .section-desc + .section-desc { margin-top: -16px; }
+
+  /* ========== PROBLEM SECTION ========== */
+  .problem-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .problem-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .problem-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+  .problem-icon {
+    flex-shrink: 0;
+    width: 44px; height: 44px;
+    background: var(--bg-card-elevated);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .problem-card-text {
+    font-size: 14.5px;
+    font-weight: 500;
+    line-height: 1.35;
+    color: white;
+  }
+  .problem-callout {
+    background: linear-gradient(180deg, rgba(192, 132, 252, 0.08), rgba(217, 70, 239, 0.04));
+    border: 1px solid rgba(192, 132, 252, 0.18);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  /* ========== SOLUTION SECTION (services) ========== */
+  .service-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .service-card {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .service-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(192, 132, 252, 0.25);
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-card-glow);
+    pointer-events: none;
+  }
+  .service-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .service-icon {
+    width: 40px; height: 40px;
+    background: var(--bg-card-elevated);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-card);
+    border-radius: 999px;
+    padding: 5px 11px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.78);
+  }
+  .tag-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent-magenta);
+    box-shadow: 0 0 8px var(--accent-magenta);
+  }
+  .service-card h3 {
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+    position: relative;
+  }
+  .service-card p {
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .service-card-line {
+    width: 28px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-cyan), transparent);
+    border-radius: 2px;
+    position: relative;
+  }
+
+  /* ========== WHITE BAND (BRAND/POSITIONING + PRESS) ========== */
+  .white-band {
+    background: var(--bg-light);
+    color: var(--text-dark);
+    position: relative;
+  }
+  .white-band-decor {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(300px 200px at 0% 0%, rgba(111, 227, 255, 0.12), transparent 70%),
+      radial-gradient(300px 200px at 100% 100%, rgba(217, 70, 239, 0.08), transparent 70%);
+  }
+  .white-band > * { position: relative; }
+
+  .brand-section {
+    padding: 64px 24px 32px;
+  }
+  .brand-section .eyebrow.dark { justify-content: flex-start; }
+  .brand-section .eyebrow.dark::after { display: none; }
+  .brand-title {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+    color: var(--text-dark);
+  }
+  .grad-blue {
+    background: linear-gradient(120deg, #38BDF8 0%, #6FE3FF 50%, #A78BFA 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .brand-desc {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--text-dark-secondary);
+    margin-bottom: 32px;
+  }
+
+  /* fake phone+icons illustration */
+  .illustration {
+    height: 320px;
+    position: relative;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .illu-phone {
+    width: 140px;
+    height: 280px;
+    background: linear-gradient(160deg, #1F2937 0%, #0A0A10 100%);
+    border-radius: 28px;
+    border: 3px solid #18181F;
+    box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255,255,255,0.05) inset;
+    position: relative;
+    overflow: hidden;
+    z-index: 2;
+  }
+  .illu-phone::after {
+    content: '';
+    position: absolute;
+    top: 14px; left: 50%;
+    transform: translateX(-50%);
+    width: 50px; height: 14px;
+    background: #000;
+    border-radius: 8px;
+  }
+  .illu-phone-screen {
+    position: absolute;
+    inset: 8px;
+    border-radius: 22px;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.08), transparent 60%),
+      linear-gradient(160deg, #2A2A38, #0F0F18 80%);
+    overflow: hidden;
+  }
+  .illu-phone-screen::before {
+    content: '';
+    position: absolute;
+    top: 35%; left: 20%;
+    width: 60%; height: 35%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+    border-radius: 50%;
+    filter: blur(14px);
+  }
+
+  .illu-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(2px);
+    opacity: 0.85;
+    z-index: 1;
+  }
+  .illu-blob-1 {
+    width: 80px; height: 80px;
+    background: radial-gradient(circle at 35% 35%, #FF6BD5, #B388FF 60%, #6FE3FF);
+    top: 10%; left: 6%;
+    box-shadow: 0 10px 40px -5px rgba(217, 70, 239, 0.5);
+  }
+  .illu-blob-2 {
+    width: 70px; height: 70px;
+    background: radial-gradient(circle at 35% 35%, #6FE3FF, #B388FF 60%, #FF6BD5);
+    top: 38%; left: 4%;
+    box-shadow: 0 10px 40px -5px rgba(111, 227, 255, 0.5);
+    z-index: 3;
+  }
+  .illu-blob-3 {
+    width: 90px; height: 90px;
+    background: radial-gradient(circle at 35% 35%, #C084FC, #FF6BD5 60%, #FFC56F);
+    bottom: 12%; right: 6%;
+    box-shadow: 0 10px 40px -5px rgba(192, 132, 252, 0.5);
+    z-index: 3;
+  }
+  .illu-blob-4 {
+    width: 60px; height: 60px;
+    background: radial-gradient(circle at 35% 35%, #6FE3FF, #4DA1FF 60%, #C084FC);
+    top: 18%; right: 8%;
+    box-shadow: 0 10px 40px -5px rgba(111, 227, 255, 0.4);
+  }
+
+  /* curvy decoration between brand and press */
+  .iridescent-wave {
+    height: 60px;
+    background: linear-gradient(90deg,
+      rgba(111, 227, 255, 0.4) 0%,
+      rgba(192, 132, 252, 0.4) 33%,
+      rgba(217, 70, 239, 0.3) 66%,
+      rgba(111, 227, 255, 0.3) 100%);
+    filter: blur(20px);
+    transform: scaleY(0.5);
+    margin: -30px 0;
+    position: relative;
+  }
+
+  /* PRESS */
+  .press-section {
+    padding: 32px 24px 64px;
+    text-align: center;
+    position: relative;
+  }
+  .press-logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .press-logo {
+    font-weight: 700;
+    color: var(--text-dark);
+    font-size: 22px;
+    letter-spacing: -0.02em;
+  }
+  .press-logo.serif { font-family: 'Playfair Display', Georgia, serif; font-style: italic; }
+  .press-logo.purple { color: #6B21A8; font-weight: 800; }
+  .press-title {
+    font-size: 38px;
+    font-weight: 800;
+    background: linear-gradient(120deg, #38BDF8 0%, #A78BFA 50%, #E879F9 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 18px;
+    letter-spacing: -0.02em;
+  }
+  .press-desc {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--text-dark-secondary);
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  /* ========== PARTNERS ========== */
+  .partners {
+    padding: 64px 0 56px;
+    background: var(--bg-page);
+  }
+  .partners-title {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+    margin: 0 24px 32px;
+    letter-spacing: -0.02em;
+  }
+  .partner-track {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 0 24px 12px;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
+  }
+  .partner-track::-webkit-scrollbar { display: none; }
+  .partner-card {
+    flex: 0 0 220px;
+    height: 280px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    position: relative;
+    scroll-snap-align: start;
+    border: 1px solid var(--border-card);
+  }
+  .partner-bg {
+    position: absolute;
+    inset: 0;
+  }
+  .partner-bg-1 { background: linear-gradient(160deg, #6B7280 0%, #374151 50%, #111827 100%); }
+  .partner-bg-2 { background: linear-gradient(160deg, #92400E 0%, #1F2937 50%, #0A0A10 100%); }
+  .partner-bg-3 { background: linear-gradient(160deg, #1E40AF 0%, #581C87 50%, #0A0A10 100%); }
+
+  .partner-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 30%, rgba(0, 0, 0, 0.85) 100%);
+  }
+  .partner-followers {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    z-index: 2;
+  }
+  .partner-info {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    z-index: 2;
+  }
+  .partner-name {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    color: white;
+  }
+  .partner-handle {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 8px;
+  }
+  .partner-bio {
+    font-size: 11px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.65);
+  }
+  .partner-icon-overlay {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    width: 22px; height: 22px;
+    background: rgba(217, 70, 239, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+  .partner-icon-overlay::before {
+    content: '✻';
+    color: white;
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  .partner-controls {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin: 20px 0 24px;
+    color: var(--text-secondary);
+  }
+  .arrow-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 4px;
+  }
+  .partner-cta {
+    padding: 0 24px;
+  }
+
+  /* ========== CASE STUDIES ========== */
+  .cases {
+    padding: 64px 24px;
+  }
+  .cases-title {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+    margin-bottom: 32px;
+    letter-spacing: -0.02em;
+  }
+  .cases-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .case-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .case-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+  .case-brand {
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .case-brand.finanzguru { color: white; font-family: 'Plus Jakarta Sans'; }
+  .case-brand.finanzguru::before {
+    content: '◇';
+    margin-right: 4px;
+    background: linear-gradient(135deg, #6FE3FF, #C084FC);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 18px;
+  }
+  .case-brand.getlvl { color: white; font-style: italic; letter-spacing: 0.02em; font-weight: 800; font-size: 12px; }
+  .case-brand.dubai { color: #FCA5A5; font-size: 11px; letter-spacing: 0.1em; }
+  .case-brand.momox {
+    background: #2563EB;
+    color: white;
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-size: 13px;
+    font-style: italic;
+    height: 26px;
+    align-self: center;
+  }
+  .case-brand.wildbrau {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: #FCD34D;
+    color: #422006;
+    font-size: 9px;
+    font-weight: 800;
+    text-align: center;
+    line-height: 1.05;
+    padding: 6px 4px;
+    align-self: center;
+  }
+  .case-brand.gymtastic { color: white; font-weight: 800; letter-spacing: 0.02em; font-size: 14px; }
+  .case-brand.gymtastic::after { content: '®'; font-size: 8px; vertical-align: super; }
+
+  .case-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .case-mockup {
+    aspect-ratio: 1 / 1.1;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    padding: 8px;
+    background: linear-gradient(135deg, #1F1F28, #0F0F18);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+  }
+  .case-mockup.fg { background: linear-gradient(160deg, #1E3A8A, #0F172A); }
+  .case-mockup.lvl { background: linear-gradient(160deg, #DC2626, #FBBF24); color: #1F2937; }
+  .case-mockup.dubai { background: linear-gradient(160deg, #FBBF24, #DC2626); color: #1F2937; font-weight: 700; }
+  .case-mockup.momox { background: linear-gradient(160deg, #FFFFFF, #F3F4F6); color: #1F2937; }
+  .case-mockup.wildbrau { background: linear-gradient(160deg, #92400E, #1F2937); }
+  .case-mockup.gymtastic { background: linear-gradient(160deg, #FBBF24, #1F2937); color: #1F2937; }
+
+  .case-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 4px;
+  }
+  .case-stat {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .case-stat-label { color: var(--text-secondary); }
+  .case-stat-value { font-weight: 600; }
+  .case-stat-value.green { color: #34D399; }
+  .case-stat-value.cyan { color: #6FE3FF; }
+
+  /* ========== HOW IT WORKS / TIMELINE ========== */
+  .timeline-section {
+    background: linear-gradient(180deg, var(--bg-page) 0%, #0D0D14 100%);
+    padding: 64px 24px 72px;
+  }
+  .timeline-section .section-title { font-size: 30px; }
+  .timeline {
+    margin-top: 40px;
+    position: relative;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    bottom: 14px;
+    width: 1.5px;
+    background: linear-gradient(180deg, var(--accent-pink), var(--accent-purple), rgba(192, 132, 252, 0.1));
+  }
+  .step {
+    position: relative;
+    padding: 0 0 36px 48px;
+  }
+  .step:last-child { padding-bottom: 0; }
+  .step-dot {
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--bg-page);
+    border: 1.5px solid var(--accent-pink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(217, 70, 239, 0.4);
+  }
+  .step-dot::after {
+    content: '';
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent-pink);
+  }
+  .step h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+  .step h4 span { color: var(--text-secondary); font-weight: 500; }
+  .step p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .step-widget {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .step-widget-icon {
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    background: var(--bg-card-elevated);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+  .step-widget-icon.purple { background: rgba(192, 132, 252, 0.12); color: var(--accent-purple); }
+  .step-widget-icon.pink { background: rgba(217, 70, 239, 0.12); color: var(--accent-pink); }
+  .step-widget-content { flex: 1; min-width: 0; }
+  .step-widget-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .step-widget-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6FE3FF, #C084FC);
+    border-radius: 2px;
+  }
+  .step-widget-bar-fill.pink { background: linear-gradient(90deg, #E879F9, #C084FC); }
+  .step-widget-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+  }
+  .step-widget-label .right { color: white; font-weight: 600; }
+
+  .step-widget-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .pill.active {
+    background: rgba(217, 70, 239, 0.18);
+    border-color: rgba(217, 70, 239, 0.4);
+    color: var(--accent-pink);
+  }
+  .step-dashes {
+    display: flex;
+    gap: 4px;
+  }
+  .step-dashes span {
+    width: 14px;
+    height: 4px;
+    background: var(--accent-pink);
+    border-radius: 2px;
+  }
+  .step-dashes span:nth-child(3) { opacity: 0.4; }
+
+  /* ========== RESULTS ========== */
+  .results-section {
+    padding: 64px 24px;
+  }
+  .results-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .result-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+  }
+  .result-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .result-value {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: 14px;
+    line-height: 1;
+  }
+  .result-bar {
+    height: 5px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .result-bar-fill {
+    height: 100%;
+    background: var(--gradient-cta);
+    border-radius: 3px;
+  }
+  .result-segments {
+    display: flex;
+    gap: 4px;
+  }
+  .result-segments span {
+    flex: 1;
+    height: 5px;
+    border-radius: 3px;
+  }
+  .result-segments span:nth-child(1) { background: #E879F9; }
+  .result-segments span:nth-child(2) { background: #C084FC; }
+  .result-segments span:nth-child(3) { background: #B388FF; }
+  .result-segments span:nth-child(4) { background: #6FE3FF; }
+  .result-segments span:nth-child(5) { background: #E879F9; }
+  .result-segments span:nth-child(6) { background: #C084FC; }
+  .result-segments span:nth-child(7) { background: #B388FF; }
+  .result-segments span:nth-child(8) { background: #6FE3FF; }
+  .result-segments span:nth-child(9) { background: #E879F9; }
+  .result-segments span:nth-child(10) { background: rgba(255, 255, 255, 0.08); }
+
+  /* ========== ABOUT ========== */
+  .about-section {
+    position: relative;
+    padding: 0 24px 64px;
+    background: var(--bg-page);
+  }
+  .about-hero {
+    position: relative;
+    height: 240px;
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    overflow: hidden;
+    margin-bottom: 24px;
+    background:
+      radial-gradient(ellipse 60% 80% at 50% 60%, rgba(99, 102, 241, 0.5), transparent 65%),
+      radial-gradient(ellipse 40% 50% at 30% 30%, rgba(217, 70, 239, 0.35), transparent 60%),
+      radial-gradient(ellipse 50% 50% at 75% 40%, rgba(111, 227, 255, 0.3), transparent 60%),
+      linear-gradient(135deg, #1E1B4B 0%, #0A0A10 70%);
+    margin-left: -24px;
+    margin-right: -24px;
+  }
+  .about-hero::before {
+    content: '';
+    position: absolute;
+    top: 38%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-12deg);
+    width: 110px; height: 110px;
+    background: linear-gradient(135deg, #6FE3FF, #C084FC, #E879F9);
+    clip-path: polygon(50% 0%, 60% 35%, 100% 50%, 60% 65%, 50% 100%, 40% 65%, 0% 50%, 40% 35%);
+    filter: blur(0.5px) drop-shadow(0 0 30px rgba(217, 70, 239, 0.6));
+    opacity: 0.85;
+  }
+  .about-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 90%, rgba(10, 10, 16, 0.95), transparent 60%),
+      linear-gradient(180deg, transparent 50%, rgba(10, 10, 16, 0.4) 100%);
+  }
+  .about-avatars {
+    position: absolute;
+    bottom: -34px;
+    left: 24px;
+    display: flex;
+    z-index: 2;
+  }
+  .about-avatar {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    border: 3px solid var(--bg-page);
+    background-size: cover;
+    background-position: center;
+    margin-left: -14px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+  .about-avatar:first-child { margin-left: 0; }
+  .about-avatar.a1 {
+    background:
+      radial-gradient(circle at 50% 30%, #FCA5A5 0%, #B45309 40%, #1F2937 90%);
+  }
+  .about-avatar.a2 {
+    background:
+      radial-gradient(circle at 50% 30%, #F59E0B 0%, #92400E 50%, #1F2937 90%);
+  }
+
+  .about-content {
+    padding-top: 28px;
+  }
+  .about-content .eyebrow.dark, .about-content .eyebrow {
+    justify-content: flex-start;
+    margin-bottom: 14px;
+  }
+  .about-content .eyebrow::after { display: none; }
+  .about-title {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+  }
+  .about-text {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* ========== FINAL CTA ========== */
+  .final-cta {
+    position: relative;
+    padding: 64px 24px;
+    overflow: hidden;
+    background:
+      radial-gradient(700px 400px at 50% 50%, rgba(99, 102, 241, 0.15), transparent 70%),
+      linear-gradient(135deg, #0A0F1F 0%, #1E1B4B 50%, #0A0A10 100%);
+  }
+  .final-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 100% 60% at 30% 0%, rgba(255, 119, 65, 0.08), transparent 60%),
+      radial-gradient(ellipse 100% 60% at 70% 100%, rgba(99, 102, 241, 0.15), transparent 60%);
+    pointer-events: none;
+  }
+  .final-cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      linear-gradient(180deg, transparent 30%, rgba(255, 165, 100, 0.04) 60%, transparent 100%),
+      repeating-linear-gradient(135deg, transparent 0px, transparent 30px, rgba(255,255,255,0.02) 30px, rgba(255,255,255,0.02) 31px);
+    pointer-events: none;
+  }
+  .final-cta > * { position: relative; }
+  .final-title {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  .final-desc {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 28px;
+  }
+  .cta-white {
+    width: 100%;
+    padding: 18px 22px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #0A0A10;
+    border: none;
+    border-radius: 16px;
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    backdrop-filter: blur(20px);
+    transition: transform 0.2s ease, background 0.2s ease;
+    box-shadow: 0 12px 40px -12px rgba(255, 255, 255, 0.2);
+  }
+  .cta-white:hover {
+    transform: translateY(-1px);
+    background: white;
+  }
+  .cta-bolt { color: var(--accent-magenta); }
+  .trust-line {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+  .trust-line .dot {
+    width: 3px; height: 3px;
+    background: var(--text-muted);
+    border-radius: 50%;
+  }
+
+  /* ========== FOOTER ========== */
+  footer {
+    background: var(--bg-deep);
+    padding: 48px 24px 28px;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .footer-brand {
+    margin-bottom: 28px;
+  }
+  .footer-brand h5 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .footer-brand p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .footer-col a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-size: 13.5px;
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .footer-col a:hover { color: white; }
+  .footer-col svg { color: var(--text-secondary); }
+  .footer-meta {
+    margin-top: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+  .footer-legal {
+    margin-top: 16px;
+    display: flex;
+    gap: 20px;
+    font-size: 12px;
+  }
+  .footer-legal a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+  }
+
+  /* Bottom safe area / home indicator */
+  .home-indicator {
+    height: 30px;
+    background: var(--bg-deep);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 8px;
+  }
+  .home-indicator-bar {
+    width: 130px;
+    height: 5px;
+    background: white;
+    border-radius: 3px;
+  }
+
+  /* fade in */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .device { animation: fadeUp 0.6s ease both; }
+
+  /* small screens / direct mobile preview */
+  @media (max-width: 460px) {
+    .stage { padding: 0; }
+    .stage-label { display: none; }
+    .device { border-radius: 0; padding: 0; box-shadow: none; }
+    .device::before { display: none; }
+    .screen { border-radius: 0; }
+    .home-indicator { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <div class="stage-label">VIRALITY · <span>Mobile Mockup</span></div>
+
+  <div class="device">
+    <div class="screen">
+
+      <!-- iOS STATUS BAR -->
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="notch"></div>
+        <div class="indicators">
+          <!-- signal -->
+          <svg width="17" height="11" viewBox="0 0 17 11" fill="white"><rect x="0" y="7" width="3" height="4" rx="0.5"/><rect x="4.5" y="5" width="3" height="6" rx="0.5"/><rect x="9" y="2.5" width="3" height="8.5" rx="0.5"/><rect x="13.5" y="0" width="3" height="11" rx="0.5"/></svg>
+          <!-- wifi -->
+          <svg width="15" height="11" viewBox="0 0 15 11" fill="white"><path d="M7.5 0C4.69 0 2.13 1.05.16 2.78c-.21.18-.21.5-.02.7l1.41 1.42c.18.18.47.18.66.01 1.51-1.32 3.49-2.12 5.79-2.12s4.28.8 5.79 2.12c.19.17.48.17.66-.01l1.41-1.42c.2-.2.19-.52-.02-.7C12.87 1.05 10.31 0 7.5 0Zm0 3.69c-1.84 0-3.55.65-4.88 1.74-.21.18-.23.5-.03.69l1.41 1.42c.17.18.45.19.64.03.85-.7 1.96-1.13 3.16-1.13s2.31.43 3.16 1.13c.19.16.47.15.64-.03l1.41-1.42c.2-.19.18-.51-.03-.69-1.33-1.09-3.04-1.74-4.88-1.74Zm0 3.7c-.86 0-1.66.27-2.31.74-.22.16-.24.48-.05.67l1.97 1.97c.21.21.55.21.76 0l1.97-1.97c.19-.19.17-.51-.05-.67-.65-.47-1.45-.74-2.31-.74Z"/></svg>
+          <!-- battery -->
+          <svg width="27" height="12" viewBox="0 0 27 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="2.5" stroke="white" stroke-opacity="0.4"/><rect x="2" y="2" width="19" height="8" rx="1.5" fill="white"/><rect x="23.5" y="4" width="2" height="4" rx="1" fill="white" fill-opacity="0.4"/></svg>
+        </div>
+      </div>
+
+      <!-- NAV -->
+      <div class="nav-wrap">
+        <div class="nav">
+          <div class="logo">
+            <span class="logo-text-v">V</span>
+            <div class="logo-mark"></div>
+            <span class="logo-text">RALITY</span>
+          </div>
+          <div class="nav-menu">
+            <a href="#">Home</a>
+            <a href="#">How It Works</a>
+            <a href="#">Results</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- HERO -->
+      <section class="hero">
+        <h1>
+          Build Digital Authority and <span class="grad">Grow Your Instagram</span> with Real Followers
+        </h1>
+        <ul class="hero-list">
+          <li>
+            <span class="check-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Real and organic growth
+          </li>
+          <li>
+            <span class="check-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Zero bots or fake profiles
+          </li>
+          <li>
+            <span class="check-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Strategies used by top influencers
+          </li>
+          <li>
+            <span class="check-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Rapid growth in social proof
+          </li>
+          <li>
+            <span class="check-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Strategic positioning for your brand
+          </li>
+        </ul>
+
+        <p class="hero-sub">Virality was developed to help brands, entrepreneurs, and influencers accelerate their growth through intelligent strategies focused on positioning, visibility, and social proof.</p>
+
+        <div class="social-proof">
+          <div class="avatars">
+            <div class="av"></div>
+            <div class="av"></div>
+            <div class="av"></div>
+            <div class="av"></div>
+            <div class="av"></div>
+          </div>
+          <div class="social-text">
+            <strong>500+ profiles joined Virality</strong><br>
+            and turned growth into strategy.
+          </div>
+        </div>
+
+        <button class="cta-primary">
+          I Want to Grow My Digital Authority
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+
+        <div class="cta-meta">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M3 5V3.5a3 3 0 0 1 6 0V5m-7 0h8v6H2V5z" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Access Virality's exclusive strategy
+        </div>
+      </section>
+
+      <!-- THE PROBLEM -->
+      <section class="section">
+        <div class="eyebrow">The Problem</div>
+        <h2 class="section-title">
+          Growing on Instagram today requires <span class="grad">more than just posting content</span>
+        </h2>
+        <p class="section-desc">Many people believe growth depends only on posting frequently. However, real and consistent growth happens when three elements work together: visibility, social proof, and strategic positioning.</p>
+        <p class="section-desc">Without these elements, even good content can be ignored by both the algorithm and the audience. That's why many profiles spend months or years trying to grow without consistent results.</p>
+
+        <div class="problem-cards">
+          <div class="problem-card">
+            <div class="problem-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5l5 5 3-3 6 6m0 0V8m0 5h-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="problem-card-text">Slow growth</div>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 17s-6-3.5-6-9a4 4 0 0 1 6-3.5A4 4 0 0 1 16 8c0 5.5-6 9-6 9z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 9l1 1.5L11 7l1 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="problem-card-text">Low engagement</div>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L3 5v5c0 4 3 7 7 8 4-1 7-4 7-8V5l-7-3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 7v3m0 2v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="problem-card-text">Difficulty becoming a recognized authority in the niche</div>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3l14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M2 10s3-5 8-5c1.7 0 3.2.6 4.5 1.5M18 10s-3 5-8 5c-1.7 0-3.2-.6-4.5-1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="problem-card-text">Limited reach</div>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="7" cy="6" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 17c0-3 2-5 5-5s5 2 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="14" cy="7" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M12 13c2-1 5 0 6 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="problem-card-text">Followers that don't turn into real opportunities</div>
+          </div>
+        </div>
+
+        <div class="problem-callout">
+          It's not a lack of effort. Most of the time, the real problem is simply the absence of a clear and structured growth strategy.
+        </div>
+      </section>
+
+      <!-- THE SOLUTION -->
+      <section class="section">
+        <div class="eyebrow">The Solution</div>
+        <h2 class="section-title">
+          Virality was <span class="grad">developed to accelerate</span> your digital authority
+        </h2>
+        <p class="section-desc">Virality is a consultancy focused on helping profiles grow strategically in the digital space.</p>
+        <p class="section-desc">Instead of artificial methods that harm engagement and credibility, Virality uses strategies that connect your profile with new real audiences, increase visibility, and strengthen your digital presence.</p>
+
+        <div class="service-cards">
+          <div class="service-card">
+            <div class="service-card-top">
+              <div class="service-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2l2.4 5 5.6.5-4.2 3.7 1.3 5.5L10 14l-5.1 2.7 1.3-5.5L2 7.5 7.6 7 10 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="tag"><span class="tag-dot"></span>CAMPAIGNS</div>
+            </div>
+            <h3>Strategic Giveaways</h3>
+            <p>High-reach campaigns that connect your profile with new audiences.</p>
+            <div class="service-card-line"></div>
+          </div>
+          <div class="service-card">
+            <div class="service-card-top">
+              <div class="service-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M7 10l-2 7 5-3 5 3-2-7" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="tag"><span class="tag-dot"></span>AUTHORITY</div>
+            </div>
+            <h3>Digital Authority</h3>
+            <p>Strategies that strengthen your brand positioning.</p>
+            <div class="service-card-line"></div>
+          </div>
+          <div class="service-card">
+            <div class="service-card-top">
+              <div class="service-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="1.5" fill="currentColor"/></svg>
+              </div>
+              <div class="tag"><span class="tag-dot"></span>ORGANIC</div>
+            </div>
+            <h3>Organic Growth</h3>
+            <p>Real followers who are interested in your content.</p>
+            <div class="service-card-line"></div>
+          </div>
+          <div class="service-card">
+            <div class="service-card-top">
+              <div class="service-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="7" cy="7" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 16c0-3 2-5 5-5s5 2 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13 7l2 2 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="tag"><span class="tag-dot"></span>CREDIBILITY</div>
+            </div>
+            <h3>Social Proof</h3>
+            <p>More credibility and authority in your niche.</p>
+            <div class="service-card-line"></div>
+          </div>
+          <div class="service-card">
+            <div class="service-card-top">
+              <div class="service-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M11 2L4 11h5l-1 7 7-9h-5l1-7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="tag"><span class="tag-dot"></span>POSITIONING</div>
+            </div>
+            <h3>Strategic Positioning</h3>
+            <p>Strategies that strengthen your presence and highlight your profile in the market.</p>
+            <div class="service-card-line"></div>
+          </div>
+          <div class="service-card">
+            <div class="service-card-top">
+              <div class="service-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="7" cy="6" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="13" cy="6" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M2 16c0-3 2-5 5-5s5 2 5 5M11 11c2-1 5 0 6 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
+              <div class="tag"><span class="tag-dot"></span>AUDIENCE</div>
+            </div>
+            <h3>Qualified Audience</h3>
+            <p>Real people who follow your content and connect with your brand.</p>
+            <div class="service-card-line"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WHITE BAND: BRAND POSITIONING + PRESS -->
+      <div class="white-band">
+        <div class="white-band-decor"></div>
+
+        <section class="brand-section">
+          <div class="eyebrow dark eyebrow-left">Brand & Positioning</div>
+          <h2 class="brand-title">
+            We build a presence that <span class="grad-blue">commands respect before it generates sales.</span>
+          </h2>
+          <p class="brand-desc">Clear positioning, a consistent brand image, and purposeful content will make you the go-to resource in your niche.</p>
+
+          <div class="illustration">
+            <div class="illu-blob illu-blob-1"></div>
+            <div class="illu-blob illu-blob-4"></div>
+            <div class="illu-phone">
+              <div class="illu-phone-screen"></div>
+            </div>
+            <div class="illu-blob illu-blob-2"></div>
+            <div class="illu-blob illu-blob-3"></div>
+          </div>
+        </section>
+
+        <div class="iridescent-wave"></div>
+
+        <section class="press-section">
+          <div class="press-logos">
+            <span class="press-logo serif">Forbes</span>
+            <span class="press-logo purple">yahoo<span style="color: #7C3AED;">!</span></span>
+          </div>
+          <h2 class="press-title">Press Features</h2>
+          <p class="press-desc">We transform credibility into social proof. Media features strengthen trust, accelerate decision-making, and increase the perceived value of your brand.</p>
+        </section>
+      </div>
+
+      <!-- PARTNERS & CREATORS -->
+      <section class="partners">
+        <h2 class="partners-title"><span class="grad">Partner</span> &amp; Creator Network</h2>
+
+        <div class="partner-track">
+          <div class="partner-card">
+            <div class="partner-bg partner-bg-1"></div>
+            <div class="partner-icon-overlay"></div>
+            <div class="partner-followers">41.2M</div>
+            <div class="partner-info">
+              <div class="partner-name">Jason Derulo</div>
+              <div class="partner-handle">@jasonderulo</div>
+              <div class="partner-bio">Bekannter Musiker und Entertainer. Riesige Social-Media-Reichweite. Begeistert Millionen Fans.</div>
+            </div>
+          </div>
+          <div class="partner-card">
+            <div class="partner-bg partner-bg-2"></div>
+            <div class="partner-icon-overlay"></div>
+            <div class="partner-followers">29.2M</div>
+            <div class="partner-info">
+              <div class="partner-name">Floyd Mayweather</div>
+              <div class="partner-handle">@floydmayweather</div>
+              <div class="partner-bio">Internationale Sportboxlegende und Lifestyle-Ikone. Steht für Erfolg, Luxus und globale Aufmerksamkeit.</div>
+            </div>
+          </div>
+          <div class="partner-card">
+            <div class="partner-bg partner-bg-3"></div>
+            <div class="partner-icon-overlay"></div>
+            <div class="partner-followers">3.1M</div>
+            <div class="partner-info">
+              <div class="partner-name">GetOnMyLvL</div>
+              <div class="partner-handle">@montanablack</div>
+              <div class="partner-bio">Einer der beliebtesten Gaming-Streamer und YouTuber Deutschlands. Bekannt für seine Twitch-Streams.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="partner-controls">
+          <button class="arrow-btn"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="arrow-btn"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M8 4l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+
+        <div class="partner-cta">
+          <button class="cta-primary">
+            I Want to Grow My Digital Authority
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- CASE STUDIES -->
+      <section class="cases">
+        <h2 class="cases-title"><span class="grad">Case Studies</span> &amp; Kampagnen</h2>
+
+        <div class="cases-grid">
+          <div class="case-card">
+            <div class="case-brand finanzguru">Finanzguru</div>
+            <div class="case-divider"></div>
+            <div class="case-mockup fg">App Promo Ads</div>
+            <div class="case-stats">
+              <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 8€</span></div>
+              <div class="case-stat"><span class="case-stat-label">CPI</span><span class="case-stat-value">: 7€</span></div>
+              <div class="case-stat"><span class="case-stat-label">Downloads</span><span class="case-stat-value green">: +1.000</span></div>
+            </div>
+          </div>
+          <div class="case-card">
+            <div class="case-brand getlvl">GET ON MY LVL</div>
+            <div class="case-divider"></div>
+            <div class="case-mockup lvl">PS5 Giveaway</div>
+            <div class="case-stats">
+              <div class="case-stat"><span class="case-stat-label">Posts</span><span class="case-stat-value">: 15</span></div>
+              <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 4€</span></div>
+              <div class="case-stat"><span class="case-stat-label">Follower</span><span class="case-stat-value green">: +8.500</span></div>
+            </div>
+          </div>
+          <div class="case-card">
+            <div class="case-brand dubai">DUBAI STORE</div>
+            <div class="case-divider"></div>
+            <div class="case-mockup dubai">Schokolade Direct</div>
+            <div class="case-stats">
+              <div class="case-stat"><span class="case-stat-label">Posts</span><span class="case-stat-value">: 1</span></div>
+              <div class="case-stat"><span class="case-stat-label">Besucher</span><span class="case-stat-value">: 1.700</span></div>
+              <div class="case-stat"><span class="case-stat-label">Sales</span><span class="case-stat-value green">: +100</span></div>
+            </div>
+          </div>
+          <div class="case-card">
+            <div class="case-brand momox">momox</div>
+            <div class="case-divider"></div>
+            <div class="case-mockup momox">Reseller App</div>
+            <div class="case-stats">
+              <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 4€</span></div>
+              <div class="case-stat"><span class="case-stat-label">CPI</span><span class="case-stat-value">: 1€</span></div>
+              <div class="case-stat"><span class="case-stat-label">Installs</span><span class="case-stat-value green">: +10.000</span></div>
+            </div>
+          </div>
+          <div class="case-card">
+            <div class="case-brand wildbrau">WILD BRÄU</div>
+            <div class="case-divider"></div>
+            <div class="case-mockup wildbrau">1 Jahr Freibier</div>
+            <div class="case-stats">
+              <div class="case-stat"><span class="case-stat-label">Posts</span><span class="case-stat-value">: 1</span></div>
+              <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 4€</span></div>
+              <div class="case-stat"><span class="case-stat-label">Followers</span><span class="case-stat-value green">: +1.500</span></div>
+            </div>
+          </div>
+          <div class="case-card">
+            <div class="case-brand gymtastic">GYMTASTIC</div>
+            <div class="case-divider"></div>
+            <div class="case-mockup gymtastic">Rabatt Promo</div>
+            <div class="case-stats">
+              <div class="case-stat"><span class="case-stat-label">Posts</span><span class="case-stat-value">: 10</span></div>
+              <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 6€</span></div>
+              <div class="case-stat"><span class="case-stat-label">Sales</span><span class="case-stat-value green">: 45×99€</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS / TIMELINE -->
+      <section class="timeline-section">
+        <h2 class="section-title">How Does Growth with <span class="grad">Virality Work?</span></h2>
+        <p class="section-desc">The growth process happens through a combination of strategic campaigns, positioning, and visibility. Each step is designed to strengthen your digital presence.</p>
+
+        <div class="timeline">
+          <div class="step">
+            <div class="step-dot"></div>
+            <h4><span>Step 1 —</span> Profile Analysis</h4>
+            <p>Analysis of your current positioning and growth potential.</p>
+            <div class="step-widget">
+              <div class="step-widget-icon">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M9 9l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
+              <div class="step-widget-content">
+                <div class="step-widget-bar"><div class="step-widget-bar-fill" style="width: 100%; background: linear-gradient(90deg, #6FE3FF, #C084FC);"></div></div>
+                <div class="step-widget-label"><span>Audit Complete</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-dot"></div>
+            <h4><span>Step 2 —</span> Strategic Planning</h4>
+            <p>Definition of visibility campaigns and growth strategies.</p>
+            <div class="step-widget">
+              <div class="step-widget-content">
+                <div class="step-dashes" style="margin-bottom: 8px;"><span></span><span></span><span></span></div>
+                <div class="step-widget-label"><span>Strategy Mapped</span></div>
+              </div>
+              <div class="step-widget-icon purple">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.3"/><circle cx="7" cy="7" r="2.5" stroke="currentColor" stroke-width="1.3"/><circle cx="7" cy="7" r="0.8" fill="currentColor"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-dot"></div>
+            <h4><span>Step 3 —</span> Growth Campaigns</h4>
+            <p>Participation in high-reach campaigns.</p>
+            <div class="step-widget">
+              <div class="step-widget-icon pink">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1l4 8-4 4-4-4 4-8z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M7 6v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+              </div>
+              <div class="step-widget-content">
+                <div class="step-widget-label" style="margin-bottom: 6px;"><span>Status</span><span class="right">Deploying</span></div>
+                <div class="step-widget-bar"><div class="step-widget-bar-fill pink" style="width: 70%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-dot"></div>
+            <h4><span>Step 4 —</span> Positioning Optimization</h4>
+            <p>Improving narrative and digital presence.</p>
+            <div class="step-widget" style="flex-direction: column; align-items: stretch; gap: 10px;">
+              <div class="step-widget-pills">
+                <div class="pill">BIO</div>
+                <div class="pill">CONTENT</div>
+                <div class="pill active">NARRATIVE</div>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div class="step-widget-label"><span>Optimized</span></div>
+                <div class="step-widget-icon" style="width: 26px; height: 26px;">
+                  <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M7 1v2m0 8v2M1 7h2m8 0h2M3 3l1.4 1.4M9.6 9.6L11 11M3 11l1.4-1.4M9.6 4.4L11 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-dot"></div>
+            <h4><span>Step 5 —</span> Authority Building</h4>
+            <p>Your profile becomes recognized as a reference in your niche.</p>
+            <div class="step-widget">
+              <div class="step-widget-icon">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4l2 6h6l2-6-3 2-2-3-2 3-3-2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="step-widget-content">
+                <div class="step-widget-bar" style="margin-bottom: 6px;"><div class="step-widget-bar-fill" style="width: 100%;"></div></div>
+                <div class="step-widget-label"><span>Authority Status</span><span class="right">Established</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESULTS -->
+      <section class="results-section">
+        <div class="eyebrow">Results</div>
+        <h2 class="section-title">
+          Profiles Already Accelerating <span class="grad">Their Digital Authority</span>
+        </h2>
+        <p class="section-desc">By participating in strategic campaigns and strengthening their positioning, profiles attract new audiences and increase their relevance.</p>
+
+        <div class="results-cards">
+          <div class="result-card">
+            <div class="result-label">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="5" cy="4" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M1 12c0-2 2-4 4-4s4 2 4 4M9 4a2 2 0 1 1 0 4M11 12c0-1.5-1-3-3-3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+              Follower Growth
+            </div>
+            <div class="result-value">+312%</div>
+            <div class="result-bar"><div class="result-bar-fill" style="width: 90%;"></div></div>
+          </div>
+          <div class="result-card">
+            <div class="result-label">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1l4 8-4 4-4-4 4-8z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              Engagement Rate
+            </div>
+            <div class="result-value">+187%</div>
+            <div class="result-bar"><div class="result-bar-fill" style="width: 75%;"></div></div>
+          </div>
+          <div class="result-card">
+            <div class="result-label">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l-1 5 3-2 3 2-1-5" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              Authority Score
+            </div>
+            <div class="result-value">94/100</div>
+            <div class="result-segments">
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section class="about-section">
+        <div class="about-hero">
+          <div class="about-avatars">
+            <div class="about-avatar a1"></div>
+            <div class="about-avatar a2"></div>
+          </div>
+        </div>
+
+        <div class="about-content">
+          <div class="eyebrow eyebrow-left">About</div>
+          <h2 class="about-title">
+            Meet the <span class="grad">People Behind Virality</span>
+          </h2>
+          <div class="about-text">
+            <p>Virality was created with the goal of helping brands, influencers, and entrepreneurs build digital authority strategically.</p>
+            <p>From the beginning, the idea was clear: develop strategies that connect profiles with new real audiences, strengthen digital presence, and increase visibility in the market.</p>
+            <p>Over time, the methodology was refined to combine growth, positioning, and social proof into a process that consistently accelerates digital recognition.</p>
+            <p>Today, Virality works with profiles that want to position themselves as authorities in their niche and transform their digital presence into a strategic advantage.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FINAL CTA -->
+      <section class="final-cta">
+        <h2 class="final-title">
+          <span class="grad">Ready to Build</span> Your Digital Authority?
+        </h2>
+        <p class="final-desc">Join hundreds of brands and influencers who already transformed their Instagram presence with Virality.</p>
+        <button class="cta-white">
+          I Want to Grow My Digital Authority
+          <span class="cta-bolt">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M9 1L2 9h4l-1 6 7-8H8l1-6z"/></svg>
+          </span>
+        </button>
+        <div class="trust-line">
+          <span>Secure Checkout</span>
+          <span class="dot"></span>
+          <span>Cancel Anytime</span>
+          <span class="dot"></span>
+          <span>30-Day Guarantee</span>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer>
+        <div class="footer-brand">
+          <h5>Virality</h5>
+          <p>Virality is a consultancy specialized in strategic growth and digital authority.</p>
+        </div>
+
+        <div class="footer-grid">
+          <div class="footer-col">
+            <a href="#">Home</a>
+            <a href="#">How It Works</a>
+            <a href="#">About Virality</a>
+            <a href="#">Contact</a>
+          </div>
+          <div class="footer-col">
+            <a href="#">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1" stroke="currentColor" stroke-width="1.3"/><path d="M1 4l6 4 6-4" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              contact@virality.com
+            </a>
+            <a href="#">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M9 9c0 2 3 2 3-1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+              @virality
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-meta">
+          © 2026 Virality — All rights reserved. Results may vary depending on the profile, niche, and strategy implementation.
+        </div>
+        <div class="footer-legal">
+          <a href="#">Terms of Use</a>
+          <a href="#">Privacy Policy</a>
+        </div>
+      </footer>
+
+      <!-- iOS home indicator -->
+      <div class="home-indicator">
+        <div class="home-indicator-bar"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
