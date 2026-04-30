@@ -387,14 +387,15 @@
   }
 
   /* Instagram screenshot mockup on phone screen
-     - shifted down 36px so the username sits cleanly below the Dynamic
-       Island (which extends to ~36px from screen top)
+     - shifted down 16px so the username clears the Dynamic Island
+       while keeping the Island visually inside the screenshot's own
+       status bar area (just like a real iPhone)
      - width: 100% (don't squash horizontally)
      - height: auto (natural aspect — minor bottom overflow is clipped
-       by the screen's overflow:hidden) */
+       by the screen's overflow:hidden, image stays inside the frame) */
   .phone-screen-image {
     position: absolute;
-    top: 36px;
+    top: 16px;
     left: 0;
     width: 100%;
     height: auto;
@@ -403,16 +404,16 @@
     filter: brightness(0.8);
     will-change: opacity;
   }
-  /* Black status-bar plate that fills the area above the image and
-     mimics the iPhone's real status bar — Dynamic Island floats inside
-     it like on real hardware. Hides during the dive's "off" state. */
+  /* Slim plate filling the 16px above the image — uses #0b0d12 so it
+     blends with the eventual "screen-off" background instead of pure
+     black, avoiding any harsh dark band. */
   .phone-screen-statusbar {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 36px;
-    background: #000;
+    height: 16px;
+    background: #0b0d12;
     z-index: 1;
     pointer-events: none;
     transition: opacity 0.18s ease-out;
