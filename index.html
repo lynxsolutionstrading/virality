@@ -4690,11 +4690,28 @@
       }, 0.20);
     }
 
+    /* ---- Phase 3a: Pre-center the phone tilt smoothly during the
+       letters fade-out, so that by the time the letters are gone the
+       phone is sitting perfectly centered (rotateY=0, rotateX=0) and
+       only the zoom-in remains. sine.inOut matches the original
+       rotationTween's easing, so there's no velocity jump where the
+       paused rotation hands off to this tween. ---- */
+    diveTl.to(phone, {
+      rotateY: 0,
+      rotateX: 0,
+      duration: 0.45,
+      ease: 'sine.inOut'
+    }, 0);
+
     /* ---- Phase 4: Existing phone dive (T = 0.55 → 1.65s)
        NOTE: stage perspective is 1600px — z must stay BELOW it or the
        phone passes the camera plane and clips, exposing the particle
        background through the gap. scale 6 + z 1300 keeps it visible
-       AND huge (visual scale ≈ 32× → phone width ≈ 7700 px). */
+       AND huge (visual scale ≈ 32× → phone width ≈ 7700 px).
+       rotateY/X stay listed here for the reverse path (so the tween
+       reverses rotation back to 0 cleanly); since Phase 3a already
+       finished the rotation at t=0.45, the rotation portion of this
+       tween is a no-op going forward. */
     diveTl.to(phone, {
       rotateY: 0,
       rotateX: 0,
@@ -4749,6 +4766,12 @@
       setTimeout(function () { sfx.powerDown(); }, 280);  /* screen fade-out */
       setTimeout(function () { sfx.whoosh(false); }, 480); /* phone dive begins */
       setTimeout(function () { sfx.impact(); }, 1500);    /* landing thud */
+      /* Refresh all recorded "from" values so the rotation pre-centering
+         tween captures the CURRENT phone rotation (wherever rotationTween
+         happened to pause) instead of reusing the value cached on the
+         first dive — that stale value was what caused snap-glitches on
+         second and later dives. */
+      diveTl.invalidate();
       diveTl.timeScale(1).play();
       /* The dive timeline's onComplete handler hides the hero in the
          same frame it finishes — no setTimeout gap, no particle flash. */
