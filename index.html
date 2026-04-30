@@ -4632,6 +4632,18 @@
         document.body.classList.add('pre-dive');
         window.scrollTo(0, 0);
         document.documentElement.classList.add('scroll-locked');
+        /* "Settle wobble" — a tiny damped oscillation on rotateZ that
+           plays only when the user has come back from a dive. Hides
+           the imperfect rotation centering by making it look like an
+           intentional bouncy settle effect. rotateZ is a separate
+           transform axis from rotationTween's rotateY/rotateX, so
+           this composes cleanly with the resumed continuous rotation. */
+        gsap.timeline()
+          .to(phone, { rotation: 3.2, duration: 0.08, ease: 'power2.out' })
+          .to(phone, { rotation: -2.2, duration: 0.09, ease: 'sine.inOut' })
+          .to(phone, { rotation: 1.5,  duration: 0.07, ease: 'sine.inOut' })
+          .to(phone, { rotation: -0.8, duration: 0.06, ease: 'sine.inOut' })
+          .to(phone, { rotation: 0,    duration: 0.05, ease: 'power2.in'  });
       },
       onComplete: function () {
         document.body.classList.remove('diving', 'pre-dive', 'reversing');
