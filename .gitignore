@@ -1,5 +1,5 @@
-# Claude Code local settings
-.claude/
+# Claude Code: keep project-wide commands/agents/settings, ignore only the machine-local ones
+.claude/settings.local.json
 
 # Dependencies
 node_modules/
