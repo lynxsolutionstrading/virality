@@ -229,50 +229,6 @@
     isolation: isolate;
   }
 
-  /* === Side neon glow strips === */
-  .hero-edge {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    pointer-events: none;
-    z-index: 4;
-  }
-  .hero-edge::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 120px;
-    pointer-events: none;
-  }
-  .hero-edge--left { left: 0; }
-  .hero-edge--left {
-    background: linear-gradient(180deg, transparent, var(--accent-cyan) 50%, transparent);
-    box-shadow: 0 0 20px var(--accent-cyan), 0 0 40px var(--accent-cyan);
-    animation: edgeFlicker 3.6s ease-in-out infinite;
-  }
-  .hero-edge--left::before {
-    left: 0;
-    background: linear-gradient(90deg, rgba(111, 227, 255, 0.18), transparent 80%);
-  }
-  .hero-edge--right { right: 0; }
-  .hero-edge--right {
-    background: linear-gradient(180deg, transparent, var(--accent-pink) 50%, transparent);
-    box-shadow: 0 0 20px var(--accent-pink), 0 0 40px var(--accent-pink);
-    animation: edgeFlicker 4.2s ease-in-out infinite reverse;
-  }
-  .hero-edge--right::before {
-    right: 0;
-    background: linear-gradient(-90deg, rgba(232, 121, 249, 0.18), transparent 80%);
-  }
-  @keyframes edgeFlicker {
-    0%, 100% { opacity: 0.55; }
-    25%      { opacity: 0.95; }
-    50%      { opacity: 0.4; }
-    75%      { opacity: 0.85; }
-  }
-
   /* === Grid backdrop (cyberpunk floor) === */
   .hero-grid {
     position: absolute;
@@ -752,20 +708,15 @@
   @media (max-width: 640px) {
     .hero-phone { width: 180px; height: 370px; }
     .hero-phone-island { width: 70px; height: 22px; top: 12px; }
-    .phone-screen-orb { width: 70px; height: 70px; }
     .hero-glitch { font-size: clamp(44px, 14vw, 76px); top: 14%; }
     .hero-tagline { bottom: 11%; }
-    .hero-edge::before { width: 60px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .hero-phone,
     .hero-phone-glow,
-    .phone-screen-orb,
     .hero-glitch-layer--cyan,
     .hero-glitch-layer--magenta,
-    .hero-edge--left,
-    .hero-edge--right,
     .hero-scroll-hint { animation: none; }
   }
 
@@ -2711,10 +2662,6 @@
 
   <!-- ========== HERO — CINEMATIC ========== -->
   <section class="hero" id="hero" data-cinematic-hero>
-    <!-- Side neon edges -->
-    <div class="hero-edge hero-edge--left" aria-hidden="true"></div>
-    <div class="hero-edge hero-edge--right" aria-hidden="true"></div>
-
     <!-- Cyberpunk grid backdrop -->
     <div class="hero-grid" aria-hidden="true"></div>
 
@@ -3911,8 +3858,7 @@
       ease: 'power2.out'
     }, 0.6);
 
-    /* Side neon edges + cyberpunk grid fade alongside the dive */
-    diveTl.to('.hero-edge', { opacity: 0, duration: 0.5 }, 0.5);
+    /* Cyberpunk grid fades alongside the dive */
     diveTl.to('.hero-grid', { opacity: 0, duration: 0.5 }, 0.55);
 
     /* Phone frame shadow fades so we can "go through" */
