@@ -452,10 +452,11 @@
     --bg-shade-b: #11111A;
     --bg-shade-c: #06060B;
   }
-  /* Each section gets a soft, large, very subtle radial glow using a
-     brand color, alternating left and right for visual rhythm. The glow
-     sits in background-image on top of the bg-color, so HTML content
-     stays above without needing any extra positioning. */
+  /* Each section gets a soft, large radial glow using a brand color,
+     alternating left and right. The opacity of every glow pulses
+     gently between 0.10 (low) and 0.16 (peak) on an 8s cycle, with
+     each section's start time offset so the page doesn't breathe in
+     unison — natural, ambient, never distracting. */
   #problem,
   #solution,
   #partners,
@@ -466,40 +467,70 @@
   }
   #problem {
     background-color: var(--bg-shade-a);
-    /* Two large overlapping glows so the entire left flank is lit
-       continuously (no dark gap in the middle) */
-    background-image:
-      radial-gradient(1100px 800px at 0% 30%, rgba(111, 227, 255, 0.16), transparent 72%),
-      radial-gradient(1000px 750px at 0% 75%, rgba(192, 132, 252, 0.15), transparent 72%);
+    animation: glowPulseProblem 8s ease-in-out infinite;
   }
   #solution {
     background-color: var(--bg-shade-b);
-    background-image: radial-gradient(900px 620px at 100% 75%, rgba(192, 132, 252, 0.13), transparent 72%);
+    animation: glowPulseSolution 8s ease-in-out -1.3s infinite;
   }
   /* #brand (white-band) stays white */
   #partners {
     background-color: var(--bg-shade-c);
-    background-image: radial-gradient(900px 620px at 0% 35%, rgba(217, 70, 239, 0.12), transparent 72%);
+    animation: glowPulsePartners 8s ease-in-out -2.6s infinite;
   }
   #cases {
     background-color: var(--bg-shade-a);
-    background-image: radial-gradient(900px 620px at 100% 60%, rgba(111, 227, 255, 0.13), transparent 72%);
+    animation: glowPulseCases 8s ease-in-out -4s infinite;
   }
-  /* #how-it-works: keeps its existing dual-glow pseudo-element AND
-     anchors the linear-gradient base to shade C so it visually
-     separates from #cases (shade A) above. */
+  /* #how-it-works: keeps its dual-glow pseudo-element AND anchors the
+     linear-gradient base to shade C so it visually separates from
+     #cases (shade A) above. */
   #how-it-works {
     background: linear-gradient(180deg, var(--bg-shade-c) 0%, #050509 100%);
   }
   #results {
     background-color: var(--bg-shade-b);
-    background-image: radial-gradient(900px 620px at 0% 70%, rgba(192, 132, 252, 0.13), transparent 72%);
+    animation: glowPulseResults 8s ease-in-out -5.3s infinite;
   }
   #about {
     background-color: var(--bg-shade-c);
-    background-image: radial-gradient(900px 620px at 100% 30%, rgba(217, 70, 239, 0.12), transparent 72%);
+    animation: glowPulseAbout 8s ease-in-out -6.6s infinite;
   }
   /* #contact (final-cta) keeps its decorative gradient */
+
+  /* ----- Per-section glow pulse keyframes (0.10 ↔ 0.16 opacity) ----- */
+  @keyframes glowPulseProblem {
+    0%, 100% {
+      background-image:
+        radial-gradient(1100px 800px at 0% 30%, rgba(111, 227, 255, 0.10), transparent 72%),
+        radial-gradient(1000px 750px at 0% 75%, rgba(192, 132, 252, 0.10), transparent 72%);
+    }
+    50% {
+      background-image:
+        radial-gradient(1100px 800px at 0% 30%, rgba(111, 227, 255, 0.16), transparent 72%),
+        radial-gradient(1000px 750px at 0% 75%, rgba(192, 132, 252, 0.16), transparent 72%);
+    }
+  }
+  @keyframes glowPulseSolution {
+    0%, 100% { background-image: radial-gradient(900px 620px at 100% 75%, rgba(192, 132, 252, 0.10), transparent 72%); }
+    50%      { background-image: radial-gradient(900px 620px at 100% 75%, rgba(192, 132, 252, 0.16), transparent 72%); }
+  }
+  @keyframes glowPulsePartners {
+    0%, 100% { background-image: radial-gradient(900px 620px at 0% 35%, rgba(217, 70, 239, 0.10), transparent 72%); }
+    50%      { background-image: radial-gradient(900px 620px at 0% 35%, rgba(217, 70, 239, 0.16), transparent 72%); }
+  }
+  @keyframes glowPulseCases {
+    0%, 100% { background-image: radial-gradient(900px 620px at 100% 60%, rgba(111, 227, 255, 0.10), transparent 72%); }
+    50%      { background-image: radial-gradient(900px 620px at 100% 60%, rgba(111, 227, 255, 0.16), transparent 72%); }
+  }
+  @keyframes glowPulseResults {
+    0%, 100% { background-image: radial-gradient(900px 620px at 0% 70%, rgba(192, 132, 252, 0.10), transparent 72%); }
+    50%      { background-image: radial-gradient(900px 620px at 0% 70%, rgba(192, 132, 252, 0.16), transparent 72%); }
+  }
+  @keyframes glowPulseAbout {
+    0%, 100% { background-image: radial-gradient(900px 620px at 100% 30%, rgba(217, 70, 239, 0.10), transparent 72%); }
+    50%      { background-image: radial-gradient(900px 620px at 100% 30%, rgba(217, 70, 239, 0.16), transparent 72%); }
+  }
 
   /* ============================================================
      HERO — CINEMATIC (Apple meets Cyberpunk)
@@ -1826,10 +1857,20 @@
     content: '';
     position: absolute;
     inset: 0;
-    background:
-      radial-gradient(700px 500px at 0% 20%, rgba(111, 227, 255, 0.06), transparent 70%),
-      radial-gradient(700px 500px at 100% 90%, rgba(217, 70, 239, 0.05), transparent 70%);
     pointer-events: none;
+    animation: glowPulseJourney 8s ease-in-out -3.3s infinite;
+  }
+  @keyframes glowPulseJourney {
+    0%, 100% {
+      background:
+        radial-gradient(700px 500px at 0% 20%, rgba(111, 227, 255, 0.10), transparent 70%),
+        radial-gradient(700px 500px at 100% 90%, rgba(217, 70, 239, 0.10), transparent 70%);
+    }
+    50% {
+      background:
+        radial-gradient(700px 500px at 0% 20%, rgba(111, 227, 255, 0.16), transparent 70%),
+        radial-gradient(700px 500px at 100% 90%, rgba(217, 70, 239, 0.16), transparent 70%);
+    }
   }
   .journey-section > * { position: relative; }
 
