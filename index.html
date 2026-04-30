@@ -4683,9 +4683,18 @@
        phone passes the camera plane and clips, exposing the particle
        background through the gap. scale 6 + z 1300 keeps it visible
        AND huge (visual scale ≈ 32× → phone width ≈ 7700 px). */
+    /* Smoothly center the phone's tilt — sine.inOut matches the
+       original rotation tween's easing so there's no velocity jump
+       when the continuous rotation pauses and this hand-off begins.
+       Starts early in the dive and finishes well before the deep
+       zoom so the centering never feels rushed. */
     diveTl.to(phone, {
       rotateY: 0,
       rotateX: 0,
+      duration: 0.9,
+      ease: 'sine.inOut'
+    }, 0.05);
+    diveTl.to(phone, {
       scale: 6,
       z: 1300,
       duration: 1.1,
