@@ -4647,83 +4647,90 @@
       }
     });
 
-    /* ---- Phase 1: Logo letters slide right and fade out (left-to-right
-       stagger so the leftmost V leads the wave) ---- */
-    var letters = gsap.utils.toArray('.hero-letter');
-    diveTl.to(letters, {
-      x: 320,
-      opacity: 0,
-      duration: 0.55,
-      stagger: 0.055,
-      ease: 'power2.in'
-    }, 0.04);
+    /* ============================================================
+       DIVE TIMELINE — clean 4-phase sequence (no overlapping
+       primary phases). Just adjust the times below to retune.
+         Phase 1 — Letters fly out         (0.00 → 0.50s)
+         Phase 2 — Phone tilt centers      (0.50 → 0.85s)
+         Phase 3 — Phone screen fades out  (0.85 → 1.10s)
+         Phase 4 — Phone zooms forward     (1.10 → 1.95s)
+       Total dive length: 1.95s
+       ============================================================ */
+    var P1_START = 0.00, P1_DUR = 0.50;   /* Schrift / letters       */
+    var P2_START = 0.50, P2_DUR = 0.35;   /* Phone center            */
+    var P3_START = 0.85, P3_DUR = 0.25;   /* Screen fadeout          */
+    var P4_START = 1.10, P4_DUR = 0.85;   /* Zoom in                 */
 
-    /* DIVE IN button fades early so it doesn't compete with the explosion */
+    var letters = gsap.utils.toArray('.hero-letter');
+
+    /* ---- Phase 1: Letters slide right + fade out, dive button fades ---- */
     diveTl.to('.dive-btn', {
       opacity: 0,
       scale: 0.82,
       duration: 0.22,
       ease: 'power2.in'
-    }, 0);
+    }, P1_START);
+    diveTl.to(letters, {
+      x: 320,
+      opacity: 0,
+      duration: P1_DUR - 0.05,
+      stagger: 0.04,
+      ease: 'power2.in'
+    }, P1_START + 0.05);
 
-    /* ---- Phase 2: Screen content fades out smoothly (image + the
-       slim #0b0d12 status-bar plate together). The .is-off class
-       (toggled in onUpdate at progress > 0.27) handles the screen
-       background transitioning to #0b0d12 underneath. ---- */
-    if (screenLayers.length) {
-      diveTl.to(screenLayers, {
-        opacity: 0,
-        duration: 0.35,
-        ease: 'power2.inOut'
-      }, 0.20);
-    }
-
-    /* ---- Phase 4: Existing phone dive (T = 0.55 → 1.65s)
-       NOTE: stage perspective is 1600px — z must stay BELOW it or the
-       phone passes the camera plane and clips, exposing the particle
-       background through the gap. scale 6 + z 1300 keeps it visible
-       AND huge (visual scale ≈ 32× → phone width ≈ 7700 px). */
-    /* Smoothly center the phone's tilt FIRST, then zoom forward.
-       Rotation finishes (0 → 0.5s) cleanly before the scale/z dive
-       begins (0.55 → 1.65s) — no temporal overlap, so GSAP never
-       composes a half-rotated, half-scaled transform mid-frame
-       (which caused the occasional graphical glitch). */
+    /* ---- Phase 2: Phone tilt smoothly centers (rotateY/X → 0) ---- */
     diveTl.to(phone, {
       rotateY: 0,
       rotateX: 0,
-      duration: 0.5,
+      duration: P2_DUR,
       ease: 'sine.inOut'
-    }, 0);
+    }, P2_START);
+
+    /* ---- Phase 3: Phone screen content (image + statusbar) fades out.
+       The .is-off class is toggled in onUpdate so the dark #0b0d12 plate
+       sits behind the layers as they fade. ---- */
+    if (screenLayers.length) {
+      diveTl.to(screenLayers, {
+        opacity: 0,
+        duration: P3_DUR,
+        ease: 'power2.inOut'
+      }, P3_START);
+    }
+
+    /* ---- Phase 4: Phone zooms forward into the camera (scale + z).
+       NOTE: stage perspective is 1600px — z must stay BELOW it or the
+       phone passes the camera plane and clips, exposing the particle
+       background through the gap. ---- */
     diveTl.to(phone, {
       scale: 6,
       z: 1300,
-      duration: 1.1,
+      duration: P4_DUR,
       ease: 'power2.in'
-    }, 0.55);
-
+    }, P4_START);
+    /* Glow expands and fades during the zoom */
     diveTl.to('[data-hero-phone-glow]', {
       scale: 12,
       opacity: 0,
-      duration: 0.6,
+      duration: P4_DUR - 0.2,
       ease: 'power2.out'
-    }, 0.6);
-
+    }, P4_START);
     /* Cyberpunk grid fades alongside the dive */
-    diveTl.to('.hero-grid', { opacity: 0, duration: 0.5 }, 0.55);
-
-    /* Phone frame shadow fades so we can "go through" */
+    diveTl.to('.hero-grid', {
+      opacity: 0,
+      duration: P4_DUR - 0.3
+    }, P4_START);
+    /* Phone frame shadow fades during the late part of the zoom */
     diveTl.to('.hero-phone-frame', {
       boxShadow: '0 0 0 rgba(0,0,0,0)',
       duration: 0.4
-    }, 0.95);
+    }, P4_START + 0.4);
 
-    /* Toggle ".is-off" on the phone screen at progress ~0.26 (≈ T=0.43s
-       relative to total 1.65s timeline). This handles both forward and
-       reverse cleanly because it's reactive to current progress. */
+    /* Toggle ".is-off" on the phone screen right when Phase 3 begins.
+       progress threshold = P3_START / total = 0.85 / 1.95 ≈ 0.436. */
     diveTl.eventCallback('onUpdate', function () {
       if (!phoneScreen) return;
       var progress = this.progress();
-      var shouldBeOff = progress > 0.27;
+      var shouldBeOff = progress > 0.43;
       var isOff = phoneScreen.classList.contains('is-off');
       if (shouldBeOff && !isOff) phoneScreen.classList.add('is-off');
       else if (!shouldBeOff && isOff) phoneScreen.classList.remove('is-off');
@@ -4732,20 +4739,20 @@
     /* ============================================================
        CLICK HANDLER — play dive forward
        ============================================================ */
-    var DIVE_DURATION_MS = 1650;
+    var DIVE_DURATION_MS = 1950;
     var isDiving = false;
     var isDived = false;
 
     diveBtn.addEventListener('click', function () {
       if (isDiving || isDived) return;
       isDiving = true;
-      /* SFX: click + scheduled sounds aligned to timeline phases */
+      /* SFX: click + scheduled sounds aligned to the 4 timeline phases */
       sfx.unlock();
       sfx.click();
-      setTimeout(function () { sfx.shatter(); }, 60);     /* letters explode */
-      setTimeout(function () { sfx.powerDown(); }, 280);  /* screen fade-out */
-      setTimeout(function () { sfx.whoosh(false); }, 480); /* phone dive begins */
-      setTimeout(function () { sfx.impact(); }, 1500);    /* landing thud */
+      setTimeout(function () { sfx.shatter(); }, 80);     /* letters fly (Phase 1) */
+      setTimeout(function () { sfx.powerDown(); }, 850);  /* screen fade-out (Phase 3) */
+      setTimeout(function () { sfx.whoosh(false); }, 1100); /* zoom begins (Phase 4) */
+      setTimeout(function () { sfx.impact(); }, 1850);    /* landing thud (end of P4) */
       /* Force GSAP to recapture all "from" values from the CURRENT
          phone state on every play. Otherwise it caches the rotation
          it saw on the first dive, and a second dive (when rotation
