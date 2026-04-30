@@ -3731,13 +3731,8 @@
         /* Release CSS overflow-lock so we can programmatically scroll later */
         document.documentElement.classList.remove('scroll-locked');
       },
-      onReverseStart: function () {
-        document.body.classList.remove('post-dive');
-        document.body.classList.add('reversing');
-        /* Restore hero so the reverse animation has something to play on */
-        heroSection.style.display = '';
-        window.scrollTo(0, 0);
-      },
+      /* GSAP does not have an onReverseStart event — reverse setup is
+         done imperatively in attemptReverse() before .reverse() is called. */
       onReverseComplete: function () {
         if (rotationTween) rotationTween.resume();
         document.body.classList.remove('diving', 'post-dive', 'reversing');
@@ -3926,6 +3921,12 @@
       if (!isDived || isDiving || isReversing) return false;
       isReversing = true;
       upScrollAccum = 0;
+      /* Restore the hero BEFORE starting reverse — GSAP has no
+         onReverseStart event, so we set up state manually here. */
+      heroSection.style.display = '';
+      document.body.classList.remove('post-dive');
+      document.body.classList.add('reversing');
+      window.scrollTo(0, 0);
       diveTl.timeScale(1.2).reverse();
       setTimeout(function () {
         isReversing = false;
