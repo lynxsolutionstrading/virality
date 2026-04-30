@@ -3748,7 +3748,12 @@
       onComplete: function () {
         document.body.classList.remove('diving', 'pre-dive', 'reversing');
         document.body.classList.add('post-dive');
-        /* scroll-locked already removed in onStart */
+        /* Hide hero in the same frame the timeline finishes — no flash
+           of particles or background between dive end and Problem reveal */
+        heroSection.style.display = 'none';
+        window.scrollTo(0, 0);
+        isDiving = false;
+        isDived = true;
       }
     });
 
@@ -3849,12 +3854,16 @@
       }, 0.43);
     }
 
-    /* ---- Phase 4: Existing phone dive (T = 0.55 → 1.65s) ---- */
+    /* ---- Phase 4: Existing phone dive (T = 0.55 → 1.65s)
+       NOTE: stage perspective is 1600px — z must stay BELOW it or the
+       phone passes the camera plane and clips, exposing the particle
+       background through the gap. scale 6 + z 1300 keeps it visible
+       AND huge (visual scale ≈ 32× → phone width ≈ 7700 px). */
     diveTl.to(phone, {
       rotateY: 0,
       rotateX: 0,
-      scale: 9,
-      z: 1800,
+      scale: 6,
+      z: 1300,
       duration: 1.1,
       ease: 'power2.in'
     }, 0.55);
@@ -3898,15 +3907,8 @@
       if (isDiving || isDived) return;
       isDiving = true;
       diveTl.timeScale(1).play();
-      /* When the dive completes, hide the hero entirely so the Problem
-         section sits at the top of the viewport. No auto-scroll, no
-         flying-particles flash — landing is instantaneous. */
-      setTimeout(function () {
-        isDiving = false;
-        isDived = true;
-        heroSection.style.display = 'none';
-        window.scrollTo(0, 0);
-      }, DIVE_DURATION_MS + 50);
+      /* The dive timeline's onComplete handler hides the hero in the
+         same frame it finishes — no setTimeout gap, no particle flash. */
     });
 
     /* ============================================================
