@@ -2091,17 +2091,6 @@
   }
   @media (min-width: 720px) { .about-hero { height: 360px; } }
 
-  .about-hero::before {
-    content: '';
-    position: absolute;
-    top: 38%; left: 50%;
-    transform: translate(-50%, -50%) rotate(-12deg);
-    width: 130px; height: 130px;
-    background: linear-gradient(135deg, #6FE3FF, #C084FC, #E879F9);
-    clip-path: polygon(50% 0%, 60% 35%, 100% 50%, 60% 65%, 50% 100%, 40% 65%, 0% 50%, 40% 35%);
-    filter: blur(0.5px) drop-shadow(0 0 30px rgba(217, 70, 239, 0.6));
-    opacity: 0.85;
-  }
   .about-hero::after {
     content: '';
     position: absolute;
@@ -2110,25 +2099,18 @@
       radial-gradient(ellipse at 50% 90%, rgba(10, 10, 16, 0.95), transparent 60%),
       linear-gradient(180deg, transparent 50%, rgba(10, 10, 16, 0.4) 100%);
   }
-  .about-avatars {
+  /* Cartoon doodle replacing the previous star — sketchy "painted" outline */
+  .about-hero-doodle {
     position: absolute;
-    bottom: -40px;
-    left: 24px;
-    display: flex;
-    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%) rotate(-6deg);
+    width: 130px;
+    height: auto;
+    z-index: 1;
+    filter: drop-shadow(0 0 28px rgba(217, 70, 239, 0.55));
+    pointer-events: none;
   }
-  .about-avatar {
-    width: 72px; height: 72px;
-    border-radius: 50%;
-    border: 4px solid var(--bg-page);
-    background-size: cover;
-    background-position: center;
-    margin-left: -16px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-  }
-  .about-avatar:first-child { margin-left: 0; }
-  .about-avatar.a1 { background: radial-gradient(circle at 50% 30%, #FCA5A5 0%, #B45309 40%, #1F2937 90%); }
-  .about-avatar.a2 { background: radial-gradient(circle at 50% 30%, #F59E0B 0%, #92400E 50%, #1F2937 90%); }
 
   .about-content {
     display: grid;
@@ -3314,23 +3296,23 @@
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="5" cy="4" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M1 12c0-2 2-4 4-4s4 2 4 4M9 4a2 2 0 1 1 0 4M11 12c0-1.5-1-3-3-3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
             Follower Growth
           </div>
-          <div class="result-value">+312%</div>
-          <div class="result-bar"><div class="result-bar-fill" style="width: 90%;"></div></div>
+          <div class="result-value">+<span data-count-up="312">312</span>%</div>
+          <div class="result-bar"><div class="result-bar-fill" data-bar-fill="90" style="width:90%"></div></div>
         </article>
         <article class="result-card">
           <div class="result-label">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1l4 8-4 4-4-4 4-8z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
             Engagement Rate
           </div>
-          <div class="result-value">+187%</div>
-          <div class="result-bar"><div class="result-bar-fill" style="width: 75%;"></div></div>
+          <div class="result-value">+<span data-count-up="187">187</span>%</div>
+          <div class="result-bar"><div class="result-bar-fill" data-bar-fill="75" style="width:75%"></div></div>
         </article>
         <article class="result-card">
           <div class="result-label">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l-1 5 3-2 3 2-1-5" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
             Authority Score
           </div>
-          <div class="result-value">94/100</div>
+          <div class="result-value"><span data-count-up="94">94</span>/100</div>
           <div class="result-segments" aria-hidden="true">
             <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
           </div>
@@ -3342,10 +3324,24 @@
   <!-- ========== ABOUT ========== -->
   <section class="about-section" id="about">
     <div class="about-hero" aria-hidden="true">
-      <div class="about-avatars">
-        <div class="about-avatar a1"></div>
-        <div class="about-avatar a2"></div>
-      </div>
+      <svg class="about-hero-doodle" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="doodleGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#6FE3FF"/>
+            <stop offset="50%" stop-color="#C084FC"/>
+            <stop offset="100%" stop-color="#E879F9"/>
+          </linearGradient>
+        </defs>
+        <g fill="none" stroke="url(#doodleGrad)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Shaft: pill shape -->
+          <rect x="72" y="18" width="56" height="160" rx="28" ry="28"/>
+          <!-- Tip line for cartoon definition -->
+          <path d="M84 32 Q100 22 116 32"/>
+          <!-- Two testicles -->
+          <ellipse cx="58" cy="198" rx="28" ry="24"/>
+          <ellipse cx="142" cy="198" rx="28" ry="24"/>
+        </g>
+      </svg>
     </div>
 
     <div class="container">
@@ -4132,6 +4128,77 @@
         attemptReverse();
       }
     }, { passive: true });
+
+    /* ============================================================
+       RESULTS — count-up + bar fill + segment stagger when in view
+       Numbers tween 0 → target, "+ % /" and "100" stay static.
+       Falls back to final values if JS / GSAP unavailable (HTML defaults).
+       ============================================================ */
+    (function setupResults() {
+      var resultsSection = document.getElementById('results');
+      if (!resultsSection) return;
+      var counters = resultsSection.querySelectorAll('[data-count-up]');
+      var bars = resultsSection.querySelectorAll('.result-bar-fill[data-bar-fill]');
+      var segmentsLists = resultsSection.querySelectorAll('.result-segments');
+      if (!counters.length) return;
+
+      /* Reset to start state. If user keeps prefers-reduced-motion or no
+         IntersectionObserver, we still ANIMATE on first scroll past the section. */
+      counters.forEach(function (el) { el.textContent = '0'; });
+      bars.forEach(function (el) { el.style.width = '0%'; });
+      segmentsLists.forEach(function (sg) {
+        Array.prototype.forEach.call(sg.children, function (s) {
+          s.style.opacity = '0';
+          s.style.transform = 'scale(0.5)';
+        });
+      });
+
+      function play() {
+        counters.forEach(function (el) {
+          var target = parseInt(el.getAttribute('data-count-up'), 10) || 0;
+          var obj = { val: 0 };
+          gsap.to(obj, {
+            val: target,
+            duration: 1.8,
+            ease: 'power2.out',
+            onUpdate: function () { el.textContent = Math.round(obj.val); },
+            onComplete: function () { el.textContent = String(target); }
+          });
+        });
+        bars.forEach(function (el) {
+          var target = el.getAttribute('data-bar-fill');
+          gsap.to(el, {
+            width: target + '%',
+            duration: 1.8,
+            ease: 'power2.out'
+          });
+        });
+        segmentsLists.forEach(function (sg) {
+          gsap.to(sg.children, {
+            opacity: 1,
+            scale: 1,
+            duration: 0.45,
+            stagger: 0.07,
+            ease: 'back.out(1.7)'
+          });
+        });
+      }
+
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              play();
+              io.disconnect();
+            }
+          });
+        }, { threshold: 0.25 });
+        io.observe(resultsSection);
+      } else {
+        /* Fallback: just play immediately so users still see the final numbers */
+        play();
+      }
+    })();
   });
 </script>
 
