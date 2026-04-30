@@ -311,6 +311,13 @@
     opacity: 1;
     pointer-events: auto;
   }
+  /* On reverse-dive: fade out fast and immediately so the rail doesn't
+     linger into the hero scene */
+  body.reversing .dot-nav {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+  }
   .dot-nav-item {
     position: relative;
     display: block;
