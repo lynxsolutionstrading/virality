@@ -3910,6 +3910,24 @@
       src.connect(bp).connect(g).connect(this.masterGain);
       src.start(t);
     };
+    /* Plop — subtle bubble-pop with quick downward pitch sweep */
+    SoundFX.prototype.plop = function () {
+      if (!this.ctx || this.muted) return;
+      var t = this.ctx.currentTime;
+      var dur = 0.11;
+      var osc = this.ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(680, t);
+      osc.frequency.exponentialRampToValueAtTime(110, t + dur);
+      var g = this.ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.13, t + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      osc.connect(g).connect(this.masterGain);
+      osc.start(t);
+      osc.stop(t + dur + 0.02);
+    };
+
     /* Impact — sub-bass hit + short noise transient */
     SoundFX.prototype.impact = function () {
       if (!this.ctx || this.muted) return;
@@ -4238,6 +4256,15 @@
 
       function pop(s) {
         s.isPopped = true;
+        /* SFX */
+        if (typeof sfx !== 'undefined') {
+          sfx.unlock();
+          sfx.plop();
+        }
+        /* Sync GSAP's internal x/y to the current drift position so the
+           pop happens exactly where the blob last was, instead of
+           snapping back to (0,0). */
+        gsap.set(s.el, { x: s.x, y: s.y });
         gsap.to(s.el, {
           scale: 1.65,
           opacity: 0,
