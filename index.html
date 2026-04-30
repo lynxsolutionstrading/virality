@@ -732,16 +732,35 @@
     font-weight: 700;
     letter-spacing: 0.02em;
     box-shadow: var(--shadow-cta);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: scale 0.2s ease, box-shadow 0.2s ease;
     text-decoration: none;
     cursor: pointer;
+    will-change: translate, scale;
+    scale: 1;
   }
   .cta-primary:hover {
-    transform: translateY(-1px);
+    scale: 1.05;
     box-shadow: 0 16px 50px -8px rgba(192, 132, 252, 0.65), 0 4px 16px -4px rgba(111, 227, 255, 0.4);
   }
   .cta-primary svg { transition: transform 0.2s ease; }
   .cta-primary:hover svg { transform: translateX(2px); }
+
+  /* Periodic 3-second pulse on the conversion CTAs — same idea as the
+     old DIVE-IN button vibrate. Uses individual `translate` so it doesn't
+     fight the hover `scale` transform. */
+  .cta-primary,
+  .cta-white {
+    animation: ctaPulse 3s ease-in-out infinite;
+  }
+  @keyframes ctaPulse {
+    0%, 89%, 100% { translate: 0 0; }
+    90% { translate: -2px 0; }
+    91% { translate: 3px -1px; }
+    92% { translate: -3px 1px; }
+    93% { translate: 2px 0; }
+    94% { translate: -1px 0; }
+    95% { translate: 1px 0; }
+  }
 
   .cta-ghost {
     display: inline-flex;
@@ -1232,7 +1251,7 @@
     width: 100%;
     height: 2px;
     margin: 0;
-    background: linear-gradient(90deg, transparent 0%, #0b0d12 calc(22% + 50px), #0b0d12 calc(78% - 50px), transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, #0b0d12 calc(22% + 100px), #0b0d12 calc(78% - 100px), transparent 100%);
     position: relative;
   }
 
@@ -2294,12 +2313,21 @@
     font-size: 15px;
     font-weight: 700;
     backdrop-filter: blur(20px);
-    transition: transform 0.2s ease, background 0.2s ease;
+    transition: scale 0.2s ease, background 0.2s ease;
     box-shadow: 0 12px 40px -12px rgba(255, 255, 255, 0.2);
     text-decoration: none;
+    will-change: translate, scale;
+    scale: 1;
   }
-  .cta-white:hover { transform: translateY(-1px); background: white; }
-  .cta-bolt { color: var(--accent-magenta); }
+  .cta-white:hover { scale: 1.05; background: white; }
+  .cta-bolt {
+    color: var(--accent-magenta);
+    transition: filter 0.25s ease, text-shadow 0.25s ease;
+  }
+  .cta-white:hover .cta-bolt {
+    filter: drop-shadow(0 0 6px rgba(217, 70, 239, 0.85));
+    text-shadow: 0 0 8px rgba(217, 70, 239, 0.6);
+  }
   .trust-line {
     margin-top: 22px;
     display: flex;
@@ -3085,7 +3113,7 @@
     </div>
 
     <div class="partner-cta">
-      <a class="cta-primary" href="#contact">
+      <a class="cta-primary" href="#contact" data-open-contact>
         I Want to Grow My Digital Authority
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
@@ -3469,7 +3497,7 @@
       <h2 class="final-title">Ready to turn growth into <span class="grad">strategy?</span></h2>
       <p class="final-desc">Join 500+ brands and creators who stopped guessing and started compounding. We'll audit your profile, map a strategy, and run the campaigns — you stay focused on the content.</p>
 
-      <a class="cta-white" href="mailto:hello@virality.example">
+      <a class="cta-white" href="#contact" data-open-contact>
         <span class="cta-bolt" aria-hidden="true">⚡</span>
         Get Your Free Strategy Audit
       </a>
