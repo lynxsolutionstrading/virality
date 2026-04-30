@@ -4746,6 +4746,13 @@
       setTimeout(function () { sfx.powerDown(); }, 280);  /* screen fade-out */
       setTimeout(function () { sfx.whoosh(false); }, 480); /* phone dive begins */
       setTimeout(function () { sfx.impact(); }, 1500);    /* landing thud */
+      /* Force GSAP to recapture all "from" values from the CURRENT
+         phone state on every play. Otherwise it caches the rotation
+         it saw on the first dive, and a second dive (when rotation
+         has continued to a different value) snaps to that cached
+         value before tweening — visible glitch in both forward and
+         reverse playback. */
+      diveTl.invalidate();
       diveTl.timeScale(1).play();
       /* The dive timeline's onComplete handler hides the hero in the
          same frame it finishes — no setTimeout gap, no particle flash. */
