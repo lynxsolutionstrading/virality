@@ -802,7 +802,10 @@
       radial-gradient(ellipse at 70% 70%, rgba(232, 121, 249, 0.4), transparent 60%),
       linear-gradient(180deg, #0a0a14 0%, #1a0a28 40%, #0a0a14 100%);
     overflow: hidden;
-    transition: background 0.18s ease-out;
+    /* No `transition` here: browsers can't cleanly interpolate between
+       multi-stop gradients and a solid color, which produced a flicker
+       when .is-off toggled. The change is now instant — and hidden by
+       the still-opaque image / statusbar above it. */
   }
   .hero-phone-screen::before {
     content: '';
@@ -811,7 +814,7 @@
     background:
       linear-gradient(135deg, transparent 30%, rgba(255, 255, 255, 0.06) 50%, transparent 70%);
     pointer-events: none;
-    transition: opacity 0.18s ease-out;
+    /* Sheen toggles instantly with .is-off, no transition. */
   }
   /* "Off" state — flat single colour, no reflection sheen, no radial glow */
   .hero-phone-screen.is-off {
@@ -851,7 +854,10 @@
     background: #0b0d12;
     z-index: 1;
     pointer-events: none;
-    transition: opacity 0.18s ease-out;
+    /* No `transition: opacity` — GSAP animates this opacity in the
+       dive timeline (Phase 3 fade-out). A CSS opacity transition
+       fights GSAP's per-frame updates and produces visible lag. */
+    will-change: opacity;
   }
   .hero-phone-screen.is-off .phone-screen-statusbar {
     opacity: 0;
