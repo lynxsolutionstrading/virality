@@ -387,23 +387,38 @@
   }
 
   /* Instagram screenshot mockup on phone screen
-     - width: 100% (don't squash, don't stretch horizontally)
-     - height: 100% with object-fit: cover so any extra image height is
-       cropped at the bottom (object-position: center top)
-     - border-radius inherited from screen so corners are rounded even
-       on older WebKit that doesn't clip non-stacking-context children */
+     - shifted down 36px so the username sits cleanly below the Dynamic
+       Island (which extends to ~36px from screen top)
+     - width: 100% (don't squash horizontally)
+     - height: auto (natural aspect — minor bottom overflow is clipped
+       by the screen's overflow:hidden) */
   .phone-screen-image {
     position: absolute;
-    inset: 0;
+    top: 36px;
+    left: 0;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-    border-radius: inherit;
+    height: auto;
     display: block;
     /* Darken by 20% so the foreground logo + button stand out cleanly */
     filter: brightness(0.8);
     will-change: opacity;
+  }
+  /* Black status-bar plate that fills the area above the image and
+     mimics the iPhone's real status bar — Dynamic Island floats inside
+     it like on real hardware. Hides during the dive's "off" state. */
+  .phone-screen-statusbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 36px;
+    background: #000;
+    z-index: 1;
+    pointer-events: none;
+    transition: opacity 0.18s ease-out;
+  }
+  .hero-phone-screen.is-off .phone-screen-statusbar {
+    opacity: 0;
   }
   /* Fallback when image is missing — subtle dark gradient */
   .phone-screen-fallback {
@@ -2713,6 +2728,7 @@
           <div class="hero-phone-screen" data-hero-phone-screen>
             <div class="phone-screen-fallback"></div>
             <img class="phone-screen-image" src="Logo/insta.jpg" alt="" data-phone-screen-img>
+            <div class="phone-screen-statusbar"></div>
           </div>
           <div class="hero-phone-island"></div>
           <div class="hero-phone-btn hero-phone-btn--action"></div>
