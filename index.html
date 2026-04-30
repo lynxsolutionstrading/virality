@@ -2601,39 +2601,13 @@
     transform: translateX(3px);
   }
 
-  /* Footer status line */
-  .contact-modal-footer {
-    margin-top: 20px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border-card);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-  }
-  .contact-modal-status-dot {
-    width: 7px;
-    height: 7px;
-    background: #34D399;
-    border-radius: 50%;
-    box-shadow: 0 0 8px #34D399;
-    animation: statusBlink 1.6s ease-in-out infinite;
-  }
-  @keyframes statusBlink {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%      { opacity: 0.5; transform: scale(0.85); }
-  }
-
   /* Mobile tweaks */
   @media (max-width: 480px) {
-    .contact-modal { padding: 12px; }
+    /* Asymmetric padding shifts the centered card 15px upward
+       (extra 30px on padding-bottom moves the centre 15px up). */
+    .contact-modal { padding: 12px 12px 42px; }
     .contact-modal-card {
-      padding: 28px 18px 16px;
+      padding: 28px 18px 18px;
       border-radius: 22px;
     }
     .contact-modal-title { font-size: 24px; }
@@ -2648,8 +2622,7 @@
     .contact-modal-card,
     .contact-row,
     .contact-avatar svg,
-    .contact-avatar-status,
-    .contact-modal-status-dot {
+    .contact-avatar-status {
       animation: none !important;
     }
     .contact-row { opacity: 1; }
@@ -3581,11 +3554,6 @@
       </a>
 
     </div>
-
-    <footer class="contact-modal-footer">
-      <span class="contact-modal-status-dot" aria-hidden="true"></span>
-      Online · Replying now
-    </footer>
   </div>
 </dialog>
 
