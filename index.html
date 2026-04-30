@@ -4819,14 +4819,19 @@
 
     /* Click on the standalone "Back to start" button — works from
        anywhere on the page. Flow:
-         1. Fade in a full-screen dark overlay (~350ms) — the user's
-            current content fades out from wherever they are.
-         2. While it's fully opaque (invisible to the user), snap
-            scroll to 0 and trigger the reverse-dive.
-         3. Fade the overlay back out (~450ms) — the user now sees
-            the reverse-dive animation already in progress, returning
-            them to the hero start screen.
-       No visible smooth-scroll step. */
+         1. Fade in a full-screen dark overlay. We wait for the actual
+            CSS `transitionend` (not a guesstimated setTimeout) so we
+            KNOW the overlay is 100% opaque before doing anything that
+            would cause a visible layout shift.
+         2. Under the opaque overlay: scrollTo(0,0), restore hero,
+            call attemptReverse() which adds .scroll-locked and starts
+            the reverse-dive timeline.
+         3. After the reverse has rendered a frame or two, fade the
+            overlay back out — the user sees the reverse animation
+            already mid-flight.
+       Doing the disruptive work BEFORE the overlay is fully opaque is
+       what caused the click-button glitch — the user briefly saw the
+       scroll snap + display change through a 95%-opaque overlay. */
     document.addEventListener('click', function (e) {
       var trigger = e.target.closest('[data-dive-reverse]');
       if (!trigger) return;
@@ -4838,18 +4843,31 @@
       document.body.appendChild(overlay);
       /* Force a reflow so the opacity transition runs from 0 to 1 */
       void overlay.offsetWidth;
-      overlay.style.opacity = '1';
 
-      setTimeout(function () {
-        /* Hidden under the opaque overlay: jump to top + start reverse */
+      var started = false;
+      function startReverse() {
+        if (started) return;
+        started = true;
+        /* Now genuinely hidden under the fully-opaque overlay */
         window.scrollTo(0, 0);
         attemptReverse();
-        /* Give the reverse a couple of frames to start, then reveal it */
+        /* Give the reverse a couple of frames to render, then reveal */
         setTimeout(function () {
           overlay.style.opacity = '0';
           setTimeout(function () { overlay.remove(); }, 500);
         }, 80);
-      }, 350);
+      }
+      overlay.addEventListener('transitionend', function onFadeIn(ev) {
+        if (ev.propertyName !== 'opacity') return;
+        overlay.removeEventListener('transitionend', onFadeIn);
+        startReverse();
+      });
+      /* Safety fallback in case transitionend never fires (e.g. tab
+         was backgrounded mid-transition): worst-case, behave like the
+         old code after a generous timeout. */
+      setTimeout(startReverse, 600);
+
+      overlay.style.opacity = '1';
     });
 
     /* Touch — pull-down at top of page */
