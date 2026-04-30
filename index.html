@@ -3396,42 +3396,54 @@
     if (typeof ScrollToPlugin !== 'undefined') gsap.registerPlugin(ScrollToPlugin);
 
     /* ============================================================
-       PARTICLES — slow drift + cursor repulsion (always on)
+       PARTICLES — true crisscross motion + cursor repulsion
+       Each particle has (x, y, vx, vy). Velocity rotates slowly
+       so paths gently curve. Wraps around viewport edges.
        ============================================================ */
     var field = document.querySelector('[data-particles]');
     var particles = [];
+    var W = 0, H = 0;
+
+    function measureField() {
+      if (!field) return;
+      W = field.clientWidth || window.innerWidth;
+      H = field.clientHeight || window.innerHeight;
+    }
+    measureField();
+
     if (field) {
       var colors = ['#6FE3FF', '#C084FC', '#E879F9', '#ffffff'];
-      var COUNT = 105; /* 30% more than before */
+      var COUNT = 315; /* 200% more than the previous 105 */
       for (var i = 0; i < COUNT; i++) {
         var p = document.createElement('div');
         p.className = 'particle';
         var size = Math.random() * 3 + 1;
         var color = colors[Math.floor(Math.random() * colors.length)];
         p.style.cssText =
-          'left:' + (Math.random() * 100) + '%;' +
-          'top:' + (Math.random() * 100) + '%;' +
+          'left:0;top:0;' +
           'width:' + size + 'px;' +
           'height:' + size + 'px;' +
           'background:' + color + ';' +
           'box-shadow:0 0 ' + (size * 4) + 'px ' + color + ';' +
-          'opacity:' + (0.3 + Math.random() * 0.5) + ';' +
+          'opacity:' + (0.35 + Math.random() * 0.45) + ';' +
           'will-change:transform;';
         field.appendChild(p);
 
-        /* Per-particle drift parameters (slow sine motion) */
-        p._driftPhaseX = Math.random() * Math.PI * 2;
-        p._driftPhaseY = Math.random() * Math.PI * 2;
-        p._driftAmpX = 6 + Math.random() * 12;
-        p._driftAmpY = 6 + Math.random() * 12;
-        p._driftSpeedX = 0.00007 + Math.random() * 0.0001;
-        p._driftSpeedY = 0.00007 + Math.random() * 0.0001;
+        /* Even-ish initial distribution + random direction */
+        p._x = Math.random() * W;
+        p._y = Math.random() * H;
+        var speed = 0.18 + Math.random() * 0.42; /* 0.18 - 0.60 px/frame */
+        var angle = Math.random() * Math.PI * 2;
+        p._vx = Math.cos(angle) * speed;
+        p._vy = Math.sin(angle) * speed;
         p._currRepelX = 0;
         p._currRepelY = 0;
 
         particles.push(p);
       }
     }
+
+    window.addEventListener('resize', measureField);
 
     /* Cursor tracking for repulsion */
     var REPEL_RADIUS = 110;            /* ~3 cm at 96 DPI */
@@ -3450,25 +3462,41 @@
       document.addEventListener('mouseleave', function () { mousePresent = false; }, { passive: true });
     }
 
-    /* Single ticker drives drift + repulsion for all particles */
+    /* Single ticker drives motion + repulsion for all particles */
     if (!prefersReduce && particles.length) {
-      gsap.ticker.add(function (time) {
-        var ms = time * 1000;
+      gsap.ticker.add(function () {
         var doRepel = mousePresent && isFinePointer;
+        var fieldRect = doRepel ? field.getBoundingClientRect() : null;
 
         for (var j = 0; j < particles.length; j++) {
           var pp = particles[j];
 
-          var driftX = Math.sin(ms * pp._driftSpeedX + pp._driftPhaseX) * pp._driftAmpX;
-          var driftY = Math.cos(ms * pp._driftSpeedY + pp._driftPhaseY) * pp._driftAmpY;
+          /* Slowly rotate velocity for gently curving paths */
+          var angleChange = (Math.random() - 0.5) * 0.008;
+          var cosA = Math.cos(angleChange);
+          var sinA = Math.sin(angleChange);
+          var newVx = pp._vx * cosA - pp._vy * sinA;
+          var newVy = pp._vx * sinA + pp._vy * cosA;
+          pp._vx = newVx;
+          pp._vy = newVy;
 
+          /* Translate */
+          pp._x += pp._vx;
+          pp._y += pp._vy;
+
+          /* Wrap edges with small buffer */
+          if (pp._x < -8) pp._x = W + 8;
+          else if (pp._x > W + 8) pp._x = -8;
+          if (pp._y < -8) pp._y = H + 8;
+          else if (pp._y > H + 8) pp._y = -8;
+
+          /* Cursor repulsion in viewport coordinates */
           var targetRepelX = 0, targetRepelY = 0;
           if (doRepel) {
-            var rect = pp.getBoundingClientRect();
-            var cx = rect.left + rect.width * 0.5;
-            var cy = rect.top + rect.height * 0.5;
-            var dx = cx - mouseX;
-            var dy = cy - mouseY;
+            var vpx = fieldRect.left + pp._x;
+            var vpy = fieldRect.top + pp._y;
+            var dx = vpx - mouseX;
+            var dy = vpy - mouseY;
             var distSq = dx * dx + dy * dy;
             if (distSq < REPEL_RADIUS_SQ && distSq > 0.01) {
               var dist = Math.sqrt(distSq);
@@ -3477,13 +3505,13 @@
               targetRepelY = (dy / dist) * force;
             }
           }
-          /* Smooth approach toward repel target */
+          /* Smooth approach to repel target */
           pp._currRepelX += (targetRepelX - pp._currRepelX) * 0.18;
           pp._currRepelY += (targetRepelY - pp._currRepelY) * 0.18;
 
           pp.style.transform =
-            'translate3d(' + (driftX + pp._currRepelX).toFixed(1) + 'px,' +
-                            (driftY + pp._currRepelY).toFixed(1) + 'px,0)';
+            'translate3d(' + (pp._x + pp._currRepelX).toFixed(1) + 'px,' +
+                            (pp._y + pp._currRepelY).toFixed(1) + 'px,0)';
         }
       });
     }
