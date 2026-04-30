@@ -475,6 +475,12 @@
       drop-shadow(0 0 28px rgba(192, 132, 252, 0.55))
       drop-shadow(0 0 56px rgba(232, 121, 249, 0.35));
     display: block;
+    overflow: visible; /* let exploded letters fly outside the SVG bounding box */
+  }
+  .hero-letter {
+    transform-origin: center;
+    transform-box: fill-box;
+    will-change: transform, opacity;
   }
 
   .dive-btn {
@@ -802,7 +808,7 @@
      so dive-in transition is seamless.
      ============================================================ */
   #problem {
-    background: #000000;
+    background: #0b0d12;
     position: relative;
     z-index: 1;
   }
@@ -2707,10 +2713,48 @@
       </div>
     </div>
 
-    <!-- Centered overlay: VIRALITY logo + DIVE IN button -->
+    <!-- Centered overlay: VIRALITY logo (inline so letters can explode individually) + DIVE IN button -->
     <div class="hero-cta-overlay" data-hero-overlay>
-      <svg class="logo-svg logo-svg--hero" viewBox="0 0 800 130" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-label="Virality" focusable="false">
-        <use href="#logo-virality" xlink:href="#logo-virality"/>
+      <svg class="logo-svg logo-svg--hero hero-logo-explode" viewBox="0 0 800 130" xmlns="http://www.w3.org/2000/svg" aria-label="Virality" focusable="false">
+        <defs>
+          <linearGradient id="hero-grad-1" x1="675.5079346" y1="404.3818817" x2="742.7286065" y2="404.3818817" gradientUnits="userSpaceOnUse">
+            <stop offset=".15" stop-color="#898ef5"/>
+            <stop offset=".8" stop-color="#cf64f3"/>
+          </linearGradient>
+          <linearGradient id="hero-grad-2" x1="622.2343452" y1="414.2628174" x2="682.4815063" y2="414.2628174" gradientUnits="userSpaceOnUse">
+            <stop offset=".2" stop-color="#39dce9"/>
+            <stop offset=".85" stop-color="#898ef5"/>
+          </linearGradient>
+        </defs>
+        <g transform="translate(-320, -340)">
+          <g class="hero-letter" data-letter="V" fill="currentColor">
+            <path d="M444.3200073,345.2592773h-12.576416c-.7871704,0-1.5019531.4567261-1.8291016,1.1687012l-42.960083,93.4979248-42.960144-93.4979248c-.3271484-.7119751-1.0419312-1.1687012-1.8290405-1.1687012h-12.576416c-1.460083,0-2.4335327,1.4987183-1.8331909,2.8223877l52.1102905,114.888855c.3251343.7167969,1.0424194,1.1776123,1.8331299,1.1776123h10.5107422c.7907104,0,1.5079956-.4608154,1.8331299-1.1776123l52.1102295-114.888855c.6004028-1.3236694-.3730469-2.8223877-1.8331299-2.8223877Z"/>
+          </g>
+          <g class="hero-letter" data-letter="I1" fill="currentColor">
+            <rect x="468.8518677" y="345.2592773" width="16.2962646" height="118.888855" rx="2" ry="2"/>
+          </g>
+          <g class="hero-letter" data-letter="R" fill="currentColor">
+            <path d="M573.3248901,416.862915c19.3030396-.5458374,34.7861938-16.3538208,34.7861938-35.7888184v-.000061c0-19.7799683-16.03479-35.8147583-35.8147583-35.8147583h-61c-1.1046143,0-2,.8953857-2,2v10.9629517c0,1.1045532.8953857,2,2,2h60.5925903c11.4138794,0,20.666626,9.2527466,20.666626,20.666626v.000061c0,11.4138794-9.2527466,20.666626-20.666626,20.666626h-60.5925903c-1.1046143,0-2,.8954468-2,2v58.5925903c0,1.1045532.8953857,2,2,2h11.555542c1.1045532,0,2-.8954468,2-2v-45.2592163h27.111084l39.7124023,45.8994141c.7471313.8635864,1.8327026,1.3598022,2.9746704,1.3598022h11.9502563c2.8088379,0,4.3260498-3.2927246,2.5010986-5.4279175l-35.7764893-41.8572998Z"/>
+          </g>
+          <g class="hero-letter hero-letter--mark" data-letter="A">
+            <path fill="url(#hero-grad-1)" d="M742.5146484,461.2532959l-57.6026611-115.1359253c-1.001709-2.0023193-3.8592529-2.0023193-4.8609619,0l-4.5430908,9.0807495,49.9523315,97.9129639-42.9787598-36.1481323v14.2592773l38.7793579,32.4595337c.3599243.3012695.8143311.4663696,1.2836914.4663696h18.1814575c1.4869995,0,2.4539795-1.5650024,1.7886353-2.8948364Z"/>
+            <polygon fill="#898ef5" points="665.6101074 423.1865234 682.4815063 388.2963257 682.4815063 388.2962646 678.6732788 380.4208984 678.6732788 388.2963257 678.6732788 380.4208984 639.222229 451.777771 682.4815063 416.9629517 682.4815063 411.333313 665.6101074 423.1865234"/>
+            <path fill="url(#hero-grad-2)" d="M639.222229,451.777771l39.4510498-71.3568726-7.7578735-16.043396-48.4671021,96.8757935c-.6653442,1.329834.3016357,2.8948364,1.7886353,2.8948364h18.1814575c.4693604,0,.9237671-.1651001,1.2836914-.4663696l38.7794189-32.4595337v-14.2592773l-43.2592773,34.8148193Z"/>
+            <polygon fill="#898ef5" points="682.4815063 388.2962646 682.4815063 388.2963257 699.3528442 423.1865234 682.4815063 411.333313 682.4815063 416.9629517 725.4602661 453.111084 675.5079346 355.1981201 670.9154053 364.3775024 678.6732788 380.4208984 682.4815063 388.2962646"/>
+          </g>
+          <g class="hero-letter" data-letter="L" fill="currentColor">
+            <path d="M838.777771,448.666687h-65.0370483v-101.4074097c0-1.1046143-.8953857-2-2-2h-12.2962646c-1.1045532,0-2,.8953857-2,2v114.888855c0,1.1046143.8954468,2,2,2h79.333313c1.1045532,0,2-.8953857,2-2v-11.4814453c0-1.1046143-.8954468-2-2-2Z"/>
+          </g>
+          <g class="hero-letter" data-letter="I2" fill="currentColor">
+            <rect x="859.3703613" y="345.2592773" width="16.2963257" height="118.888855" rx="2" ry="2"/>
+          </g>
+          <g class="hero-letter" data-letter="T" fill="currentColor">
+            <path d="M991,345.2592773h-92.2963257c-1.1045532,0-2,.8953857-2,2v11.4074097c0,1.1045532.8954468,2,2,2h38v101.4814453c0,1.1046143.8954468,2,2,2h12.2963257c1.1045532,0,2-.8953857,2-2v-101.4814453h38c1.1045532,0,2-.8954468,2-2v-11.4074097c0-1.1046143-.8954468-2-2-2Z"/>
+          </g>
+          <g class="hero-letter" data-letter="Y" fill="currentColor">
+            <path d="M1107.444458,345.2592773h-9.6327515c-.6893311,0-1.3300171.3549194-1.6956177.9393311l-36.5975952,58.5050659-36.5975342-58.5050659c-.3656006-.5844116-1.0062866-.9393311-1.6956177-.9393311h-9.6327515c-1.1045532,0-2,.8953857-2,2v8.9588013c0,.3893433.1136475.7702026.3269653,1.0958862l41.4508057,63.2786255v41.555542c0,1.1046143.8954468,2,2,2h12.2963257c1.1045532,0,2-.8953857,2-2v-41.555542l41.4507446-63.2786255c.2133789-.3256836.3270264-.706543.3270264-1.0958862v-8.9588013c0-1.1046143-.8954468-2-2-2Z"/>
+          </g>
+        </g>
       </svg>
       <button type="button" class="dive-btn" data-dive-in aria-label="Dive into Virality">
         DIVE IN
@@ -3723,15 +3767,67 @@
       }
     });
 
-    /* Overlay (logo + button) fades fast */
-    diveTl.to(overlay, {
+    /* ---- Phase 1: Logo letters explode (T = 0 → ~0.7s) ---- */
+    var letters = gsap.utils.toArray('.hero-letter');
+    var letterCount = letters.length;
+    letters.forEach(function (letter, i) {
+      /* Each letter gets a roughly evenly distributed angle with random jitter */
+      var baseAngle = (i / letterCount) * Math.PI * 2;
+      var angle = baseAngle + (Math.random() - 0.5) * 0.7;
+      var distance = 360 + Math.random() * 360;
+      var dx = Math.cos(angle) * distance;
+      var dy = Math.sin(angle) * distance - 80; /* slight upward bias for natural "flying" feel */
+      var rot = (Math.random() - 0.5) * 1080;   /* up to ±540° spin */
+      var skew = (Math.random() - 0.5) * 30;
+      var endScale = 0.25 + Math.random() * 0.55;
+
+      diveTl.to(letter, {
+        x: dx,
+        y: dy,
+        rotation: rot,
+        skewX: skew,
+        scale: endScale,
+        opacity: 0,
+        duration: 0.55 + Math.random() * 0.2,
+        ease: 'power3.out'
+      }, 0.02 + i * 0.022);
+    });
+
+    /* DIVE IN button fades early so it doesn't compete with the explosion */
+    diveTl.to('.dive-btn', {
       opacity: 0,
-      scale: 0.85,
-      duration: 0.35,
+      scale: 0.78,
+      duration: 0.25,
       ease: 'power2.in'
     }, 0);
 
-    /* Phone scales massively, locks rotation to 0 */
+    /* ---- Phase 2: Screen glitch (T = 0.22 → 0.42s) ---- */
+    if (phoneScreenImg) {
+      diveTl.to(phoneScreenImg, { x: 8,  filter: 'brightness(0.8) hue-rotate(120deg) saturate(2.2)',     duration: 0.04, ease: 'none' }, 0.22)
+            .to(phoneScreenImg, { x: -10, filter: 'brightness(0.8) hue-rotate(-100deg) saturate(2.5)',   duration: 0.04, ease: 'none' }, 0.27)
+            .to(phoneScreenImg, { x: 6,  filter: 'brightness(0.8) hue-rotate(180deg) contrast(1.8)',    duration: 0.04, ease: 'none' }, 0.32)
+            .to(phoneScreenImg, { x: -4, filter: 'brightness(0.95) invert(1) hue-rotate(0deg)',          duration: 0.04, ease: 'none' }, 0.37)
+            .to(phoneScreenImg, { x: 0,  filter: 'brightness(0.8)',                                       duration: 0.04, ease: 'none' }, 0.41);
+    }
+
+    /* ---- Phase 3: Screen turns OFF — switches to #0b0d12 (T = 0.42 → 0.55s) ---- */
+    if (phoneScreen) {
+      diveTl.to(phoneScreen, {
+        backgroundColor: '#0b0d12',
+        background: '#0b0d12',
+        duration: 0.13,
+        ease: 'power2.inOut'
+      }, 0.45);
+    }
+    if (phoneScreenImg) {
+      diveTl.to(phoneScreenImg, {
+        opacity: 0,
+        duration: 0.13,
+        ease: 'power2.in'
+      }, 0.45);
+    }
+
+    /* ---- Phase 4: Existing phone dive (T = 0.55 → 1.65s) ---- */
     diveTl.to(phone, {
       rotateY: 0,
       rotateX: 0,
@@ -3739,47 +3835,29 @@
       z: 1800,
       duration: 1.1,
       ease: 'power2.in'
-    }, 0.05);
+    }, 0.55);
 
-    /* Phone glow expands & fades */
     diveTl.to('[data-hero-phone-glow]', {
       scale: 12,
       opacity: 0,
       duration: 0.6,
       ease: 'power2.out'
-    }, 0.1);
+    }, 0.6);
 
-    /* IG screenshot fades out as we get close */
-    if (phoneScreenImg) {
-      diveTl.to(phoneScreenImg, {
-        opacity: 0,
-        duration: 0.45,
-        ease: 'power2.in'
-      }, 0.55);
-    }
-    /* Screen background animates to pure black to match Instagram dark */
-    if (phoneScreen) {
-      diveTl.to(phoneScreen, {
-        background: '#000000',
-        duration: 0.5,
-        ease: 'power2.inOut'
-      }, 0.6);
-    }
+    /* Side neon edges + cyberpunk grid fade alongside the dive */
+    diveTl.to('.hero-edge', { opacity: 0, duration: 0.5 }, 0.5);
+    diveTl.to('.hero-grid', { opacity: 0, duration: 0.5 }, 0.55);
 
-    /* Side neon edges + cyberpunk grid fade */
-    diveTl.to('.hero-edge', { opacity: 0, duration: 0.5 }, 0.2);
-    diveTl.to('.hero-grid', { opacity: 0, duration: 0.5 }, 0.3);
-
-    /* Phone frame highlights/shadows fade so we can "go through" */
+    /* Phone frame shadow fades so we can "go through" */
     diveTl.to('.hero-phone-frame', {
       boxShadow: '0 0 0 rgba(0,0,0,0)',
       duration: 0.4
-    }, 0.7);
+    }, 0.95);
 
     /* ============================================================
        CLICK HANDLER — play dive forward
        ============================================================ */
-    var DIVE_DURATION_MS = 1400;
+    var DIVE_DURATION_MS = 1650;
     var isDiving = false;
     var isDived = false;
 
