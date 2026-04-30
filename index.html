@@ -1578,7 +1578,10 @@
     transform-origin: 50% 50%;
     will-change: transform, opacity;
     filter: drop-shadow(0 3px 6px rgba(217, 70, 239, 0.45));
-    animation: heartRise 1.5s cubic-bezier(0.25, 0.65, 0.4, 1) forwards;
+    /* `linear` timing on the rise = constant vertical speed, no
+       acceleration ramps. Each heart's `animation-duration` is set
+       per-heart in JS so different hearts rise at different speeds. */
+    animation: heartRise 1.6s linear forwards;
   }
   .heart-rain__heart svg {
     display: block;
@@ -1586,16 +1589,15 @@
     height: 100%;
   }
   /* Hearts spawn inside the top portion of the phone (z-index 1, phone
-     is z-index 2) so they're hidden behind the phone for the first
-     part of the animation, then visibly emerge from the phone's top
-     edge and rise + pop. Opacity stays at 1 during the rise — the
-     phone itself naturally masks them while they're still behind it. */
+     is z-index 2) so they're hidden behind the phone while still
+     inside its bounds and emerge as they cross the top edge.
+     The translate is linear-paced; the scale grows with the same
+     linear pace; the pop (extra scale + fade-out) is concentrated in
+     the last ~12% of the timeline. */
   @keyframes heartRise {
-    0%   { translate: 0 0;      scale: 0.4; opacity: 1; }
-    25%  { translate: 0 -22px;  scale: 0.75; opacity: 1; }
-    55%  { translate: 0 -55px;  scale: 1.0; opacity: 1; }
-    82%  { translate: 0 -88px;  scale: 1.05; opacity: 1; }
-    100% { translate: 0 -110px; scale: 1.55; opacity: 0; }
+    0%   { translate: 0 0;      scale: 0.55; opacity: 1; }
+    88%  { translate: 0 -100px; scale: 1;    opacity: 1; }
+    100% { translate: 0 -110px; scale: 1.5;  opacity: 0; }
   }
   /* Mobile: no heart rain (per spec) */
   @media (max-width: 959px) {
@@ -4858,9 +4860,16 @@
            exact same line. */
         heart.style.bottom = (76 + Math.random() * 8) + '%';
 
+        /* Each heart rises at its own constant speed: durations vary
+           between 1.2s (faster) and 2.2s (slower). Combined with
+           `linear` timing in CSS this produces uniform vertical motion
+           per heart but visibly different speeds across hearts. */
+        var durMs = 1200 + Math.random() * 1000;
+        heart.style.animationDuration = durMs + 'ms';
+
         root.appendChild(heart);
-        /* Auto-clean after the animation finishes */
-        setTimeout(function () { heart.remove(); }, 1600);
+        /* Auto-clean once this heart's animation has finished */
+        setTimeout(function () { heart.remove(); }, durMs + 100);
       }
 
       /* Pause spawning while the section is offscreen so we don't
