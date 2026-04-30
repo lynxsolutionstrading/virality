@@ -1327,6 +1327,23 @@
     0%, 100% { translate: 170px 0; }
     50%      { translate: 0 0; }
   }
+  /* Mobile drift: symmetric around 0 with a smaller range so the logos
+     never run off-screen on narrow viewports. */
+  @keyframes forbesDriftMobile {
+    0%, 100% { translate: -45px 0; }
+    50%      { translate:  45px 0; }
+  }
+  @keyframes yahooDriftMobile {
+    0%, 100% { translate:  45px 0; }
+    50%      { translate: -45px 0; }
+  }
+  @media (max-width: 959px) {
+    .press-logo.serif  { animation-name: forbesDriftMobile; }
+    .press-logo.purple { animation-name: yahooDriftMobile;  }
+    /* Stack order on mobile: text on top, logos below. */
+    .press-grid > .press-text  { order: 1; }
+    .press-grid > .press-logos { order: 2; }
+  }
 
   .press-text { text-align: center; }
   @media (min-width: 960px) { .press-text { text-align: right; } }
