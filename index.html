@@ -147,12 +147,14 @@
     animation: gradShine 3s cubic-bezier(0.45, 0, 0.2, 1) infinite;
   }
   .grad-blue {
+    /* Used on the WHITE band — peak is dark indigo so the sweep is
+       visible against the light background. */
     background: linear-gradient(
       110deg,
       #38BDF8 0%,
       #6FE3FF 25%,
       #A78BFA 40%,
-      rgba(255, 255, 255, 0.92) 50%,
+      #1E1B4B 50%,
       #A78BFA 60%,
       #6FE3FF 75%,
       #38BDF8 100%
@@ -1188,6 +1190,8 @@
     filter: blur(2px);
     opacity: 0.85;
     z-index: 1;
+    cursor: pointer;
+    will-change: transform, opacity;
   }
   .illu-blob.b1 {
     width: 90px; height: 90px;
@@ -1217,16 +1221,14 @@
   }
 
   .iridescent-wave {
+    display: block;
+    width: 100%;
     height: 60px;
-    background: linear-gradient(90deg,
-      rgba(111, 227, 255, 0.4) 0%,
-      rgba(192, 132, 252, 0.4) 33%,
-      rgba(217, 70, 239, 0.3) 66%,
-      rgba(111, 227, 255, 0.3) 100%);
-    filter: blur(20px);
-    transform: scaleY(0.5);
     margin: -30px 0;
     position: relative;
+    overflow: visible; /* let the path push beyond the SVG box when grabbed */
+    filter: blur(8px);
+    pointer-events: auto;
   }
 
   .press-section {
@@ -1254,12 +1256,13 @@
   .press-title {
     font-size: clamp(34px, 5vw, 56px);
     font-weight: 800;
+    /* Used on the WHITE band — peak is dark violet for visible contrast */
     background: linear-gradient(
       110deg,
       #38BDF8 0%,
       #A78BFA 30%,
       #E879F9 40%,
-      rgba(255, 255, 255, 0.92) 50%,
+      #4C1D95 50%,
       #E879F9 60%,
       #A78BFA 70%,
       #38BDF8 100%
@@ -3014,7 +3017,17 @@
       </div>
     </div>
 
-    <div class="iridescent-wave" aria-hidden="true"></div>
+    <svg class="iridescent-wave" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="wave-grad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#6FE3FF" stop-opacity="0.6"/>
+          <stop offset="33%" stop-color="#C084FC" stop-opacity="0.6"/>
+          <stop offset="66%" stop-color="#E879F9" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#6FE3FF" stop-opacity="0.5"/>
+        </linearGradient>
+      </defs>
+      <path data-wave-path d="M 0 30 L 1000 30" fill="none" stroke="url(#wave-grad)" stroke-width="22" stroke-linecap="round"/>
+    </svg>
 
     <div class="press-section">
       <div class="container">
@@ -4195,6 +4208,174 @@
         attemptReverse();
       }
     }, { passive: true });
+
+    /* ============================================================
+       ILLUSTRATION BLOBS — slow random drift, click to pop, respawn
+       from the right after 5s, never wander more than 150px from base.
+       ============================================================ */
+    (function setupBlobs() {
+      var blobs = document.querySelectorAll('.illu-blob');
+      if (!blobs.length) return;
+      var DRIFT_RANGE = 150;
+      var states = [];
+
+      blobs.forEach(function (blob) {
+        var s = {
+          el: blob,
+          x: 0, y: 0,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          isPopped: false,
+          isReturning: false
+        };
+        states.push(s);
+        blob.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (s.isPopped || s.isReturning) return;
+          pop(s);
+        });
+      });
+
+      function pop(s) {
+        s.isPopped = true;
+        gsap.to(s.el, {
+          scale: 1.65,
+          opacity: 0,
+          duration: 0.32,
+          ease: 'power2.out',
+          onComplete: function () {
+            s.el.style.visibility = 'hidden';
+            setTimeout(function () { respawn(s); }, 5000);
+          }
+        });
+      }
+
+      function respawn(s) {
+        s.el.style.visibility = '';
+        s.isReturning = true;
+        gsap.set(s.el, { x: 420, y: 0, scale: 0.55, opacity: 0 });
+        gsap.to(s.el, {
+          x: 0, y: 0,
+          scale: 1, opacity: 0.85,
+          duration: 0.7,
+          ease: 'power2.out',
+          onComplete: function () {
+            s.x = 0; s.y = 0;
+            s.vx = (Math.random() - 0.5) * 0.5;
+            s.vy = (Math.random() - 0.5) * 0.5;
+            s.isPopped = false;
+            s.isReturning = false;
+          }
+        });
+      }
+
+      function update() {
+        for (var i = 0; i < states.length; i++) {
+          var s = states[i];
+          if (s.isPopped || s.isReturning) continue;
+          s.vx += (Math.random() - 0.5) * 0.025;
+          s.vy += (Math.random() - 0.5) * 0.025;
+          if (s.vx > 0.6) s.vx = 0.6; else if (s.vx < -0.6) s.vx = -0.6;
+          if (s.vy > 0.6) s.vy = 0.6; else if (s.vy < -0.6) s.vy = -0.6;
+          s.x += s.vx;
+          s.y += s.vy;
+          var dist = Math.sqrt(s.x * s.x + s.y * s.y);
+          if (dist > DRIFT_RANGE) {
+            var ang = Math.atan2(s.y, s.x);
+            s.x = Math.cos(ang) * DRIFT_RANGE;
+            s.y = Math.sin(ang) * DRIFT_RANGE;
+            s.vx *= -0.6;
+            s.vy *= -0.6;
+          }
+          s.el.style.transform = 'translate(' + s.x.toFixed(1) + 'px,' + s.y.toFixed(1) + 'px)';
+        }
+        requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    })();
+
+    /* ============================================================
+       IRIDESCENT WAVE — gentle idle waves at random points; mouse can
+       grab and deform up to 100px, beyond which the line snaps back
+       (rubber-band release).
+       ============================================================ */
+    (function setupWave() {
+      var path = document.querySelector('[data-wave-path]');
+      if (!path) return;
+      var svg = path.closest('svg');
+
+      var NUM = 13;
+      var VBW = 1000;
+      var BASE_Y = 30;
+      var PUSH_RADIUS_REL = 0.16; /* fraction of wave width that mouse affects */
+      var MAX_PUSH = 100;          /* px from baseline before the rubber band releases */
+
+      var pts = [];
+      for (var i = 0; i < NUM; i++) {
+        pts.push({
+          x: (i / (NUM - 1)) * VBW,
+          baseY: BASE_Y,
+          y: BASE_Y,
+          pushY: 0,
+          phase: Math.random() * Math.PI * 2,
+          amp: 2 + Math.random() * 6,
+          speed: 0.0005 + Math.random() * 0.0011,
+          released: false
+        });
+      }
+
+      var mx = -9999, my = -9999;
+      window.addEventListener('mousemove', function (e) {
+        mx = e.clientX; my = e.clientY;
+      }, { passive: true });
+
+      function buildPath() {
+        var d = 'M' + pts[0].x.toFixed(1) + ' ' + pts[0].y.toFixed(2);
+        for (var i = 0; i < pts.length - 1; i++) {
+          var a = pts[i], b = pts[i + 1];
+          var cpX = (a.x + b.x) / 2;
+          d += ' C' + cpX.toFixed(1) + ' ' + a.y.toFixed(2) +
+               ', ' + cpX.toFixed(1) + ' ' + b.y.toFixed(2) +
+               ', ' + b.x.toFixed(1) + ' ' + b.y.toFixed(2);
+        }
+        return d;
+      }
+
+      function tick(time) {
+        var rect = svg.getBoundingClientRect();
+        var mxRel = (mx - rect.left) / rect.width;
+        var baselineY = rect.top + rect.height / 2;
+        var myDelta = my - baselineY; /* + below, − above */
+
+        for (var i = 0; i < pts.length; i++) {
+          var p = pts[i];
+          var pxRel = p.x / VBW;
+          var dxRel = Math.abs(pxRel - mxRel);
+
+          var pushTarget = 0;
+          if (dxRel < PUSH_RADIUS_REL && !p.released) {
+            var prox = 1 - dxRel / PUSH_RADIUS_REL;
+            pushTarget = -myDelta * prox * 0.7;  /* push line AWAY from mouse */
+            if (pushTarget > MAX_PUSH || pushTarget < -MAX_PUSH) {
+              p.released = true;
+              pushTarget = 0;
+            }
+          }
+          if (p.released && dxRel > PUSH_RADIUS_REL * 1.3) {
+            p.released = false;
+          }
+
+          p.pushY += (pushTarget - p.pushY) * 0.16;
+
+          var idleY = Math.sin(time * p.speed + p.phase) * p.amp;
+          p.y = p.baseY + idleY + p.pushY;
+        }
+
+        path.setAttribute('d', buildPath());
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    })();
 
     /* ============================================================
        RESULTS — count-up + bar fill + segment stagger when in view
