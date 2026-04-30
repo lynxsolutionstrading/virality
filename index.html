@@ -537,6 +537,12 @@
     transform-box: fill-box;
     will-change: transform, opacity;
   }
+  /* Stop the chromatic logo glitch while the dive (or its reverse) is
+     playing so the slide-right animation isn't fighting it. */
+  body.diving .logo-svg--hero,
+  body.reversing .logo-svg--hero {
+    animation: none;
+  }
 
   .dive-btn {
     position: relative;
@@ -3997,39 +4003,16 @@
       }
     });
 
-    /* ---- Phase 1: Logo letters explode in 8 fixed compass directions ---- */
-    /* Letter index → direction (in degrees, CSS coords: 0=right, 90=down):
-       0:V → 225° top-left   1:I → 270° top      2:R → 315° top-right
-       3:A →   0° right      4:L →  45° bottom-right
-       5:I →  90° bottom     6:T → 135° bottom-left   7:Y → 180° left      */
+    /* ---- Phase 1: Logo letters slide right and fade out (left-to-right
+       stagger so the leftmost V leads the wave) ---- */
     var letters = gsap.utils.toArray('.hero-letter');
-    var directionAngles = [225, 270, 315, 0, 45, 90, 135, 180];
-
-    letters.forEach(function (letter, i) {
-      var angleDeg = directionAngles[i] || (i * 45);
-      var rad = angleDeg * Math.PI / 180;
-      /* Slight per-letter distance variation so it doesn't look mechanical */
-      var distance = 280 + Math.random() * 80;
-      var dx = Math.cos(rad) * distance;
-      var dy = Math.sin(rad) * distance;
-      /* Natural rotation: ±120° (less than a full spin), random direction */
-      var rot = (Math.random() < 0.5 ? -1 : 1) * (60 + Math.random() * 80);
-      /* Subtle skew for tilt feel */
-      var skew = (Math.random() - 0.5) * 14;
-      /* Mild shrink so letters fade into distance */
-      var endScale = 0.55 + Math.random() * 0.25;
-
-      diveTl.to(letter, {
-        x: dx,
-        y: dy,
-        rotation: rot,
-        skewX: skew,
-        scale: endScale,
-        opacity: 0,
-        duration: 0.65,
-        ease: 'power2.out'
-      }, 0.04 + i * 0.018);
-    });
+    diveTl.to(letters, {
+      x: 320,
+      opacity: 0,
+      duration: 0.55,
+      stagger: 0.055,
+      ease: 'power2.in'
+    }, 0.04);
 
     /* DIVE IN button fades early so it doesn't compete with the explosion */
     diveTl.to('.dive-btn', {
