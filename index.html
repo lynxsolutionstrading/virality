@@ -1118,7 +1118,13 @@
     display: grid;
     gap: 32px;
     align-items: center;
+    position: relative;
   }
+  /* Stack text above illustration so blobs (inside .illustration) can
+     never visually fly in front of the headline text. */
+  .brand-grid > * { position: relative; }
+  .brand-grid > :not(.illustration) { z-index: 2; }
+  .illustration { z-index: 1; isolation: isolate; }
   @media (min-width: 960px) {
     .brand-section { padding: 120px 0 60px; }
     .brand-grid { grid-template-columns: 1fr 1fr; gap: 64px; }
@@ -1204,14 +1210,12 @@
     background: radial-gradient(circle at 35% 35%, #6FE3FF, #B388FF 60%, #FF6BD5);
     top: 38%; left: 4%;
     box-shadow: 0 10px 40px -5px rgba(111, 227, 255, 0.5);
-    z-index: 3;
   }
   .illu-blob.b3 {
     width: 100px; height: 100px;
     background: radial-gradient(circle at 35% 35%, #C084FC, #FF6BD5 60%, #FFC56F);
     bottom: 10%; right: 6%;
     box-shadow: 0 10px 40px -5px rgba(192, 132, 252, 0.5);
-    z-index: 3;
   }
   .illu-blob.b4 {
     width: 70px; height: 70px;
@@ -4333,9 +4337,13 @@
 
       var NUM = 13;
       var VBW = 1000;
+      var VBH = 60;
       var BASE_Y = 30;
-      var PUSH_RADIUS_REL = 0.16; /* fraction of wave width that mouse affects */
-      var MAX_PUSH = 100;          /* px from baseline before the rubber band releases */
+      var GRIP_X_REL = 0.10;   /* mouse must be within 10% of wave width horizontally */
+      var GRIP_Y = 55;          /* mouse must be within 55px of the actual line vertically */
+      var MAX_PUSH = 50;         /* line follows mouse up to this displacement (px) */
+      var BREAK_PUSH = 65;       /* beyond this stretch, line releases and snaps back */
+      var TREMBLE_START = 42;    /* tremble kicks in just before the cap */
 
       var pts = [];
       for (var i = 0; i < NUM; i++) {
@@ -4371,31 +4379,57 @@
       function tick(time) {
         var rect = svg.getBoundingClientRect();
         var mxRel = (mx - rect.left) / rect.width;
-        var baselineY = rect.top + rect.height / 2;
-        var myDelta = my - baselineY; /* + below, − above */
+        var baselineScreenY = rect.top + (BASE_Y / VBH) * rect.height;
+        var dyFromBase = my - baselineScreenY;
 
         for (var i = 0; i < pts.length; i++) {
           var p = pts[i];
           var pxRel = p.x / VBW;
           var dxRel = Math.abs(pxRel - mxRel);
 
+          /* Distance from the mouse to the point's CURRENT line position
+             (not baseline) — this is what determines whether the mouse
+             is actually "on" the line. */
+          var pointScreenY = rect.top + (p.y / VBH) * rect.height;
+          var dyFromLine = my - pointScreenY;
+
           var pushTarget = 0;
-          if (dxRel < PUSH_RADIUS_REL && !p.released) {
-            var prox = 1 - dxRel / PUSH_RADIUS_REL;
-            pushTarget = -myDelta * prox * 0.7;  /* push line AWAY from mouse */
-            if (pushTarget > MAX_PUSH || pushTarget < -MAX_PUSH) {
+          var trembleAmt = 0;
+
+          if (!p.released && dxRel < GRIP_X_REL && Math.abs(dyFromLine) < GRIP_Y) {
+            var proxX = 1 - dxRel / GRIP_X_REL;
+            /* Line wants to be at the mouse's Y position (relative to baseline) */
+            var rawTarget = dyFromBase * proxX;
+
+            if (rawTarget > BREAK_PUSH || rawTarget < -BREAK_PUSH) {
+              /* Mouse pushed past the breaking point — slip and snap */
               p.released = true;
               pushTarget = 0;
+            } else if (rawTarget > MAX_PUSH || rawTarget < -MAX_PUSH) {
+              /* At the cap — clamp to max and tremble while the user
+                 keeps pushing. */
+              pushTarget = MAX_PUSH * (rawTarget > 0 ? 1 : -1);
+              trembleAmt = (Math.random() - 0.5) * 5;
+            } else if (rawTarget > TREMBLE_START || rawTarget < -TREMBLE_START) {
+              /* Approaching the cap — small pre-tremble for tension */
+              pushTarget = rawTarget;
+              trembleAmt = (Math.random() - 0.5) * 2;
+            } else {
+              pushTarget = rawTarget;
             }
           }
-          if (p.released && dxRel > PUSH_RADIUS_REL * 1.3) {
-            p.released = false;
+
+          /* Restore grip-ability when mouse leaves the area entirely */
+          if (p.released) {
+            if (dxRel > GRIP_X_REL * 1.6 || Math.abs(dyFromBase) < 6) {
+              p.released = false;
+            }
           }
 
-          p.pushY += (pushTarget - p.pushY) * 0.16;
+          p.pushY += (pushTarget - p.pushY) * 0.18;
 
           var idleY = Math.sin(time * p.speed + p.phase) * p.amp;
-          p.y = p.baseY + idleY + p.pushY;
+          p.y = p.baseY + idleY + p.pushY + trembleAmt;
         }
 
         path.setAttribute('d', buildPath());
