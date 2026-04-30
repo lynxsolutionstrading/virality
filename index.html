@@ -789,6 +789,12 @@
     position: relative;
     z-index: 1;
   }
+  /* When the dive is complete the hero is removed entirely; ensure the
+     body falls back to the same #0b0d12 so there's no brief flash of
+     the page-default gradient between hero and problem. */
+  body.post-dive {
+    background: #0b0d12;
+  }
   /* Children of #problem fade in after dive completes */
   #problem .section-head,
   #problem .problem-cards,
@@ -3728,7 +3734,9 @@
       onReverseStart: function () {
         document.body.classList.remove('post-dive');
         document.body.classList.add('reversing');
-        /* Keep overflow free so smoothScrollTo can work */
+        /* Restore hero so the reverse animation has something to play on */
+        heroSection.style.display = '';
+        window.scrollTo(0, 0);
       },
       onReverseComplete: function () {
         if (rotationTween) rotationTween.resume();
@@ -3890,61 +3898,67 @@
       if (isDiving || isDived) return;
       isDiving = true;
       diveTl.timeScale(1).play();
-      /* near end of dive, smooth-scroll to Problem section so it's in view when fade-in starts */
-      setTimeout(function () {
-        var problem = document.getElementById('problem');
-        if (problem) {
-          smoothScrollTo(problem.offsetTop, 700);
-        }
-      }, DIVE_DURATION_MS - 350);
-      /* mark complete */
+      /* When the dive completes, hide the hero entirely so the Problem
+         section sits at the top of the viewport. No auto-scroll, no
+         flying-particles flash — landing is instantaneous. */
       setTimeout(function () {
         isDiving = false;
         isDived = true;
+        heroSection.style.display = 'none';
+        window.scrollTo(0, 0);
       }, DIVE_DURATION_MS + 50);
     });
 
     /* ============================================================
-       REVERSE TRIGGER — when user scrolls back UP past anchor
-       Anchor: when scrollY drops below 60% of hero height (i.e., they're
-       near the top of Problem section heading back up).
+       REVERSE TRIGGER — overscroll-up gesture at the top of the page
+       When the user is at scrollY = 0 in post-dive state and pulls/scrolls
+       upward enough (≥ 80px of accumulated upward intent), the dive
+       animation plays in reverse and the hero comes back.
        ============================================================ */
-    var reverseAnchor = function () {
-      return window.innerHeight * 0.55;
-    };
-    var lastScrollY = window.scrollY;
     var isReversing = false;
+    var upScrollAccum = 0;
+    var lastUpScrollTime = 0;
+    var REVERSE_THRESHOLD_PX = 80;
 
-    window.addEventListener('scroll', function () {
-      var y = window.scrollY;
-      var goingUp = y < lastScrollY;
-      lastScrollY = y;
+    function attemptReverse() {
+      if (!isDived || isDiving || isReversing) return false;
+      isReversing = true;
+      upScrollAccum = 0;
+      diveTl.timeScale(1.2).reverse();
+      setTimeout(function () {
+        isReversing = false;
+        isDived = false;
+      }, DIVE_DURATION_MS / 1.2 + 50);
+      return true;
+    }
+
+    window.addEventListener('wheel', function (e) {
       if (!isDived || isDiving || isReversing) return;
-      if (goingUp && y < reverseAnchor()) {
-        isReversing = true;
-        diveTl.timeScale(1.2).reverse();
-        smoothScrollTo(0, 700);
-        setTimeout(function () {
-          isReversing = false;
-          isDived = false;
-        }, DIVE_DURATION_MS / 1.2 + 50);
+      if (window.scrollY > 0) { upScrollAccum = 0; return; }
+      if (e.deltaY >= 0) {
+        if (Date.now() - lastUpScrollTime > 250) upScrollAccum = 0;
+        return;
       }
+      upScrollAccum += -e.deltaY;
+      lastUpScrollTime = Date.now();
+      if (upScrollAccum > REVERSE_THRESHOLD_PX) attemptReverse();
     }, { passive: true });
 
-    /* RAF-based smooth scroll (no plugin dependency) */
-    function smoothScrollTo(targetY, duration) {
-      duration = duration || 700;
-      var startY = window.scrollY;
-      var dist = targetY - startY;
-      var startTime = performance.now();
-      function easeInOut(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
-      function step(now) {
-        var t = Math.min((now - startTime) / duration, 1);
-        window.scrollTo(0, startY + dist * easeInOut(t));
-        if (t < 1) requestAnimationFrame(step);
+    /* Touch — pull-down at top of page */
+    var touchStartY = null;
+    window.addEventListener('touchstart', function (e) {
+      if (!isDived || isDiving || isReversing) return;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    window.addEventListener('touchmove', function (e) {
+      if (!isDived || isDiving || isReversing || touchStartY === null) return;
+      if (window.scrollY > 0) return;
+      var dy = e.touches[0].clientY - touchStartY;
+      if (dy > REVERSE_THRESHOLD_PX) {
+        touchStartY = null;
+        attemptReverse();
       }
-      requestAnimationFrame(step);
-    }
+    }, { passive: true });
   });
 </script>
 
