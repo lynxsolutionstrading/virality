@@ -1558,6 +1558,45 @@
     box-shadow: 0 10px 40px -5px rgba(111, 227, 255, 0.4);
   }
 
+  /* ----- Heart "multi-like" rain (desktop only) -----
+     Hearts spawn behind the phone (z-index 1, phone is z-index 2),
+     rise ~100px, then silently pop (scale up + fade out). */
+  .heart-rain {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: visible;
+  }
+  .heart-rain__heart {
+    position: absolute;
+    left: 50%;
+    bottom: 30%;
+    width: 22px;
+    height: 22px;
+    margin-left: -11px;
+    transform-origin: 50% 50%;
+    will-change: transform, opacity;
+    filter: drop-shadow(0 3px 6px rgba(217, 70, 239, 0.45));
+    animation: heartRise 1.4s cubic-bezier(0.25, 0.65, 0.4, 1) forwards;
+  }
+  .heart-rain__heart svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  @keyframes heartRise {
+    0%   { translate: 0 8px;    scale: 0.35; opacity: 0; }
+    14%  { translate: 0 -4px;   scale: 1.05; opacity: 1; }
+    65%  { translate: 0 -82px;  scale: 1.0;  opacity: 1; }
+    85%  { translate: 0 -100px; scale: 1.35; opacity: 0.85; }
+    100% { translate: 0 -100px; scale: 1.7;  opacity: 0; }
+  }
+  /* Mobile: no heart rain (per spec) */
+  @media (max-width: 959px) {
+    .heart-rain { display: none; }
+  }
+
   /* Brand-section / Press-section divider — clean horizontal line in
      #0b0d12 that fades out softly at the edges. The illustration's
      blobs above it bounce against this line via JS. */
@@ -3445,6 +3484,24 @@
         <div class="illustration" aria-hidden="true">
           <div class="illu-blob b1"></div>
           <div class="illu-blob b4"></div>
+          <!-- Heart "multi-like" emitter — spawned hearts fly up from
+               behind the phone and silently pop. Hidden on mobile. -->
+          <div class="heart-rain" data-heart-rain>
+            <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+              <defs>
+                <linearGradient id="heartGrad" x1="0.15" y1="0.05" x2="0.8" y2="0.95">
+                  <stop offset="0%" stop-color="#FFE4F0"/>
+                  <stop offset="22%" stop-color="#FF9FC9"/>
+                  <stop offset="58%" stop-color="#E879F9"/>
+                  <stop offset="100%" stop-color="#7B2BB5"/>
+                </linearGradient>
+                <radialGradient id="heartShine" cx="0.32" cy="0.28" r="0.22">
+                  <stop offset="0%" stop-color="rgba(255,255,255,0.85)"/>
+                  <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                </radialGradient>
+              </defs>
+            </svg>
+          </div>
           <div class="illu-phone-mini">
             <div class="illu-phone-mini-screen"></div>
           </div>
@@ -4746,6 +4803,81 @@
       requestAnimationFrame(update);
     })();
 
+
+    /* ============================================================
+       HEART RAIN — multi-like effect behind the brand-section phone.
+       Spawns small 3D-look hearts at random x positions and intervals.
+       Each heart silently rises ~100px and pops via the heartRise CSS
+       animation. Desktop-only; pauses while the section is offscreen.
+       ============================================================ */
+    (function setupHeartRain() {
+      var root = document.querySelector('[data-heart-rain]');
+      if (!root) return;
+      /* Desktop only */
+      if (!window.matchMedia('(min-width: 960px)').matches) return;
+
+      var section = root.closest('section');
+      if (!section) return;
+
+      /* SVG markup for one heart — references the gradient/shine defs
+         that are already in the heart-rain container. */
+      var heartSvg =
+        '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+          '<path d="M12 21.2s-7.4-4.6-7.4-10.4a4.4 4.4 0 0 1 7.4-3.2 4.4 4.4 0 0 1 7.4 3.2c0 5.8-7.4 10.4-7.4 10.4z" fill="url(#heartGrad)"/>' +
+          '<ellipse cx="9" cy="8.5" rx="2.6" ry="2" fill="url(#heartShine)"/>' +
+        '</svg>';
+
+      function spawn() {
+        var heart = document.createElement('div');
+        heart.className = 'heart-rain__heart';
+        heart.innerHTML = heartSvg;
+
+        /* Random x within ±70px of the illustration center
+           (phone is 160px wide, so this is "behind the phone"
+           with some natural spread to the sides) */
+        var xOffset = (Math.random() - 0.5) * 140;
+        heart.style.marginLeft = (xOffset - 11) + 'px';
+
+        /* Random size 16–28px for variety */
+        var size = 16 + Math.random() * 12;
+        heart.style.width = size + 'px';
+        heart.style.height = size + 'px';
+        heart.style.marginLeft = (xOffset - size / 2) + 'px';
+
+        /* Slight random tilt */
+        var rot = (Math.random() - 0.5) * 26;
+        heart.style.rotate = rot + 'deg';
+
+        /* Random vertical start so they don't all leave the same line */
+        heart.style.bottom = (28 + Math.random() * 14) + '%';
+
+        root.appendChild(heart);
+        /* Auto-clean after the animation finishes */
+        setTimeout(function () { heart.remove(); }, 1500);
+      }
+
+      /* Pause spawning while the section is offscreen so we don't
+         pile up DOM nodes the user can't see. */
+      var inView = false;
+      if (typeof IntersectionObserver !== 'undefined') {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { inView = e.isIntersecting; });
+        }, { threshold: 0.15 });
+        io.observe(section);
+      } else {
+        inView = true;
+      }
+
+      function loop() {
+        if (inView) spawn();
+        /* Random delay 110–340ms — frequent enough for a flowing
+           "multi-like" feel without being noisy */
+        var nextDelay = 110 + Math.random() * 230;
+        setTimeout(loop, nextDelay);
+      }
+      /* Slight initial delay to let layout settle */
+      setTimeout(loop, 450);
+    })();
 
     /* ============================================================
        RESULTS — count-up + bar fill + segment stagger when in view
