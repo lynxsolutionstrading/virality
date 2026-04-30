@@ -2123,6 +2123,11 @@
     border: 1px solid var(--border-card);
     border-radius: var(--radius-lg);
     padding: 22px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .result-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.16);
   }
   .result-label {
     display: flex;
@@ -3423,9 +3428,7 @@
             Authority Score
           </div>
           <div class="result-value"><span data-count-up="94">94</span>/100</div>
-          <div class="result-segments" aria-hidden="true">
-            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-          </div>
+          <div class="result-bar"><div class="result-bar-fill" data-bar-fill="94" style="width:94%"></div></div>
         </article>
       </div>
     </div>
