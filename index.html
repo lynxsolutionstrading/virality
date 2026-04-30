@@ -208,6 +208,33 @@
   }
   .nav-cta:hover { background: rgba(255, 255, 255, 0.12); transform: translateY(-1px); }
 
+  /* Mute-toggle button (sound on/off) */
+  .mute-toggle {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-card);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    flex-shrink: 0;
+  }
+  .mute-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+  .mute-toggle:active { transform: scale(0.92); }
+  .mute-toggle .icon-sound-on,
+  .mute-toggle .icon-sound-off { display: block; }
+  .mute-toggle:not(.is-muted) .icon-sound-off,
+  .mute-toggle.is-muted .icon-sound-on { display: none; }
+  .mute-toggle.is-muted { color: var(--text-muted); }
+
   @media (max-width: 640px) {
     .nav-menu { gap: 12px; font-size: 11px; }
     .nav-menu a:not(.nav-cta) { display: none; }
@@ -2662,6 +2689,18 @@
         <a href="#hero" class="active">Home</a>
         <a href="#how-it-works">How It Works</a>
         <a href="#results">Results</a>
+        <button type="button" class="mute-toggle" data-mute-toggle aria-label="Toggle sound" title="Toggle sound">
+          <svg class="icon-sound-on" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+          </svg>
+          <svg class="icon-sound-off" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/>
+            <line x1="22" y1="9" x2="16" y2="15"/>
+            <line x1="16" y1="9" x2="22" y2="15"/>
+          </svg>
+        </button>
         <a href="#contact" class="nav-cta always-show" data-open-contact>Contact</a>
       </nav>
     </div>
@@ -3665,6 +3704,174 @@
       });
     }
 
+    /* ============================================================
+       AUDIO SYSTEM — synthesized SFX via Web Audio API
+       ============================================================ */
+    function SoundFX() {
+      this.ctx = null;
+      this.masterGain = null;
+      this.muted = (function () {
+        try { return localStorage.getItem('virality-sfx-muted') === '1'; } catch (e) { return false; }
+      })();
+      this.unlocked = false;
+      try {
+        var Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) {
+          this.ctx = new Ctx();
+          this.masterGain = this.ctx.createGain();
+          this.masterGain.gain.value = this.muted ? 0 : 0.55;
+          this.masterGain.connect(this.ctx.destination);
+        }
+      } catch (e) {}
+    }
+    SoundFX.prototype.unlock = function () {
+      if (!this.ctx || this.unlocked) return;
+      if (this.ctx.state === 'suspended') {
+        var self = this;
+        this.ctx.resume().then(function () { self.unlocked = true; });
+      } else { this.unlocked = true; }
+    };
+    SoundFX.prototype.setMuted = function (m) {
+      this.muted = !!m;
+      if (this.masterGain) {
+        this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+        this.masterGain.gain.setValueAtTime(this.muted ? 0 : 0.55, this.ctx.currentTime);
+      }
+      try { localStorage.setItem('virality-sfx-muted', this.muted ? '1' : '0'); } catch (e) {}
+    };
+    SoundFX.prototype._noiseBuffer = function (durationSec) {
+      var len = Math.max(1, Math.floor(this.ctx.sampleRate * durationSec));
+      var buf = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
+      var data = buf.getChannelData(0);
+      for (var i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+      return buf;
+    };
+    /* UI click — short, tactile, slightly metallic */
+    SoundFX.prototype.click = function () {
+      if (!this.ctx || this.muted) return;
+      var t = this.ctx.currentTime;
+      var osc = this.ctx.createOscillator();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(820, t);
+      osc.frequency.exponentialRampToValueAtTime(180, t + 0.05);
+      var g = this.ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.18, t + 0.005);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
+      osc.connect(g).connect(this.masterGain);
+      osc.start(t); osc.stop(t + 0.07);
+    };
+    /* Letters shatter — staggered noise bursts at varying frequencies */
+    SoundFX.prototype.shatter = function () {
+      if (!this.ctx || this.muted) return;
+      var t0 = this.ctx.currentTime;
+      for (var i = 0; i < 9; i++) {
+        var t = t0 + i * 0.022 + Math.random() * 0.012;
+        var dur = 0.05 + Math.random() * 0.04;
+        var src = this.ctx.createBufferSource();
+        src.buffer = this._noiseBuffer(dur);
+        var bp = this.ctx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.frequency.value = 700 + Math.random() * 4500;
+        bp.Q.value = 6;
+        var g = this.ctx.createGain();
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.12 + Math.random() * 0.06, t + 0.005);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        src.connect(bp).connect(g).connect(this.masterGain);
+        src.start(t);
+      }
+    };
+    /* Power-down — descending saw + filter sweep */
+    SoundFX.prototype.powerDown = function () {
+      if (!this.ctx || this.muted) return;
+      var t = this.ctx.currentTime;
+      var dur = 0.32;
+      var osc = this.ctx.createOscillator();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(280, t);
+      osc.frequency.exponentialRampToValueAtTime(45, t + dur);
+      var lp = this.ctx.createBiquadFilter();
+      lp.type = 'lowpass';
+      lp.frequency.setValueAtTime(1400, t);
+      lp.frequency.exponentialRampToValueAtTime(90, t + dur);
+      var g = this.ctx.createGain();
+      g.gain.setValueAtTime(0.16, t);
+      g.gain.exponentialRampToValueAtTime(0.0008, t + dur);
+      osc.connect(lp).connect(g).connect(this.masterGain);
+      osc.start(t); osc.stop(t + dur + 0.02);
+    };
+    /* Whoosh — bandpass-filtered noise sweep, low→high (or reverse) */
+    SoundFX.prototype.whoosh = function (reverse) {
+      if (!this.ctx || this.muted) return;
+      var t = this.ctx.currentTime;
+      var dur = 1.05;
+      var src = this.ctx.createBufferSource();
+      src.buffer = this._noiseBuffer(dur);
+      var bp = this.ctx.createBiquadFilter();
+      bp.type = 'bandpass';
+      bp.Q.value = 1.4;
+      if (reverse) {
+        bp.frequency.setValueAtTime(2400, t);
+        bp.frequency.exponentialRampToValueAtTime(220, t + dur);
+      } else {
+        bp.frequency.setValueAtTime(220, t);
+        bp.frequency.exponentialRampToValueAtTime(2400, t + dur);
+      }
+      var g = this.ctx.createGain();
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.32, t + 0.18);
+      g.gain.linearRampToValueAtTime(0.42, t + dur * 0.8);
+      g.gain.linearRampToValueAtTime(0, t + dur);
+      src.connect(bp).connect(g).connect(this.masterGain);
+      src.start(t);
+    };
+    /* Impact — sub-bass hit + short noise transient */
+    SoundFX.prototype.impact = function () {
+      if (!this.ctx || this.muted) return;
+      var t = this.ctx.currentTime;
+      var dur = 0.5;
+      /* sub */
+      var sub = this.ctx.createOscillator();
+      sub.type = 'sine';
+      sub.frequency.setValueAtTime(95, t);
+      sub.frequency.exponentialRampToValueAtTime(28, t + dur);
+      var subG = this.ctx.createGain();
+      subG.gain.setValueAtTime(0.45, t);
+      subG.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      sub.connect(subG).connect(this.masterGain);
+      sub.start(t); sub.stop(t + dur + 0.02);
+      /* transient */
+      var src = this.ctx.createBufferSource();
+      src.buffer = this._noiseBuffer(0.08);
+      var hp = this.ctx.createBiquadFilter();
+      hp.type = 'highpass';
+      hp.frequency.value = 600;
+      var nG = this.ctx.createGain();
+      nG.gain.setValueAtTime(0.25, t);
+      nG.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+      src.connect(hp).connect(nG).connect(this.masterGain);
+      src.start(t);
+    };
+
+    var sfx = new SoundFX();
+    /* Wire mute toggle */
+    var muteBtn = document.querySelector('[data-mute-toggle]');
+    function syncMuteUI() {
+      if (!muteBtn) return;
+      if (sfx.muted) muteBtn.classList.add('is-muted');
+      else muteBtn.classList.remove('is-muted');
+    }
+    if (muteBtn) {
+      muteBtn.addEventListener('click', function () {
+        sfx.unlock();
+        sfx.setMuted(!sfx.muted);
+        syncMuteUI();
+        if (!sfx.muted) sfx.click(); /* tiny feedback when unmuting */
+      });
+      syncMuteUI();
+    }
+
     if (prefersReduce) return; /* reduce-motion: skip cinematics */
 
     /* ============================================================
@@ -3862,6 +4069,13 @@
     diveBtn.addEventListener('click', function () {
       if (isDiving || isDived) return;
       isDiving = true;
+      /* SFX: click + scheduled sounds aligned to timeline phases */
+      sfx.unlock();
+      sfx.click();
+      setTimeout(function () { sfx.shatter(); }, 60);     /* letters explode */
+      setTimeout(function () { sfx.powerDown(); }, 280);  /* screen fade-out */
+      setTimeout(function () { sfx.whoosh(false); }, 480); /* phone dive begins */
+      setTimeout(function () { sfx.impact(); }, 1500);    /* landing thud */
       diveTl.timeScale(1).play();
       /* The dive timeline's onComplete handler hides the hero in the
          same frame it finishes — no setTimeout gap, no particle flash. */
@@ -3882,6 +4096,13 @@
       if (!isDived || isDiving || isReversing) return false;
       isReversing = true;
       upScrollAccum = 0;
+      /* SFX for reverse — mirrors forward in opposite order */
+      sfx.unlock();
+      sfx.whoosh(true);                                    /* reverse whoosh */
+      var reverseDur = DIVE_DURATION_MS / 1.2;
+      setTimeout(function () { sfx.powerDown(); }, reverseDur - 700);
+      setTimeout(function () { sfx.shatter(); }, reverseDur - 350);
+      setTimeout(function () { sfx.click(); }, reverseDur - 50);
       /* Restore the hero BEFORE starting reverse — GSAP has no
          onReverseStart event, so we set up state manually here. */
       heroSection.style.display = '';
@@ -3892,7 +4113,7 @@
       setTimeout(function () {
         isReversing = false;
         isDived = false;
-      }, DIVE_DURATION_MS / 1.2 + 50);
+      }, reverseDur + 50);
       return true;
     }
 
