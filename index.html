@@ -3737,6 +3737,9 @@
     var overlay = document.querySelector('[data-hero-overlay]');
     var phoneScreen = document.querySelector('[data-hero-phone-screen]');
     var phoneScreenImg = document.querySelector('[data-phone-screen-img]');
+    var phoneStatusbar = document.querySelector('.phone-screen-statusbar');
+    /* Image + status-bar plate are glitched as one unit so they stay in sync */
+    var screenLayers = [phoneScreenImg, phoneStatusbar].filter(Boolean);
     if (!heroSection || !diveBtn || !phone) return;
 
     document.body.classList.add('pre-dive');
@@ -3836,42 +3839,44 @@
       ease: 'power2.in'
     }, 0);
 
-    /* ---- Phase 2: Screen glitch — analog-tape / dying-signal vibe (T ≈ 0.20 → 0.43s) ---- */
-    if (phoneScreenImg) {
+    /* ---- Phase 2: Screen glitch — analog-tape / dying-signal vibe (T ≈ 0.20 → 0.43s)
+       Applied to BOTH the image and the slim #0b0d12 status-bar plate so the
+       whole screen content shears as a single unit. ---- */
+    if (screenLayers.length) {
       var gT = 0.20;
       diveTl
         /* F1: stretch right, slight skew, brightness pop */
-        .to(phoneScreenImg, {
+        .to(screenLayers, {
           x: 7, scaleY: 1.04, skewX: 2.5,
           filter: 'brightness(1.05) saturate(1.5) contrast(1.2)',
           duration: 0.035, ease: 'none'
         }, gT)
         /* F2: opposite jitter, vertical squash (CRT pinch) */
-        .to(phoneScreenImg, {
+        .to(screenLayers, {
           x: -6, scaleY: 0.94, skewX: -1.5,
           filter: 'brightness(0.65) saturate(1.8) hue-rotate(-12deg)',
           duration: 0.035, ease: 'none'
         }, gT + 0.04)
         /* F3: tape-tear with sharp skew */
-        .to(phoneScreenImg, {
+        .to(screenLayers, {
           x: 9, scaleY: 1.02, skewX: 4,
           filter: 'brightness(0.9) saturate(0.6) hue-rotate(8deg)',
           duration: 0.035, ease: 'none'
         }, gT + 0.085)
         /* F4: brief negative flash (one frame) */
-        .to(phoneScreenImg, {
+        .to(screenLayers, {
           x: 3, scaleY: 1, skewX: 0,
           filter: 'brightness(1.3) contrast(1.6) invert(0.85)',
           duration: 0.025, ease: 'none'
         }, gT + 0.13)
         /* F5: dim recovery with slight horizontal slip */
-        .to(phoneScreenImg, {
+        .to(screenLayers, {
           x: -3, scaleY: 0.98, skewX: -2,
           filter: 'brightness(0.55) saturate(1.4) hue-rotate(15deg)',
           duration: 0.035, ease: 'none'
         }, gT + 0.16)
         /* F6: snap back to baseline */
-        .to(phoneScreenImg, {
+        .to(screenLayers, {
           x: 0, scaleY: 1, skewX: 0,
           filter: 'brightness(0.8) saturate(1)',
           duration: 0.035, ease: 'none'
@@ -3881,8 +3886,8 @@
     /* ---- Phase 3: Screen turns OFF — solid #0b0d12, no reflection sheen.
        Implemented via class toggle so CSS transition + ::before opacity
        both happen together (forward AND reverse). ---- */
-    if (phoneScreenImg) {
-      diveTl.to(phoneScreenImg, {
+    if (screenLayers.length) {
+      diveTl.to(screenLayers, {
         opacity: 0,
         duration: 0.13,
         ease: 'power2.in'
