@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>
+  /* Run as early as possible: prevent the browser from restoring the
+     previous scroll position on reload, and force the page to scroll-top
+     before the scroll-lock CSS kicks in. Otherwise mobile reload can
+     freeze the layout at a non-zero scroll, hiding the sticky top bar. */
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  try { window.scrollTo(0, 0); } catch (e) {}
+</script>
 <meta name="description" content="Virality — build digital authority and grow your Instagram with real followers through strategic campaigns, positioning, and social proof." />
 <meta name="theme-color" content="#050507" />
 <meta property="og:title" content="Virality — Grow Your Digital Authority" />
