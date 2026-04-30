@@ -1571,26 +1571,31 @@
   .heart-rain__heart {
     position: absolute;
     left: 50%;
-    bottom: 30%;
+    bottom: 80%;
     width: 22px;
     height: 22px;
     margin-left: -11px;
     transform-origin: 50% 50%;
     will-change: transform, opacity;
     filter: drop-shadow(0 3px 6px rgba(217, 70, 239, 0.45));
-    animation: heartRise 1.4s cubic-bezier(0.25, 0.65, 0.4, 1) forwards;
+    animation: heartRise 1.5s cubic-bezier(0.25, 0.65, 0.4, 1) forwards;
   }
   .heart-rain__heart svg {
     display: block;
     width: 100%;
     height: 100%;
   }
+  /* Hearts spawn inside the top portion of the phone (z-index 1, phone
+     is z-index 2) so they're hidden behind the phone for the first
+     part of the animation, then visibly emerge from the phone's top
+     edge and rise + pop. Opacity stays at 1 during the rise — the
+     phone itself naturally masks them while they're still behind it. */
   @keyframes heartRise {
-    0%   { translate: 0 8px;    scale: 0.35; opacity: 0; }
-    14%  { translate: 0 -4px;   scale: 1.05; opacity: 1; }
-    65%  { translate: 0 -82px;  scale: 1.0;  opacity: 1; }
-    85%  { translate: 0 -100px; scale: 1.35; opacity: 0.85; }
-    100% { translate: 0 -100px; scale: 1.7;  opacity: 0; }
+    0%   { translate: 0 0;      scale: 0.4; opacity: 1; }
+    25%  { translate: 0 -22px;  scale: 0.75; opacity: 1; }
+    55%  { translate: 0 -55px;  scale: 1.0; opacity: 1; }
+    82%  { translate: 0 -88px;  scale: 1.05; opacity: 1; }
+    100% { translate: 0 -110px; scale: 1.55; opacity: 0; }
   }
   /* Mobile: no heart rain (per spec) */
   @media (max-width: 959px) {
@@ -4832,30 +4837,30 @@
         heart.className = 'heart-rain__heart';
         heart.innerHTML = heartSvg;
 
-        /* Phone is 160px wide (±80px). We spawn hearts in a 240px-wide
-           band (±120px) so most spawn beside or just past the phone
-           edges — they emerge "from behind" the phone visually as they
-           rise. Hearts that land dead-center are hidden behind the
-           phone (gives the depth feel) and clean up silently. */
-        var xOffset = (Math.random() - 0.5) * 240;
+        /* Phone is 160px wide. Spawn hearts within ±55px of center so
+           they're always inside the phone's footprint — never on the
+           sides, only emerging from the phone's TOP. */
+        var xOffset = (Math.random() - 0.5) * 110;
 
-        /* Random size 16–28px for variety */
-        var size = 16 + Math.random() * 12;
+        /* Random size 16–26px */
+        var size = 16 + Math.random() * 10;
         heart.style.width = size + 'px';
         heart.style.height = size + 'px';
         heart.style.marginLeft = (xOffset - size / 2) + 'px';
 
-        /* Slight random tilt */
-        var rot = (Math.random() - 0.5) * 26;
+        /* Subtle random tilt */
+        var rot = (Math.random() - 0.5) * 22;
         heart.style.rotate = rot + 'deg';
 
-        /* Random vertical start across the lower half of the phone so
-           hearts emerge at varied heights (not from a single line) */
-        heart.style.bottom = (18 + Math.random() * 32) + '%';
+        /* Spawn just inside the top of the phone so hearts emerge
+           cleanly from the phone's top edge as they rise.
+           Slight vertical jitter so they don't all leave from the
+           exact same line. */
+        heart.style.bottom = (76 + Math.random() * 8) + '%';
 
         root.appendChild(heart);
         /* Auto-clean after the animation finishes */
-        setTimeout(function () { heart.remove(); }, 1500);
+        setTimeout(function () { heart.remove(); }, 1600);
       }
 
       /* Pause spawning while the section is offscreen so we don't
