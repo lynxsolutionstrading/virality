@@ -531,6 +531,20 @@
     .dot-nav-top { display: none; }
   }
 
+  /* Full-page flash overlay used during back-to-start.
+     Fades the current page content out, the scroll-snap + reverse-dive
+     happen behind it (invisible to the user), then fades back out
+     revealing the reverse animation already underway. */
+  .reverse-flash {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: #050507;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+
   /* ============================================================
      SECTION BACKGROUND ROTATION
      3 alternating shades for visual rhythm. The white-band, hero,
@@ -4778,29 +4792,38 @@
     }, { passive: true });
 
     /* Click on the standalone "Back to start" button — works from
-       anywhere on the page. We scroll to top first (with a short
-       delay to feel intentional), then trigger the reverse-dive,
-       which fades the page out and restores the hero scene. */
+       anywhere on the page. Flow:
+         1. Fade in a full-screen dark overlay (~350ms) — the user's
+            current content fades out from wherever they are.
+         2. While it's fully opaque (invisible to the user), snap
+            scroll to 0 and trigger the reverse-dive.
+         3. Fade the overlay back out (~450ms) — the user now sees
+            the reverse-dive animation already in progress, returning
+            them to the hero start screen.
+       No visible smooth-scroll step. */
     document.addEventListener('click', function (e) {
       var trigger = e.target.closest('[data-dive-reverse]');
       if (!trigger) return;
       e.preventDefault();
       if (!isDived || isDiving || isReversing) return;
-      /* If we're scrolled down, smoothly scroll up first, then reverse */
-      if (window.scrollY > 0) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        /* Wait for the scroll to (mostly) finish before reversing */
-        var waited = 0;
-        var tick = setInterval(function () {
-          waited += 50;
-          if (window.scrollY < 4 || waited > 1200) {
-            clearInterval(tick);
-            attemptReverse();
-          }
-        }, 50);
-      } else {
+
+      var overlay = document.createElement('div');
+      overlay.className = 'reverse-flash';
+      document.body.appendChild(overlay);
+      /* Force a reflow so the opacity transition runs from 0 to 1 */
+      void overlay.offsetWidth;
+      overlay.style.opacity = '1';
+
+      setTimeout(function () {
+        /* Hidden under the opaque overlay: jump to top + start reverse */
+        window.scrollTo(0, 0);
         attemptReverse();
-      }
+        /* Give the reverse a couple of frames to start, then reveal it */
+        setTimeout(function () {
+          overlay.style.opacity = '0';
+          setTimeout(function () { overlay.remove(); }, 500);
+        }, 80);
+      }, 350);
     });
 
     /* Touch — pull-down at top of page */
