@@ -791,17 +791,18 @@
     50%      { transform: scale(1.12); opacity: 1; }
   }
 
-  /* Screen — bg is permanently the dark "off" colour. The Instagram
-     screenshot above (img + statusbar plate) provides the visual
-     content; when those fade out during the dive the screen is
-     already on its final dark state, so there's no bg-change paint
-     to glitch. The .is-off class only toggles the sheen now. */
+  /* Screen */
   .hero-phone-screen {
     position: absolute;
     inset: 8px;
     border-radius: 44px;
-    background: #0b0d12;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(192, 132, 252, 0.5), transparent 65%),
+      radial-gradient(ellipse at 30% 80%, rgba(111, 227, 255, 0.4), transparent 60%),
+      radial-gradient(ellipse at 70% 70%, rgba(232, 121, 249, 0.4), transparent 60%),
+      linear-gradient(180deg, #0a0a14 0%, #1a0a28 40%, #0a0a14 100%);
     overflow: hidden;
+    transition: background 0.18s ease-out;
   }
   .hero-phone-screen::before {
     content: '';
@@ -810,6 +811,11 @@
     background:
       linear-gradient(135deg, transparent 30%, rgba(255, 255, 255, 0.06) 50%, transparent 70%);
     pointer-events: none;
+    transition: opacity 0.18s ease-out;
+  }
+  /* "Off" state — flat single colour, no reflection sheen, no radial glow */
+  .hero-phone-screen.is-off {
+    background: #0b0d12;
   }
   .hero-phone-screen.is-off::before {
     opacity: 0;
@@ -831,11 +837,7 @@
     display: block;
     /* Darken by 20% so the foreground logo + button stand out cleanly */
     filter: brightness(0.8);
-    /* Force its own GPU compositing layer so GSAP's per-frame opacity
-       updates are pure compositor changes (no element repaints). */
     will-change: opacity;
-    transform: translate3d(0, 0, 0);
-    backface-visibility: hidden;
   }
   /* Slim plate filling the 16px above the image — uses #0b0d12 so it
      blends with the eventual "screen-off" background instead of pure
@@ -849,12 +851,7 @@
     background: #0b0d12;
     z-index: 1;
     pointer-events: none;
-    /* GSAP animates this opacity. Force its own GPU layer so
-       opacity changes are pure compositor (no repaint) and there's
-       no CSS-vs-GSAP transition fighting. */
-    will-change: opacity;
-    transform: translate3d(0, 0, 0);
-    backface-visibility: hidden;
+    transition: opacity 0.18s ease-out;
   }
   .hero-phone-screen.is-off .phone-screen-statusbar {
     opacity: 0;
@@ -4650,90 +4647,74 @@
       }
     });
 
-    /* ============================================================
-       DIVE TIMELINE — clean 4-phase sequence (no overlapping
-       primary phases). Just adjust the times below to retune.
-         Phase 1 — Letters fly out         (0.00 → 0.50s)
-         Phase 2 — Phone tilt centers      (0.50 → 0.85s)
-         Phase 3 — Phone screen fades out  (0.85 → 1.10s)
-         Phase 4 — Phone zooms forward     (1.10 → 1.95s)
-       Total dive length: 1.95s
-       ============================================================ */
-    var P1_START = 0.00, P1_DUR = 0.50;   /* Schrift / letters       */
-    var P2_START = 0.50, P2_DUR = 0.35;   /* Phone center            */
-    var P3_START = 0.85, P3_DUR = 0.25;   /* Screen fadeout          */
-    var P4_START = 1.10, P4_DUR = 0.85;   /* Zoom in                 */
-
+    /* ---- Phase 1: Logo letters slide right and fade out (left-to-right
+       stagger so the leftmost V leads the wave) ---- */
     var letters = gsap.utils.toArray('.hero-letter');
+    diveTl.to(letters, {
+      x: 320,
+      opacity: 0,
+      duration: 0.55,
+      stagger: 0.055,
+      ease: 'power2.in'
+    }, 0.04);
 
-    /* ---- Phase 1: Letters slide right + fade out, dive button fades ---- */
+    /* DIVE IN button fades early so it doesn't compete with the explosion */
     diveTl.to('.dive-btn', {
       opacity: 0,
       scale: 0.82,
       duration: 0.22,
       ease: 'power2.in'
-    }, P1_START);
-    diveTl.to(letters, {
-      x: 320,
-      opacity: 0,
-      duration: P1_DUR - 0.05,
-      stagger: 0.04,
-      ease: 'power2.in'
-    }, P1_START + 0.05);
+    }, 0);
 
-    /* ---- Phase 2: Phone tilt smoothly centers (rotateY/X → 0) ---- */
-    diveTl.to(phone, {
-      rotateY: 0,
-      rotateX: 0,
-      duration: P2_DUR,
-      ease: 'sine.inOut'
-    }, P2_START);
-
-    /* ---- Phase 3: Phone screen content (image + statusbar) fades out.
-       The .is-off class is toggled in onUpdate so the dark #0b0d12 plate
-       sits behind the layers as they fade. ---- */
+    /* ---- Phase 2: Screen content fades out smoothly (image + the
+       slim #0b0d12 status-bar plate together). The .is-off class
+       (toggled in onUpdate at progress > 0.27) handles the screen
+       background transitioning to #0b0d12 underneath. ---- */
     if (screenLayers.length) {
       diveTl.to(screenLayers, {
         opacity: 0,
-        duration: P3_DUR,
+        duration: 0.35,
         ease: 'power2.inOut'
-      }, P3_START);
+      }, 0.20);
     }
 
-    /* ---- Phase 4: Phone zooms forward into the camera (scale + z).
+    /* ---- Phase 4: Existing phone dive (T = 0.55 → 1.65s)
        NOTE: stage perspective is 1600px — z must stay BELOW it or the
        phone passes the camera plane and clips, exposing the particle
-       background through the gap. ---- */
+       background through the gap. scale 6 + z 1300 keeps it visible
+       AND huge (visual scale ≈ 32× → phone width ≈ 7700 px). */
     diveTl.to(phone, {
+      rotateY: 0,
+      rotateX: 0,
       scale: 6,
       z: 1300,
-      duration: P4_DUR,
+      duration: 1.1,
       ease: 'power2.in'
-    }, P4_START);
-    /* Glow expands and fades during the zoom */
+    }, 0.55);
+
     diveTl.to('[data-hero-phone-glow]', {
       scale: 12,
       opacity: 0,
-      duration: P4_DUR - 0.2,
+      duration: 0.6,
       ease: 'power2.out'
-    }, P4_START);
+    }, 0.6);
+
     /* Cyberpunk grid fades alongside the dive */
-    diveTl.to('.hero-grid', {
-      opacity: 0,
-      duration: P4_DUR - 0.3
-    }, P4_START);
-    /* Phone frame shadow fades during the late part of the zoom */
+    diveTl.to('.hero-grid', { opacity: 0, duration: 0.5 }, 0.55);
+
+    /* Phone frame shadow fades so we can "go through" */
     diveTl.to('.hero-phone-frame', {
       boxShadow: '0 0 0 rgba(0,0,0,0)',
       duration: 0.4
-    }, P4_START + 0.4);
+    }, 0.95);
 
-    /* Toggle ".is-off" on the phone screen right when Phase 3 begins.
-       progress threshold = P3_START / total = 0.85 / 1.95 ≈ 0.436. */
+    /* Toggle ".is-off" on the phone screen at progress ~0.26 (≈ T=0.43s
+       relative to total 1.65s timeline). This handles both forward and
+       reverse cleanly because it's reactive to current progress. */
     diveTl.eventCallback('onUpdate', function () {
       if (!phoneScreen) return;
       var progress = this.progress();
-      var shouldBeOff = progress > 0.43;
+      var shouldBeOff = progress > 0.27;
       var isOff = phoneScreen.classList.contains('is-off');
       if (shouldBeOff && !isOff) phoneScreen.classList.add('is-off');
       else if (!shouldBeOff && isOff) phoneScreen.classList.remove('is-off');
@@ -4742,27 +4723,20 @@
     /* ============================================================
        CLICK HANDLER — play dive forward
        ============================================================ */
-    var DIVE_DURATION_MS = 1950;
+    var DIVE_DURATION_MS = 1650;
     var isDiving = false;
     var isDived = false;
 
     diveBtn.addEventListener('click', function () {
       if (isDiving || isDived) return;
       isDiving = true;
-      /* SFX: click + scheduled sounds aligned to the 4 timeline phases */
+      /* SFX: click + scheduled sounds aligned to timeline phases */
       sfx.unlock();
       sfx.click();
-      setTimeout(function () { sfx.shatter(); }, 80);     /* letters fly (Phase 1) */
-      setTimeout(function () { sfx.powerDown(); }, 850);  /* screen fade-out (Phase 3) */
-      setTimeout(function () { sfx.whoosh(false); }, 1100); /* zoom begins (Phase 4) */
-      setTimeout(function () { sfx.impact(); }, 1850);    /* landing thud (end of P4) */
-      /* Force GSAP to recapture all "from" values from the CURRENT
-         phone state on every play. Otherwise it caches the rotation
-         it saw on the first dive, and a second dive (when rotation
-         has continued to a different value) snaps to that cached
-         value before tweening — visible glitch in both forward and
-         reverse playback. */
-      diveTl.invalidate();
+      setTimeout(function () { sfx.shatter(); }, 60);     /* letters explode */
+      setTimeout(function () { sfx.powerDown(); }, 280);  /* screen fade-out */
+      setTimeout(function () { sfx.whoosh(false); }, 480); /* phone dive begins */
+      setTimeout(function () { sfx.impact(); }, 1500);    /* landing thud */
       diveTl.timeScale(1).play();
       /* The dive timeline's onComplete handler hides the hero in the
          same frame it finishes — no setTimeout gap, no particle flash. */
@@ -4783,39 +4757,25 @@
       if (!isDived || isDiving || isReversing) return false;
       isReversing = true;
       upScrollAccum = 0;
+      /* SFX for reverse — mirrors forward in opposite order */
+      sfx.unlock();
+      sfx.whoosh(true);                                    /* reverse whoosh */
       var reverseDur = DIVE_DURATION_MS / 1.2;
-
-      /* All the disruptive DOM/style work first: scroll-lock, restore
-         hero, body class swap, scroll snap. These cause layout reflows
-         (page height changes, hero re-enters layout). */
+      setTimeout(function () { sfx.powerDown(); }, reverseDur - 700);
+      setTimeout(function () { sfx.shatter(); }, reverseDur - 350);
+      setTimeout(function () { sfx.click(); }, reverseDur - 50);
+      /* Lock scroll FIRST so the scrollbar disappears immediately, then
+         restore hero — prevents any scrollbar-flash during the reverse. */
       document.documentElement.classList.add('scroll-locked');
       heroSection.style.display = '';
       document.body.classList.remove('post-dive');
       document.body.classList.add('reversing');
       window.scrollTo(0, 0);
-
-      /* Force the browser to lay out and paint the hero in its
-         end-of-forward state (huge phone, screen off, etc.) BEFORE
-         GSAP starts animating it. Double rAF guarantees one full
-         render cycle has completed — the GPU layers are warm and
-         the first reverse frame is smooth instead of janky. */
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          /* SFX fires now, perfectly aligned with the visible reverse */
-          sfx.unlock();
-          sfx.whoosh(true);
-          setTimeout(function () { sfx.powerDown(); }, reverseDur - 700);
-          setTimeout(function () { sfx.shatter(); }, reverseDur - 350);
-          setTimeout(function () { sfx.click(); }, reverseDur - 50);
-          diveTl.timeScale(1.2).reverse();
-          /* Release the locks once the reverse actually finishes */
-          setTimeout(function () {
-            isReversing = false;
-            isDived = false;
-          }, reverseDur + 50);
-        });
-      });
-
+      diveTl.timeScale(1.2).reverse();
+      setTimeout(function () {
+        isReversing = false;
+        isDived = false;
+      }, reverseDur + 50);
       return true;
     }
 
@@ -4833,19 +4793,14 @@
 
     /* Click on the standalone "Back to start" button — works from
        anywhere on the page. Flow:
-         1. Fade in a full-screen dark overlay. We wait for the actual
-            CSS `transitionend` (not a guesstimated setTimeout) so we
-            KNOW the overlay is 100% opaque before doing anything that
-            would cause a visible layout shift.
-         2. Under the opaque overlay: scrollTo(0,0), restore hero,
-            call attemptReverse() which adds .scroll-locked and starts
-            the reverse-dive timeline.
-         3. After the reverse has rendered a frame or two, fade the
-            overlay back out — the user sees the reverse animation
-            already mid-flight.
-       Doing the disruptive work BEFORE the overlay is fully opaque is
-       what caused the click-button glitch — the user briefly saw the
-       scroll snap + display change through a 95%-opaque overlay. */
+         1. Fade in a full-screen dark overlay (~350ms) — the user's
+            current content fades out from wherever they are.
+         2. While it's fully opaque (invisible to the user), snap
+            scroll to 0 and trigger the reverse-dive.
+         3. Fade the overlay back out (~450ms) — the user now sees
+            the reverse-dive animation already in progress, returning
+            them to the hero start screen.
+       No visible smooth-scroll step. */
     document.addEventListener('click', function (e) {
       var trigger = e.target.closest('[data-dive-reverse]');
       if (!trigger) return;
@@ -4857,31 +4812,18 @@
       document.body.appendChild(overlay);
       /* Force a reflow so the opacity transition runs from 0 to 1 */
       void overlay.offsetWidth;
+      overlay.style.opacity = '1';
 
-      var started = false;
-      function startReverse() {
-        if (started) return;
-        started = true;
-        /* Now genuinely hidden under the fully-opaque overlay */
+      setTimeout(function () {
+        /* Hidden under the opaque overlay: jump to top + start reverse */
         window.scrollTo(0, 0);
         attemptReverse();
-        /* Give the reverse a couple of frames to render, then reveal */
+        /* Give the reverse a couple of frames to start, then reveal it */
         setTimeout(function () {
           overlay.style.opacity = '0';
           setTimeout(function () { overlay.remove(); }, 500);
         }, 80);
-      }
-      overlay.addEventListener('transitionend', function onFadeIn(ev) {
-        if (ev.propertyName !== 'opacity') return;
-        overlay.removeEventListener('transitionend', onFadeIn);
-        startReverse();
-      });
-      /* Safety fallback in case transitionend never fires (e.g. tab
-         was backgrounded mid-transition): worst-case, behave like the
-         old code after a generous timeout. */
-      setTimeout(startReverse, 600);
-
-      overlay.style.opacity = '1';
+      }, 350);
     });
 
     /* Touch — pull-down at top of page */
