@@ -791,21 +791,17 @@
     50%      { transform: scale(1.12); opacity: 1; }
   }
 
-  /* Screen */
+  /* Screen — bg is permanently the dark "off" colour. The Instagram
+     screenshot above (img + statusbar plate) provides the visual
+     content; when those fade out during the dive the screen is
+     already on its final dark state, so there's no bg-change paint
+     to glitch. The .is-off class only toggles the sheen now. */
   .hero-phone-screen {
     position: absolute;
     inset: 8px;
     border-radius: 44px;
-    background:
-      radial-gradient(ellipse at 50% 30%, rgba(192, 132, 252, 0.5), transparent 65%),
-      radial-gradient(ellipse at 30% 80%, rgba(111, 227, 255, 0.4), transparent 60%),
-      radial-gradient(ellipse at 70% 70%, rgba(232, 121, 249, 0.4), transparent 60%),
-      linear-gradient(180deg, #0a0a14 0%, #1a0a28 40%, #0a0a14 100%);
+    background: #0b0d12;
     overflow: hidden;
-    /* No `transition` here: browsers can't cleanly interpolate between
-       multi-stop gradients and a solid color, which produced a flicker
-       when .is-off toggled. The change is now instant — and hidden by
-       the still-opaque image / statusbar above it. */
   }
   .hero-phone-screen::before {
     content: '';
@@ -814,11 +810,6 @@
     background:
       linear-gradient(135deg, transparent 30%, rgba(255, 255, 255, 0.06) 50%, transparent 70%);
     pointer-events: none;
-    /* Sheen toggles instantly with .is-off, no transition. */
-  }
-  /* "Off" state — flat single colour, no reflection sheen, no radial glow */
-  .hero-phone-screen.is-off {
-    background: #0b0d12;
   }
   .hero-phone-screen.is-off::before {
     opacity: 0;
@@ -840,7 +831,11 @@
     display: block;
     /* Darken by 20% so the foreground logo + button stand out cleanly */
     filter: brightness(0.8);
+    /* Force its own GPU compositing layer so GSAP's per-frame opacity
+       updates are pure compositor changes (no element repaints). */
     will-change: opacity;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
   }
   /* Slim plate filling the 16px above the image — uses #0b0d12 so it
      blends with the eventual "screen-off" background instead of pure
@@ -854,10 +849,12 @@
     background: #0b0d12;
     z-index: 1;
     pointer-events: none;
-    /* No `transition: opacity` — GSAP animates this opacity in the
-       dive timeline (Phase 3 fade-out). A CSS opacity transition
-       fights GSAP's per-frame updates and produces visible lag. */
+    /* GSAP animates this opacity. Force its own GPU layer so
+       opacity changes are pure compositor (no repaint) and there's
+       no CSS-vs-GSAP transition fighting. */
     will-change: opacity;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
   }
   .hero-phone-screen.is-off .phone-screen-statusbar {
     opacity: 0;
