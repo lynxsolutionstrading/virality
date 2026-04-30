@@ -1224,15 +1224,16 @@
     box-shadow: 0 10px 40px -5px rgba(111, 227, 255, 0.4);
   }
 
-  .iridescent-wave {
+  /* Brand-section / Press-section divider — clean horizontal line in
+     #0b0d12 that fades out softly at the edges. The illustration's
+     blobs above it bounce against this line via JS. */
+  .brand-divider {
     display: block;
     width: 100%;
-    height: 60px;
-    margin: -30px 0;
+    height: 2px;
+    margin: 0;
+    background: linear-gradient(90deg, transparent 0%, #0b0d12 22%, #0b0d12 78%, transparent 100%);
     position: relative;
-    overflow: visible; /* let the path push beyond the SVG box when grabbed */
-    filter: blur(8px);
-    pointer-events: auto;
   }
 
   .press-section {
@@ -3032,17 +3033,7 @@
       </div>
     </div>
 
-    <svg class="iridescent-wave" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true">
-      <defs>
-        <linearGradient id="wave-grad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#6FE3FF" stop-opacity="0.6"/>
-          <stop offset="33%" stop-color="#C084FC" stop-opacity="0.6"/>
-          <stop offset="66%" stop-color="#E879F9" stop-opacity="0.5"/>
-          <stop offset="100%" stop-color="#6FE3FF" stop-opacity="0.5"/>
-        </linearGradient>
-      </defs>
-      <path data-wave-path d="M 0 30 L 1000 30" fill="none" stroke="url(#wave-grad)" stroke-width="22" stroke-linecap="round"/>
-    </svg>
+    <div class="brand-divider" data-brand-divider aria-hidden="true"></div>
 
     <div class="press-section">
       <div class="container">
@@ -4309,7 +4300,16 @@
         });
       }
 
+      var divider = document.querySelector('[data-brand-divider]');
+
       function update() {
+        /* Cache divider top once per frame for the bounce check */
+        var dividerTopY = null;
+        if (divider) {
+          var dRect = divider.getBoundingClientRect();
+          dividerTopY = dRect.top;
+        }
+
         for (var i = 0; i < states.length; i++) {
           var s = states[i];
           if (s.isPopped || s.isReturning) continue;
@@ -4328,132 +4328,23 @@
             s.vy *= -0.6;
           }
           s.el.style.transform = 'translate(' + s.x.toFixed(1) + 'px,' + s.y.toFixed(1) + 'px)';
+
+          /* Bounce off the brand divider — no blob may pass through it */
+          if (dividerTopY !== null && s.vy > -0.05) {
+            var blobRect = s.el.getBoundingClientRect();
+            if (blobRect.bottom > dividerTopY) {
+              var overshoot = blobRect.bottom - dividerTopY;
+              s.y -= overshoot;
+              if (s.vy > 0) s.vy = -s.vy * 0.7; /* reflect Y velocity */
+              s.el.style.transform = 'translate(' + s.x.toFixed(1) + 'px,' + s.y.toFixed(1) + 'px)';
+            }
+          }
         }
         requestAnimationFrame(update);
       }
       requestAnimationFrame(update);
     })();
 
-    /* ============================================================
-       IRIDESCENT WAVE — gentle idle waves at random points; mouse can
-       grab and deform up to 100px, beyond which the line snaps back
-       (rubber-band release).
-       ============================================================ */
-    (function setupWave() {
-      var path = document.querySelector('[data-wave-path]');
-      if (!path) return;
-      var svg = path.closest('svg');
-
-      var NUM = 13;
-      var VBW = 1000;
-      var VBH = 60;
-      var BASE_Y = 30;
-      var GRIP_X_REL = 0.10;   /* mouse must be within 10% of wave width horizontally */
-      var GRIP_Y = 65;          /* mouse must be within 65px of the actual line vertically */
-      var BUFFER = 5;            /* line stays at least this many px away from the mouse */
-      var MAX_PUSH = 100;        /* line can be pushed up to this displacement from baseline */
-      var BREAK_PUSH = 130;      /* beyond this stretch, line releases and snaps back */
-      var TREMBLE_START = 85;    /* tremble kicks in just before the cap */
-
-      var pts = [];
-      for (var i = 0; i < NUM; i++) {
-        pts.push({
-          x: (i / (NUM - 1)) * VBW,
-          baseY: BASE_Y,
-          y: BASE_Y,
-          pushY: 0,
-          phase: Math.random() * Math.PI * 2,
-          amp: 2 + Math.random() * 6,
-          speed: 0.0005 + Math.random() * 0.0011,
-          released: false
-        });
-      }
-
-      var mx = -9999, my = -9999;
-      window.addEventListener('mousemove', function (e) {
-        mx = e.clientX; my = e.clientY;
-      }, { passive: true });
-
-      function buildPath() {
-        var d = 'M' + pts[0].x.toFixed(1) + ' ' + pts[0].y.toFixed(2);
-        for (var i = 0; i < pts.length - 1; i++) {
-          var a = pts[i], b = pts[i + 1];
-          var cpX = (a.x + b.x) / 2;
-          d += ' C' + cpX.toFixed(1) + ' ' + a.y.toFixed(2) +
-               ', ' + cpX.toFixed(1) + ' ' + b.y.toFixed(2) +
-               ', ' + b.x.toFixed(1) + ' ' + b.y.toFixed(2);
-        }
-        return d;
-      }
-
-      function tick(time) {
-        var rect = svg.getBoundingClientRect();
-        var mxRel = (mx - rect.left) / rect.width;
-        var baselineScreenY = rect.top + (BASE_Y / VBH) * rect.height;
-        var dyFromBase = my - baselineScreenY;
-
-        for (var i = 0; i < pts.length; i++) {
-          var p = pts[i];
-          var pxRel = p.x / VBW;
-          var dxRel = Math.abs(pxRel - mxRel);
-
-          /* Distance from the mouse to the point's CURRENT line position
-             (not baseline) — this is what determines whether the mouse
-             is actually "on" the line. */
-          var pointScreenY = rect.top + (p.y / VBH) * rect.height;
-          var dyFromLine = my - pointScreenY;
-
-          var pushTarget = 0;
-          var trembleAmt = 0;
-
-          if (!p.released && dxRel < GRIP_X_REL && Math.abs(dyFromLine) < GRIP_Y) {
-            var proxX = 1 - dxRel / GRIP_X_REL;
-            /* Line keeps a 5px buffer from the mouse — never sticks to it.
-               Line is pushed AHEAD of the mouse on the same side as the
-               cursor, leaving exactly BUFFER px between cursor and line. */
-            var rawTarget;
-            if (Math.abs(dyFromBase) <= BUFFER) {
-              rawTarget = 0;
-            } else {
-              rawTarget = (dyFromBase - BUFFER * (dyFromBase > 0 ? 1 : -1)) * proxX;
-            }
-
-            if (rawTarget > BREAK_PUSH || rawTarget < -BREAK_PUSH) {
-              /* Mouse pushed past the breaking point — slip and snap */
-              p.released = true;
-              pushTarget = 0;
-            } else if (rawTarget > MAX_PUSH || rawTarget < -MAX_PUSH) {
-              /* At the cap — clamp to max and tremble while the user
-                 keeps pushing. */
-              pushTarget = MAX_PUSH * (rawTarget > 0 ? 1 : -1);
-              trembleAmt = (Math.random() - 0.5) * 5;
-            } else if (rawTarget > TREMBLE_START || rawTarget < -TREMBLE_START) {
-              /* Approaching the cap — small pre-tremble for tension */
-              pushTarget = rawTarget;
-              trembleAmt = (Math.random() - 0.5) * 2;
-            } else {
-              pushTarget = rawTarget;
-            }
-          }
-
-          /* Restore grip-ability when mouse leaves the area entirely */
-          if (p.released) {
-            if (dxRel > GRIP_X_REL * 1.6 || Math.abs(dyFromBase) < 6) {
-              p.released = false;
-            }
-          }
-
-          p.pushY += (pushTarget - p.pushY) * 0.18;
-
-          var idleY = Math.sin(time * p.speed + p.phase) * p.amp;
-          p.y = p.baseY + idleY + p.pushY + trembleAmt;
-        }
-
-        path.setAttribute('d', buildPath());
-        requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
-    })();
 
     /* ============================================================
        RESULTS — count-up + bar fill + segment stagger when in view
