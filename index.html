@@ -4572,10 +4572,6 @@
           ease: 'sine.inOut'
         }
       );
-      /* Start the tween from the centered midpoint (rotateY: 0,
-         rotateX: 0) instead of one extreme. With sine.inOut and a
-         6s sweep, t=3s lands exactly on the midpoint values. */
-      rotationTween.seek(3);
     }
 
     /* ============================================================
@@ -4631,13 +4627,7 @@
       /* GSAP does not have an onReverseStart event — reverse setup is
          done imperatively in attemptReverse() before .reverse() is called. */
       onReverseComplete: function () {
-        if (rotationTween) {
-          /* Reset to the centered midpoint so the tilt always
-             restarts from the same neutral pose, regardless of
-             where the dive happened to pause the tween. */
-          rotationTween.seek(3);
-          rotationTween.resume();
-        }
+        if (rotationTween) rotationTween.resume();
         document.body.classList.remove('diving', 'post-dive', 'reversing');
         document.body.classList.add('pre-dive');
         window.scrollTo(0, 0);
