@@ -509,34 +509,81 @@
 
   /* Per-section glow — every section uses a SINGLE radial at the
      same peak opacity (0.08) so they all read at equal strength.
-     The pulse scales opacity 0.5 → 1 → 0.5 (effective 0.04 ↔ 0.08). */
+     The pulse scales opacity 0.5 → 1 → 0.5 (effective 0.04 ↔ 0.08).
+     Each ::before also slowly drifts within a ~20px radius via a
+     second animation, with each section using a different drift
+     pattern so the page never looks synchronized. */
   #problem::before {
-    /* One large radial covering the entire left flank top-to-bottom */
-    background: radial-gradient(1200px 1100px at 0% 50%, rgba(111, 227, 255, 0.08), transparent 72%);
+    background: radial-gradient(900px 620px at 0% 35%, rgba(111, 227, 255, 0.08), transparent 72%);
+    animation:
+      glowPulse 9s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite,
+      glowDrift1 18s ease-in-out infinite;
   }
   #solution::before {
     background: radial-gradient(900px 620px at 100% 75%, rgba(192, 132, 252, 0.08), transparent 72%);
-    animation-delay: -1.3s;
+    animation:
+      glowPulse 9s cubic-bezier(0.45, 0.05, 0.55, 0.95) -1.3s infinite,
+      glowDrift2 21s ease-in-out -3s infinite;
   }
   #partners::before {
     background: radial-gradient(900px 620px at 0% 35%, rgba(217, 70, 239, 0.08), transparent 72%);
-    animation-delay: -2.6s;
+    animation:
+      glowPulse 9s cubic-bezier(0.45, 0.05, 0.55, 0.95) -2.6s infinite,
+      glowDrift3 19s ease-in-out -7s infinite;
   }
   #cases::before {
     background: radial-gradient(900px 620px at 100% 60%, rgba(111, 227, 255, 0.08), transparent 72%);
-    animation-delay: -3.9s;
+    animation:
+      glowPulse 9s cubic-bezier(0.45, 0.05, 0.55, 0.95) -3.9s infinite,
+      glowDrift4 22s ease-in-out -2s infinite;
   }
   #results::before {
     background: radial-gradient(900px 620px at 0% 70%, rgba(192, 132, 252, 0.08), transparent 72%);
-    animation-delay: -6.4s;
+    animation:
+      glowPulse 9s cubic-bezier(0.45, 0.05, 0.55, 0.95) -6.4s infinite,
+      glowDrift1 20s ease-in-out -9s infinite;
   }
   #about::before {
     background: radial-gradient(900px 620px at 100% 30%, rgba(217, 70, 239, 0.08), transparent 72%);
-    animation-delay: -7.7s;
+    animation:
+      glowPulse 9s cubic-bezier(0.45, 0.05, 0.55, 0.95) -7.7s infinite,
+      glowDrift2 17s ease-in-out -5s infinite;
   }
   @keyframes glowPulse {
     0%, 100% { opacity: 0.5; }   /* effective 0.04 */
     50%      { opacity: 1; }     /* effective 0.08 */
+  }
+  /* Four distinct drift patterns — each stays inside a ~20px radius,
+     no two patterns visit the same point in the same phase. Using
+     `translate` (individual property) so it composes cleanly with
+     the opacity pulse animation. */
+  @keyframes glowDrift1 {
+    0%   { translate: 0 0; }
+    25%  { translate: 14px -9px; }
+    50%  { translate: -11px 12px; }
+    75%  { translate: 6px 16px; }
+    100% { translate: 0 0; }
+  }
+  @keyframes glowDrift2 {
+    0%   { translate: 0 0; }
+    25%  { translate: -13px 7px; }
+    50%  { translate: 15px 11px; }
+    75%  { translate: -8px -14px; }
+    100% { translate: 0 0; }
+  }
+  @keyframes glowDrift3 {
+    0%   { translate: 0 0; }
+    25%  { translate: 9px 13px; }
+    50%  { translate: -16px -5px; }
+    75%  { translate: 11px -11px; }
+    100% { translate: 0 0; }
+  }
+  @keyframes glowDrift4 {
+    0%   { translate: 0 0; }
+    25%  { translate: -10px -12px; }
+    50%  { translate: 13px 8px; }
+    75%  { translate: -7px 15px; }
+    100% { translate: 0 0; }
   }
 
   /* ============================================================
@@ -1868,8 +1915,10 @@
     background:
       radial-gradient(700px 500px at 0% 20%, rgba(111, 227, 255, 0.08), transparent 70%),
       radial-gradient(700px 500px at 100% 90%, rgba(217, 70, 239, 0.08), transparent 70%);
-    /* Same smooth pulse as the other sections, with its own phase offset */
-    animation: glowPulse 9s cubic-bezier(0.45, 0.05, 0.55, 0.95) -5.1s infinite;
+    /* Same smooth pulse + its own drift pattern */
+    animation:
+      glowPulse 9s cubic-bezier(0.45, 0.05, 0.55, 0.95) -5.1s infinite,
+      glowDrift3 23s ease-in-out -11s infinite;
   }
   .journey-section > * { position: relative; }
 
