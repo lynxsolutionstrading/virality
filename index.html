@@ -17,6 +17,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;0,800&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollToPlugin.min.js" defer></script>
 <style>
   /* ============================================================
      DESIGN TOKENS
@@ -317,12 +318,7 @@
     width: 240px;
     height: 490px;
     transform-style: preserve-3d;
-    animation: phoneRotate 14s ease-in-out infinite;
     will-change: transform;
-  }
-  @keyframes phoneRotate {
-    0%, 100% { transform: rotateY(-12deg) rotateX(2deg); }
-    50%      { transform: rotateY(12deg) rotateX(-2deg); }
   }
 
   /* iPhone 15 Pro frame — titanium look */
@@ -449,18 +445,19 @@
   /* === GO VIRAL Glitch Headline === */
   .hero-glitch {
     position: absolute;
-    top: 50%;
+    top: 13%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     z-index: 5;
     font-family: 'Orbitron', 'Plus Jakarta Sans', sans-serif;
     font-weight: 900;
-    font-size: clamp(60px, 14vw, 200px);
+    font-size: clamp(56px, 12vw, 168px);
     letter-spacing: -0.02em;
     line-height: 0.9;
     pointer-events: none;
     text-align: center;
     white-space: nowrap;
+    will-change: transform, opacity, filter;
   }
   .hero-glitch-row {
     position: relative;
@@ -625,7 +622,7 @@
     .hero-phone { width: 180px; height: 370px; }
     .hero-phone-island { width: 70px; height: 22px; top: 12px; }
     .phone-screen-orb { width: 70px; height: 70px; }
-    .hero-glitch { font-size: clamp(48px, 18vw, 88px); }
+    .hero-glitch { font-size: clamp(44px, 14vw, 76px); top: 14%; }
     .hero-tagline { bottom: 11%; }
     .hero-edge::before { width: 60px; }
   }
@@ -3385,7 +3382,10 @@
 </dialog>
 
 <!-- ============================================================
-     CINEMATIC HERO — GSAP + ScrollTrigger
+     CINEMATIC HERO — GSAP + ScrollTrigger + ScrollToPlugin
+     - Particles: 105, slow drift, cursor repulsion (~110px)
+     - "GO VIRAL" visible at top from start; flies up on scroll
+     - Phone dive: scroll-locked auto-play once Phase 2 starts
      ============================================================ -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
@@ -3393,14 +3393,17 @@
 
     var prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     gsap.registerPlugin(ScrollTrigger);
+    if (typeof ScrollToPlugin !== 'undefined') gsap.registerPlugin(ScrollToPlugin);
 
-    /* ---- Particle field generation ---- */
+    /* ============================================================
+       PARTICLES — slow drift + cursor repulsion (always on)
+       ============================================================ */
     var field = document.querySelector('[data-particles]');
     var particles = [];
     if (field) {
       var colors = ['#6FE3FF', '#C084FC', '#E879F9', '#ffffff'];
-      var count = 80;
-      for (var i = 0; i < count; i++) {
+      var COUNT = 105; /* 30% more than before */
+      for (var i = 0; i < COUNT; i++) {
         var p = document.createElement('div');
         p.className = 'particle';
         var size = Math.random() * 3 + 1;
@@ -3412,114 +3415,260 @@
           'height:' + size + 'px;' +
           'background:' + color + ';' +
           'box-shadow:0 0 ' + (size * 4) + 'px ' + color + ';' +
-          'opacity:' + (0.3 + Math.random() * 0.5);
+          'opacity:' + (0.3 + Math.random() * 0.5) + ';' +
+          'will-change:transform;';
         field.appendChild(p);
+
+        /* Per-particle drift parameters (slow sine motion) */
+        p._driftPhaseX = Math.random() * Math.PI * 2;
+        p._driftPhaseY = Math.random() * Math.PI * 2;
+        p._driftAmpX = 6 + Math.random() * 12;
+        p._driftAmpY = 6 + Math.random() * 12;
+        p._driftSpeedX = 0.00007 + Math.random() * 0.0001;
+        p._driftSpeedY = 0.00007 + Math.random() * 0.0001;
+        p._currRepelX = 0;
+        p._currRepelY = 0;
+
         particles.push(p);
       }
+    }
 
-      if (!prefersReduce && particles.length) {
-        gsap.to(particles, {
-          x: 'random(-25, 25)',
-          y: 'random(-25, 25)',
-          duration: 'random(4, 9)',
-          repeat: -1,
+    /* Cursor tracking for repulsion */
+    var REPEL_RADIUS = 110;            /* ~3 cm at 96 DPI */
+    var REPEL_RADIUS_SQ = REPEL_RADIUS * REPEL_RADIUS;
+    var REPEL_FORCE = 70;
+    var mouseX = -9999, mouseY = -9999;
+    var mousePresent = false;
+    var isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    if (isFinePointer) {
+      window.addEventListener('mousemove', function (e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        mousePresent = true;
+      }, { passive: true });
+      document.addEventListener('mouseleave', function () { mousePresent = false; }, { passive: true });
+    }
+
+    /* Single ticker drives drift + repulsion for all particles */
+    if (!prefersReduce && particles.length) {
+      gsap.ticker.add(function (time) {
+        var ms = time * 1000;
+        var doRepel = mousePresent && isFinePointer;
+
+        for (var j = 0; j < particles.length; j++) {
+          var pp = particles[j];
+
+          var driftX = Math.sin(ms * pp._driftSpeedX + pp._driftPhaseX) * pp._driftAmpX;
+          var driftY = Math.cos(ms * pp._driftSpeedY + pp._driftPhaseY) * pp._driftAmpY;
+
+          var targetRepelX = 0, targetRepelY = 0;
+          if (doRepel) {
+            var rect = pp.getBoundingClientRect();
+            var cx = rect.left + rect.width * 0.5;
+            var cy = rect.top + rect.height * 0.5;
+            var dx = cx - mouseX;
+            var dy = cy - mouseY;
+            var distSq = dx * dx + dy * dy;
+            if (distSq < REPEL_RADIUS_SQ && distSq > 0.01) {
+              var dist = Math.sqrt(distSq);
+              var force = (1 - dist / REPEL_RADIUS) * REPEL_FORCE;
+              targetRepelX = (dx / dist) * force;
+              targetRepelY = (dy / dist) * force;
+            }
+          }
+          /* Smooth approach toward repel target */
+          pp._currRepelX += (targetRepelX - pp._currRepelX) * 0.18;
+          pp._currRepelY += (targetRepelY - pp._currRepelY) * 0.18;
+
+          pp.style.transform =
+            'translate3d(' + (driftX + pp._currRepelX).toFixed(1) + 'px,' +
+                            (driftY + pp._currRepelY).toFixed(1) + 'px,0)';
+        }
+      });
+    }
+
+    if (prefersReduce) return; /* reduce-motion: skip cinematics */
+
+    /* ============================================================
+       PHONE — continuous slow rotation (separate from dive)
+       ============================================================ */
+    var phone = document.querySelector('[data-hero-phone]');
+    var rotationTween = null;
+    if (phone) {
+      rotationTween = gsap.fromTo(phone,
+        { rotateY: -12, rotateX: 2 },
+        {
+          rotateY: 12, rotateX: -2,
+          duration: 7,
           yoyo: true,
+          repeat: -1,
           ease: 'sine.inOut'
-        });
-      }
+        }
+      );
     }
 
-    if (prefersReduce) return; /* reduce-motion: no scroll-driven cinematics */
+    /* ============================================================
+       CINEMATIC TIMELINE (driven by ScrollTrigger scrub)
+       Phase 1 (0 → 0.30): letters fly up & dissolve
+       Phase 2 (0.30 → 1.0): phone dive (scroll-locked auto-play)
+       ============================================================ */
+    var heroSection = document.querySelector('[data-cinematic-hero]');
+    if (!heroSection) return;
 
-    /* ---- Glitch letters: initial hidden state ---- */
     var letters = gsap.utils.toArray('.hero-glitch-layer--main .hero-glitch-letter');
+
+    var heroTl = gsap.timeline({ paused: true });
+
+    /* Phase 1 — Letters fly upward and dissolve */
     if (letters.length) {
-      gsap.set(letters, { opacity: 0, yPercent: 80, rotateX: -90, filter: 'blur(20px)' });
-      gsap.set('.hero-glitch-layer--cyan, .hero-glitch-layer--magenta', { opacity: 0 });
+      heroTl.to(letters, {
+        opacity: 0,
+        yPercent: -300,
+        filter: 'blur(20px)',
+        stagger: 0.04,
+        duration: 0.3,
+        ease: 'power2.in'
+      }, 0);
+      heroTl.to('.hero-glitch-layer--cyan, .hero-glitch-layer--magenta', {
+        opacity: 0,
+        duration: 0.25,
+        ease: 'power2.in'
+      }, 0);
+      heroTl.to('.hero-tagline, .hero-scroll-hint', {
+        opacity: 0,
+        y: 20,
+        duration: 0.25
+      }, 0.05);
     }
 
-    /* ---- Master pinned timeline ---- */
-    var trigger = document.querySelector('[data-cinematic-hero]');
-    if (!trigger) return;
+    /* Phase 2 — Phone dive (camera flies INTO the screen) */
+    if (phone) {
+      heroTl.to(phone, {
+        rotateY: 0,
+        rotateX: 0,
+        scale: 7,
+        z: 1500,
+        duration: 0.7,
+        ease: 'power2.in',
+        onStart: function () { if (rotationTween) rotationTween.pause(); },
+        onReverseComplete: function () { if (rotationTween) rotationTween.resume(); }
+      }, 0.3);
+    }
+    heroTl.to('[data-hero-phone-glow]', {
+      scale: 9,
+      opacity: 0,
+      duration: 0.5
+    }, 0.3);
+    heroTl.to('.hero-phone-frame', {
+      boxShadow: '0 0 0 rgba(0,0,0,0)',
+      duration: 0.35,
+      ease: 'power2.in'
+    }, 0.55);
+    heroTl.to('.hero-edge', {
+      opacity: 0,
+      duration: 0.4
+    }, 0.3);
+    heroTl.to('.hero-grid', {
+      opacity: 0,
+      duration: 0.4
+    }, 0.4);
 
-    var heroTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: trigger,
-        start: 'top top',
-        end: '+=140%',
-        scrub: 0.8,
-        pin: true,
-        anticipatePin: 1
+    /* ============================================================
+       SCROLL TRIGGER + AUTO-LOCK
+       Pin for 85% viewport. When user crosses Phase 2 boundary
+       in either direction, force-scroll to opposite boundary
+       and block input. After completion, normal scroll resumes.
+       ============================================================ */
+    var PHASE2_START = 0.30;
+    var PHASE2_NEAR_END = 0.95;
+    var isAutoPlaying = false;
+    var prevProgress = 0;
+
+    /* Smooth timeline progress (own scrub-equivalent) */
+    var targetProgress = 0;
+    var currentProgress = 0;
+    gsap.ticker.add(function () {
+      currentProgress += (targetProgress - currentProgress) * 0.12;
+      if (Math.abs(currentProgress - targetProgress) < 0.001) currentProgress = targetProgress;
+      heroTl.progress(currentProgress);
+    });
+
+    var pinST = ScrollTrigger.create({
+      trigger: heroSection,
+      start: 'top top',
+      end: '+=85%',
+      pin: true,
+      anticipatePin: 1,
+      onUpdate: function (self) {
+        var progress = self.progress;
+        targetProgress = progress;
+
+        if (isAutoPlaying) { prevProgress = progress; return; }
+
+        /* Forward: just crossed PHASE2_START going down */
+        if (prevProgress < PHASE2_START && progress >= PHASE2_START) {
+          autoScrollTo(self.end + 30);
+        }
+        /* Reverse: just crossed PHASE2_NEAR_END going up */
+        else if (prevProgress > PHASE2_NEAR_END && progress <= PHASE2_NEAR_END) {
+          var phase2StartScrollY = self.start + (PHASE2_START - 0.005) * (self.end - self.start);
+          autoScrollTo(phase2StartScrollY);
+        }
+
+        prevProgress = progress;
       }
     });
 
-    /* Phase 1 — letters reveal with glitch fade */
-    if (letters.length) {
-      heroTl.to(letters, {
-        opacity: 1,
-        yPercent: 0,
-        rotateX: 0,
-        filter: 'blur(0px)',
-        stagger: 0.05,
-        duration: 0.5,
-        ease: 'back.out(1.4)'
-      }, 0);
+    /* Native RAF-based scroll lock — bypasses any plugin issues with window-tweens */
+    function autoScrollTo(targetY, duration) {
+      duration = duration || 1300;
+      isAutoPlaying = true;
+      var startY = window.scrollY;
+      var distance = targetY - startY;
+      var startTime = performance.now();
 
-      heroTl.to('.hero-glitch-layer--cyan, .hero-glitch-layer--magenta', {
-        opacity: 0.8,
-        duration: 0.4,
-        ease: 'power2.out'
-      }, 0.2);
+      function easeInOut(t) {
+        return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      }
+      function step(now) {
+        var elapsed = now - startTime;
+        var t = Math.min(elapsed / duration, 1);
+        window.scrollTo(0, startY + distance * easeInOut(t));
+        if (t < 1) {
+          requestAnimationFrame(step);
+        } else {
+          isAutoPlaying = false;
+          prevProgress = pinST.progress;
+        }
+      }
+      requestAnimationFrame(step);
     }
 
-    /* Phase 2 — phone flies forward, glow expands */
-    heroTl.to('[data-hero-phone]', {
-      scale: 3.5,
-      z: 1000,
-      rotateY: 0,
-      rotateX: 0,
-      ease: 'power2.in',
-      duration: 1
-    }, 0.5);
-
-    heroTl.to('[data-hero-phone-glow]', {
-      scale: 5,
-      opacity: 0,
-      duration: 0.8
-    }, 0.55);
-
-    /* Phase 3 — particles explode outward */
-    if (particles.length) {
-      heroTl.to(particles, {
-        x: function () { return (Math.random() - 0.5) * window.innerWidth * 2.5; },
-        y: function () { return (Math.random() - 0.5) * window.innerHeight * 2.5; },
-        scale: function () { return Math.random() * 4 + 1; },
-        opacity: 0,
-        stagger: 0.001,
-        duration: 0.9,
-        ease: 'power3.out'
-      }, 0.5);
+    /* Block user scroll input while auto-play is active */
+    function blockIfLocked(e) {
+      if (isAutoPlaying) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
     }
+    window.addEventListener('wheel', blockIfLocked, { passive: false });
+    window.addEventListener('touchmove', blockIfLocked, { passive: false });
+    window.addEventListener('keydown', function (e) {
+      if (!isAutoPlaying) return;
+      var blocked = ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Space', ' ', 'Home', 'End'];
+      if (blocked.indexOf(e.key) !== -1) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    });
 
-    /* Phase 4 — headline blurs/scales out */
-    heroTl.to('.hero-glitch', {
-      scale: 1.4,
-      filter: 'blur(12px)',
-      opacity: 0,
-      duration: 0.6,
-      ease: 'power2.in'
-    }, 0.7);
-
-    /* Tagline fades early */
-    heroTl.to('.hero-tagline, .hero-scroll-hint', {
-      opacity: 0,
-      y: 20,
-      duration: 0.4
-    }, 0.3);
-
-    /* ---- Periodic random glitch jitter (cyberpunk feel) ---- */
+    /* ============================================================
+       Periodic glitch jitter on letters (continuous cyberpunk feel)
+       ============================================================ */
     function glitchJitter() {
-      if (!letters.length) return;
+      if (!letters.length || isAutoPlaying) return;
+      if (pinST.progress > PHASE2_START) return; /* hide jitter once letters are gone */
       if (Math.random() > 0.7) {
         var target = letters[Math.floor(Math.random() * letters.length)];
         if (target) {
