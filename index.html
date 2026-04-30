@@ -1270,27 +1270,46 @@
   }
 
   .press-section {
-    padding: 32px 0 80px;
+    /* Top padding mirrors the bottom padding of .brand-section so the
+       gap above and below the divider matches. */
+    padding: 40px 0 80px;
     text-align: center;
   }
-  @media (min-width: 960px) { .press-section { padding: 32px 0 120px; } }
+  @media (min-width: 960px) { .press-section { padding: 60px 0 120px; } }
+
+  .press-grid {
+    display: grid;
+    gap: 28px;
+    align-items: center;
+  }
+  @media (min-width: 960px) {
+    .press-grid { grid-template-columns: 1fr 1fr; gap: 64px; }
+  }
 
   .press-logos {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 32px;
-    flex-wrap: wrap;
-    margin-bottom: 24px;
+    gap: 18px;
+  }
+  @media (min-width: 960px) {
+    .press-logos { align-items: flex-start; gap: 24px; }
   }
   .press-logo {
     font-weight: 700;
     color: var(--text-dark);
-    font-size: 24px;
+    /* ~3.5x the previous 24px size, scales fluidly */
+    font-size: clamp(56px, 8.5vw, 92px);
     letter-spacing: -0.02em;
+    line-height: 1;
   }
   .press-logo.serif { font-family: 'Playfair Display', Georgia, serif; font-style: italic; }
   .press-logo.purple { color: #6B21A8; font-weight: 800; }
+
+  .press-text { text-align: center; }
+  @media (min-width: 960px) { .press-text { text-align: right; } }
+
   .press-title {
     font-size: clamp(34px, 5vw, 56px);
     font-weight: 800;
@@ -1320,6 +1339,9 @@
     color: var(--text-dark-secondary);
     max-width: 540px;
     margin: 0 auto;
+  }
+  @media (min-width: 960px) {
+    .press-desc { margin: 0 0 0 auto; }
   }
 
   /* ============================================================
@@ -3078,13 +3100,15 @@
     <div class="brand-divider" data-brand-divider aria-hidden="true"></div>
 
     <div class="press-section">
-      <div class="container">
+      <div class="container press-grid">
         <div class="press-logos" aria-label="Featured press">
           <span class="press-logo serif">Forbes</span>
           <span class="press-logo purple">yahoo<span style="color: #7C3AED;">!</span></span>
         </div>
-        <h2 class="press-title">Press Features</h2>
-        <p class="press-desc">We transform credibility into social proof. Media features strengthen trust, accelerate decision-making, and increase the perceived value of your brand.</p>
+        <div class="press-text">
+          <h2 class="press-title">Press Features</h2>
+          <p class="press-desc">We transform credibility into social proof. Media features strengthen trust, accelerate decision-making, and increase the perceived value of your brand.</p>
+        </div>
       </div>
     </div>
   </section>
