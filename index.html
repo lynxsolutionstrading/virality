@@ -1925,6 +1925,329 @@
     .cta-primary:hover,
     .cta-white:hover { transform: none; }
   }
+
+  /* ============================================================
+     CONTACT MODAL
+     ============================================================ */
+  .contact-modal {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 16px;
+    background: transparent;
+    border: none;
+    color: inherit;
+    overflow: hidden;
+  }
+  .contact-modal:not([open]) { display: none; }
+  .contact-modal[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: contactModalIn 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .contact-modal::backdrop {
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(111, 227, 255, 0.14), transparent 60%),
+      radial-gradient(ellipse at 70% 80%, rgba(217, 70, 239, 0.14), transparent 60%),
+      rgba(5, 5, 7, 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    animation: contactBackdropIn 0.32s ease-out;
+  }
+  @keyframes contactModalIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes contactBackdropIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .contact-modal-card {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    background:
+      radial-gradient(80% 60% at 50% 0%, rgba(192, 132, 252, 0.18), transparent 60%),
+      linear-gradient(180deg, rgba(20, 20, 26, 0.96), rgba(15, 15, 22, 0.98));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 28px;
+    padding: 36px 24px 22px;
+    box-shadow:
+      0 30px 80px -10px rgba(0, 0, 0, 0.7),
+      0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+      0 0 60px -10px rgba(192, 132, 252, 0.25);
+    overflow: hidden;
+    animation: cardScaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes cardScaleIn {
+    from { transform: translateY(16px) scale(0.96); }
+    to   { transform: translateY(0) scale(1); }
+  }
+  .contact-modal-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(40% 30% at 0% 0%, rgba(111, 227, 255, 0.1), transparent 60%),
+      radial-gradient(40% 30% at 100% 100%, rgba(232, 121, 249, 0.08), transparent 60%);
+    pointer-events: none;
+  }
+  .contact-modal-card > * { position: relative; z-index: 1; }
+
+  .contact-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.25s ease;
+    z-index: 10;
+  }
+  .contact-modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: rotate(90deg);
+  }
+
+  .contact-modal-header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .contact-avatar {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 8px 24px rgba(217, 70, 239, 0.35));
+  }
+  .contact-avatar svg {
+    animation: avatarFloat 4s ease-in-out infinite;
+  }
+  @keyframes avatarFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-3px) scale(1.04); }
+  }
+  .contact-avatar-status {
+    position: absolute;
+    bottom: 2px;
+    right: 6px;
+    width: 16px;
+    height: 16px;
+    background: #34D399;
+    border: 3px solid #131319;
+    border-radius: 50%;
+    animation: statusPing 2s ease-out infinite;
+  }
+  @keyframes statusPing {
+    0%   { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.55); }
+    100% { box-shadow: 0 0 0 12px rgba(52, 211, 153, 0); }
+  }
+  .contact-modal-name {
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .contact-modal-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .contact-modal-title .grad {
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .contact-modal-sub {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    max-width: 32ch;
+    margin: 0 auto;
+  }
+
+  /* Channels */
+  .contact-channels {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .contact-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    opacity: 0;
+    animation: rowFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes rowFadeIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  .contact-row:nth-child(1) { animation-delay: 0.10s; }
+  .contact-row:nth-child(2) { animation-delay: 0.18s; }
+  .contact-row:nth-child(3) { animation-delay: 0.26s; }
+  .contact-row:nth-child(4) { animation-delay: 0.34s; }
+  .contact-row:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.14);
+    transform: translateX(2px);
+  }
+  .contact-row:focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 2px;
+  }
+
+  .contact-row-icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    position: relative;
+  }
+  .contact-row-icon::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 14px;
+    background: inherit;
+    opacity: 0.35;
+    filter: blur(10px);
+    z-index: -1;
+  }
+  .contact-row-icon--wa { background: linear-gradient(135deg, #25D366, #128C7E); }
+  .contact-row-icon--tg { background: linear-gradient(135deg, #2AABEE, #229ED9); }
+  .contact-row-icon--ig { background: linear-gradient(135deg, #FCAF45 0%, #E1306C 50%, #5B51D8 100%); }
+  .contact-row-icon--mail {
+    background: var(--gradient-cta);
+    color: #0A0A10;
+  }
+
+  .contact-row-body { flex: 1; min-width: 0; }
+  .contact-row-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+  }
+  .contact-row-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: -0.01em;
+  }
+
+  .contact-row-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+  }
+  .contact-row-action svg { transition: transform 0.2s ease; }
+  .contact-row:hover .contact-row-action {
+    color: white;
+  }
+  .contact-row:hover .contact-row-action svg {
+    transform: translateX(3px);
+  }
+
+  /* Footer status line */
+  .contact-modal-footer {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .contact-modal-status-dot {
+    width: 7px;
+    height: 7px;
+    background: #34D399;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #34D399;
+    animation: statusBlink 1.6s ease-in-out infinite;
+  }
+  @keyframes statusBlink {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.5; transform: scale(0.85); }
+  }
+
+  /* Mobile tweaks */
+  @media (max-width: 480px) {
+    .contact-modal { padding: 12px; }
+    .contact-modal-card {
+      padding: 28px 18px 16px;
+      border-radius: 22px;
+    }
+    .contact-modal-title { font-size: 24px; }
+    .contact-row { padding: 10px 12px; gap: 12px; }
+    .contact-row-icon { width: 40px; height: 40px; }
+    .contact-row-action-text { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact-modal[open],
+    .contact-modal::backdrop,
+    .contact-modal-card,
+    .contact-row,
+    .contact-avatar svg,
+    .contact-avatar-status,
+    .contact-modal-status-dot {
+      animation: none !important;
+    }
+    .contact-row { opacity: 1; }
+  }
 </style>
 </head>
 <body>
@@ -1980,7 +2303,7 @@
         <a href="#hero" class="active">Home</a>
         <a href="#how-it-works">How It Works</a>
         <a href="#results">Results</a>
-        <a href="#contact" class="nav-cta always-show">Contact</a>
+        <a href="#contact" class="nav-cta always-show" data-open-contact>Contact</a>
       </nav>
     </div>
   </div>
@@ -2718,6 +3041,169 @@
     </div>
   </div>
 </footer>
+
+<!-- ============================================================
+     CONTACT MODAL
+     Replace the placeholder phone numbers / handles below
+     with the real contact details when ready.
+     ============================================================ -->
+<dialog class="contact-modal" id="contactModal" aria-labelledby="contactModalTitle">
+  <div class="contact-modal-card">
+    <button type="button" class="contact-modal-close" aria-label="Close" data-close-contact>
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <header class="contact-modal-header">
+      <div class="contact-avatar">
+        <svg viewBox="0 0 100 100" width="72" height="72" aria-hidden="true">
+          <defs>
+            <linearGradient id="cmAvatar" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6FE3FF"/>
+              <stop offset="55%" stop-color="#C084FC"/>
+              <stop offset="100%" stop-color="#E879F9"/>
+            </linearGradient>
+          </defs>
+          <path fill="url(#cmAvatar)" d="M50 6 L60 38 L94 50 L60 62 L50 94 L40 62 L6 50 L40 38 Z"/>
+        </svg>
+        <span class="contact-avatar-status" aria-hidden="true"></span>
+      </div>
+      <div class="contact-modal-name">Lynx Solutions Trading</div>
+      <h2 class="contact-modal-title" id="contactModalTitle">Let's <span class="grad">talk</span>.</h2>
+      <p class="contact-modal-sub">Pick the channel you prefer — we typically reply within 1–2 hours during business days.</p>
+    </header>
+
+    <div class="contact-channels">
+
+      <a class="contact-row" href="https://wa.me/49000000000" target="_blank" rel="noopener noreferrer">
+        <span class="contact-row-icon contact-row-icon--wa" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.6 6.32A7.85 7.85 0 0 0 12.05 4 7.94 7.94 0 0 0 5.1 16.05L4 20l4.05-1.06A7.95 7.95 0 0 0 12 19.97h.01a7.94 7.94 0 0 0 5.59-13.65zm-5.55 12.21h-.01a6.6 6.6 0 0 1-3.36-.92l-.24-.14-2.5.65.67-2.43-.16-.25a6.6 6.6 0 0 1 10.27-8.13 6.55 6.55 0 0 1 1.93 4.66 6.6 6.6 0 0 1-6.6 6.56zm3.62-4.94c-.2-.1-1.18-.58-1.36-.65-.18-.07-.31-.1-.45.1s-.51.65-.62.78c-.11.14-.23.15-.43.05a5.4 5.4 0 0 1-2.7-2.36c-.2-.35.2-.32.58-1.07.06-.14.03-.25-.02-.35l-.62-1.49c-.16-.4-.33-.34-.45-.34h-.39a.74.74 0 0 0-.54.25c-.18.2-.71.7-.71 1.7s.73 1.97.83 2.1c.1.14 1.43 2.18 3.46 3.06.48.21.86.33 1.16.43.49.16.93.13 1.28.08.39-.06 1.18-.48 1.35-.95.17-.46.17-.86.12-.95-.05-.08-.18-.13-.38-.23z"/>
+          </svg>
+        </span>
+        <span class="contact-row-body">
+          <span class="contact-row-label">WhatsApp</span>
+          <span class="contact-row-value">+49 XXX XXX XXXX</span>
+        </span>
+        <span class="contact-row-action">
+          <span class="contact-row-action-text">Open</span>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+
+      <a class="contact-row" href="https://t.me/USERNAME" target="_blank" rel="noopener noreferrer">
+        <span class="contact-row-icon contact-row-icon--tg" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22 4.43L18.7 19.5c-.25 1.1-.9 1.37-1.83.85l-5.05-3.7-2.43 2.34c-.27.27-.5.5-1.02.5l.36-5.13 9.34-8.42c.4-.36-.09-.56-.62-.2L6.91 13.16 2.06 11.65c-1.05-.33-1.07-1.05.22-1.55l18.95-7.3c.88-.32 1.65.21 1.36 1.63z"/>
+          </svg>
+        </span>
+        <span class="contact-row-body">
+          <span class="contact-row-label">Telegram</span>
+          <span class="contact-row-value">@username</span>
+        </span>
+        <span class="contact-row-action">
+          <span class="contact-row-action-text">Open</span>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+
+      <a class="contact-row" href="https://instagram.com/USERNAME" target="_blank" rel="noopener noreferrer">
+        <span class="contact-row-icon contact-row-icon--ig" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="3" y="3" width="18" height="18" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+        </span>
+        <span class="contact-row-body">
+          <span class="contact-row-label">Instagram</span>
+          <span class="contact-row-value">@username</span>
+        </span>
+        <span class="contact-row-action">
+          <span class="contact-row-action-text">Open</span>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+
+      <a class="contact-row" href="mailto:lynxsolutionstrading@gmail.com">
+        <span class="contact-row-icon contact-row-icon--mail" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+            <rect x="3" y="5" width="18" height="14" rx="2.5"/>
+            <path d="M3 7l9 6 9-6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="contact-row-body">
+          <span class="contact-row-label">Email</span>
+          <span class="contact-row-value">lynxsolutionstrading@gmail.com</span>
+        </span>
+        <span class="contact-row-action">
+          <span class="contact-row-action-text">Send</span>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+
+    </div>
+
+    <footer class="contact-modal-footer">
+      <span class="contact-modal-status-dot" aria-hidden="true"></span>
+      Online · Replying now
+    </footer>
+  </div>
+</dialog>
+
+<script>
+  (function () {
+    var modal = document.getElementById('contactModal');
+    if (!modal) return;
+    var openers = document.querySelectorAll('[data-open-contact]');
+    var closers = modal.querySelectorAll('[data-close-contact]');
+
+    function open(e) {
+      if (e) e.preventDefault();
+      if (typeof modal.showModal === 'function') {
+        modal.showModal();
+      } else {
+        modal.setAttribute('open', '');
+      }
+      document.body.style.overflow = 'hidden';
+    }
+    function close() {
+      if (typeof modal.close === 'function') {
+        modal.close();
+      } else {
+        modal.removeAttribute('open');
+      }
+      document.body.style.overflow = '';
+    }
+
+    openers.forEach(function (btn) { btn.addEventListener('click', open); });
+    closers.forEach(function (btn) { btn.addEventListener('click', close); });
+
+    // Click outside the card closes
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) close();
+    });
+    // Native dialog close event (e.g. ESC key) — release scroll lock
+    modal.addEventListener('close', function () {
+      document.body.style.overflow = '';
+    });
+
+    // Auto-open via URL — useful for marketing links like /?contact=1 or #contact-modal
+    if (/[?&]contact=1\b/.test(location.search) || location.hash === '#contact-modal') {
+      // Defer to next tick so the page can finish layout first
+      setTimeout(open, 50);
+    }
+  })();
+</script>
 
 </body>
 </html>
