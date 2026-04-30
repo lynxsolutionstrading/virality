@@ -466,9 +466,11 @@
   }
   #problem {
     background-color: var(--bg-shade-a);
+    /* Two large overlapping glows so the entire left flank is lit
+       continuously (no dark gap in the middle) */
     background-image:
-      radial-gradient(900px 620px at 0% 25%, rgba(111, 227, 255, 0.13), transparent 72%),
-      radial-gradient(800px 560px at 0% 85%, rgba(192, 132, 252, 0.12), transparent 72%);
+      radial-gradient(1100px 800px at 0% 30%, rgba(111, 227, 255, 0.16), transparent 72%),
+      radial-gradient(1000px 750px at 0% 75%, rgba(192, 132, 252, 0.15), transparent 72%);
   }
   #solution {
     background-color: var(--bg-shade-b);
