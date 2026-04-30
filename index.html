@@ -2105,10 +2105,10 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -55%) rotate(-6deg);
-    width: 130px;
+    width: 195px; /* 50% larger than the previous 130px */
     height: auto;
     z-index: 1;
-    filter: drop-shadow(0 0 28px rgba(217, 70, 239, 0.55));
+    filter: drop-shadow(0 0 32px rgba(217, 70, 239, 0.55));
     pointer-events: none;
   }
 
@@ -3324,7 +3324,7 @@
   <!-- ========== ABOUT ========== -->
   <section class="about-section" id="about">
     <div class="about-hero" aria-hidden="true">
-      <svg class="about-hero-doodle" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <svg class="about-hero-doodle" viewBox="0 0 220 260" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="doodleGrad" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stop-color="#6FE3FF"/>
@@ -3332,14 +3332,14 @@
             <stop offset="100%" stop-color="#E879F9"/>
           </linearGradient>
         </defs>
-        <g fill="none" stroke="url(#doodleGrad)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
-          <!-- Shaft: pill shape -->
-          <rect x="72" y="18" width="56" height="160" rx="28" ry="28"/>
-          <!-- Tip line for cartoon definition -->
-          <path d="M84 32 Q100 22 116 32"/>
-          <!-- Two testicles -->
-          <ellipse cx="58" cy="198" rx="28" ry="24"/>
-          <ellipse cx="142" cy="198" rx="28" ry="24"/>
+        <g fill="none" stroke="url(#doodleGrad)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Shaft + rounded head: continuous outline, open at the bottom so it meets the balls -->
+          <path d="M75 180 L75 55 Q75 20 110 20 Q145 20 145 55 L145 180"/>
+          <!-- Glans definition line under the head -->
+          <path d="M84 48 Q110 34 136 48"/>
+          <!-- Testicles -->
+          <circle cx="64" cy="215" r="32"/>
+          <circle cx="156" cy="215" r="32"/>
         </g>
       </svg>
     </div>
