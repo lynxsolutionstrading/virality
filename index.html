@@ -131,25 +131,46 @@
   }
 
   .grad {
-    background: var(--gradient-text);
-    background-size: 220% 100%;
+    background: linear-gradient(
+      110deg,
+      #6FE3FF 0%,
+      #C084FC 30%,
+      rgba(255, 255, 255, 0.92) 50%,
+      #C084FC 70%,
+      #6FE3FF 100%
+    );
+    background-size: 260% 100%;
+    background-position: 0% 50%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: gradShimmer 7s ease-in-out infinite;
+    animation: gradShine 3s cubic-bezier(0.45, 0, 0.2, 1) infinite;
   }
   .grad-blue {
-    background: linear-gradient(120deg, #38BDF8 0%, #6FE3FF 50%, #A78BFA 100%);
-    background-size: 220% 100%;
+    background: linear-gradient(
+      110deg,
+      #38BDF8 0%,
+      #6FE3FF 25%,
+      #A78BFA 40%,
+      rgba(255, 255, 255, 0.92) 50%,
+      #A78BFA 60%,
+      #6FE3FF 75%,
+      #38BDF8 100%
+    );
+    background-size: 260% 100%;
+    background-position: 0% 50%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: gradShimmer 7s ease-in-out infinite;
+    animation: gradShine 3s cubic-bezier(0.45, 0, 0.2, 1) infinite;
   }
-  /* Subtle gradient shimmer applied to every coloured headline part */
-  @keyframes gradShimmer {
-    0%, 100% { background-position: 0% 50%; }
-    50%      { background-position: 100% 50%; }
+  /* Quick "shine" sweep — bright highlight passes once across the
+     colored text in the first ~30% of the cycle, then idles ~70%
+     before repeating. Looks like polished metal catching light. */
+  @keyframes gradShine {
+    0%   { background-position: 100% 50%; }    /* highlight off-left */
+    30%  { background-position: 0% 50%; }      /* highlight has crossed to off-right */
+    100% { background-position: 0% 50%; }      /* idle until next cycle */
   }
 
   /* ============================================================
@@ -1233,14 +1254,24 @@
   .press-title {
     font-size: clamp(34px, 5vw, 56px);
     font-weight: 800;
-    background: linear-gradient(120deg, #38BDF8 0%, #A78BFA 50%, #E879F9 100%);
-    background-size: 220% 100%;
+    background: linear-gradient(
+      110deg,
+      #38BDF8 0%,
+      #A78BFA 30%,
+      #E879F9 40%,
+      rgba(255, 255, 255, 0.92) 50%,
+      #E879F9 60%,
+      #A78BFA 70%,
+      #38BDF8 100%
+    );
+    background-size: 260% 100%;
+    background-position: 0% 50%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 18px;
     letter-spacing: -0.02em;
-    animation: gradShimmer 8s ease-in-out infinite;
+    animation: gradShine 3.2s cubic-bezier(0.45, 0, 0.2, 1) infinite;
   }
   .press-desc {
     font-size: clamp(14.5px, 1.4vw, 17px);
