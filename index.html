@@ -4832,11 +4832,12 @@
         heart.className = 'heart-rain__heart';
         heart.innerHTML = heartSvg;
 
-        /* Random x within ±70px of the illustration center
-           (phone is 160px wide, so this is "behind the phone"
-           with some natural spread to the sides) */
-        var xOffset = (Math.random() - 0.5) * 140;
-        heart.style.marginLeft = (xOffset - 11) + 'px';
+        /* Phone is 160px wide (±80px). We spawn hearts in a 240px-wide
+           band (±120px) so most spawn beside or just past the phone
+           edges — they emerge "from behind" the phone visually as they
+           rise. Hearts that land dead-center are hidden behind the
+           phone (gives the depth feel) and clean up silently. */
+        var xOffset = (Math.random() - 0.5) * 240;
 
         /* Random size 16–28px for variety */
         var size = 16 + Math.random() * 12;
@@ -4848,8 +4849,9 @@
         var rot = (Math.random() - 0.5) * 26;
         heart.style.rotate = rot + 'deg';
 
-        /* Random vertical start so they don't all leave the same line */
-        heart.style.bottom = (28 + Math.random() * 14) + '%';
+        /* Random vertical start across the lower half of the phone so
+           hearts emerge at varied heights (not from a single line) */
+        heart.style.bottom = (18 + Math.random() * 32) + '%';
 
         root.appendChild(heart);
         /* Auto-clean after the animation finishes */
