@@ -1307,24 +1307,25 @@
   .press-logo.serif {
     font-family: 'Playfair Display', Georgia, serif;
     font-style: italic;
-    /* Drift 100px left/right, opposite to yahoo */
-    animation: forbesDrift 10s ease-in-out infinite;
+    /* Drift right/back, opposite to yahoo. Leftmost = column edge (0px)
+       so the logo never crosses the brand-title's left border. */
+    animation: forbesDrift 14s ease-in-out infinite;
     will-change: translate;
   }
   .press-logo.purple {
     color: #6B21A8;
     font-weight: 800;
-    /* Drift 100px right/left, opposite to Forbes */
-    animation: yahooDrift 10s ease-in-out infinite;
+    /* Drift left/back to right, opposite to Forbes. Same 0px left clamp. */
+    animation: yahooDrift 14s ease-in-out infinite;
     will-change: translate;
   }
   @keyframes forbesDrift {
-    0%, 100% { translate: -100px 0; }
-    50%      { translate:  100px 0; }
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 170px 0; }
   }
   @keyframes yahooDrift {
-    0%, 100% { translate:  100px 0; }
-    50%      { translate: -100px 0; }
+    0%, 100% { translate: 170px 0; }
+    50%      { translate: 0 0; }
   }
 
   .press-text { text-align: center; }
