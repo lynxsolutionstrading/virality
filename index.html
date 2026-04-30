@@ -1304,8 +1304,28 @@
     letter-spacing: -0.02em;
     line-height: 1;
   }
-  .press-logo.serif { font-family: 'Playfair Display', Georgia, serif; font-style: italic; }
-  .press-logo.purple { color: #6B21A8; font-weight: 800; }
+  .press-logo.serif {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic;
+    /* Drift 100px left/right, opposite to yahoo */
+    animation: forbesDrift 10s ease-in-out infinite;
+    will-change: translate;
+  }
+  .press-logo.purple {
+    color: #6B21A8;
+    font-weight: 800;
+    /* Drift 100px right/left, opposite to Forbes */
+    animation: yahooDrift 10s ease-in-out infinite;
+    will-change: translate;
+  }
+  @keyframes forbesDrift {
+    0%, 100% { translate: -100px 0; }
+    50%      { translate:  100px 0; }
+  }
+  @keyframes yahooDrift {
+    0%, 100% { translate:  100px 0; }
+    50%      { translate: -100px 0; }
+  }
 
   .press-text { text-align: center; }
   @media (min-width: 960px) { .press-text { text-align: right; } }
