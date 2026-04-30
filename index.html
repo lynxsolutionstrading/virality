@@ -376,7 +376,12 @@
       linear-gradient(135deg, transparent 30%, rgba(255, 255, 255, 0.06) 50%, transparent 70%);
   }
 
-  /* Instagram screenshot mockup on phone screen */
+  /* Instagram screenshot mockup on phone screen
+     - width: 100% (don't squash, don't stretch horizontally)
+     - height: 100% with object-fit: cover so any extra image height is
+       cropped at the bottom (object-position: center top)
+     - border-radius inherited from screen so corners are rounded even
+       on older WebKit that doesn't clip non-stacking-context children */
   .phone-screen-image {
     position: absolute;
     inset: 0;
@@ -384,6 +389,8 @@
     height: 100%;
     object-fit: cover;
     object-position: center top;
+    border-radius: inherit;
+    display: block;
     will-change: opacity;
   }
   /* Fallback when image is missing — subtle dark gradient */
@@ -393,6 +400,9 @@
     background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
     z-index: -1;
   }
+  /* Force the screen to its own stacking context so the rounded corners
+     reliably clip the image on every browser */
+  .hero-phone-screen { transform: translateZ(0); }
 
   /* Dynamic Island */
   .hero-phone-island {
@@ -2684,7 +2694,7 @@
         <div class="hero-phone-frame">
           <div class="hero-phone-screen" data-hero-phone-screen>
             <div class="phone-screen-fallback"></div>
-            <img class="phone-screen-image" src="assets/ig-mockup.png" alt="" data-phone-screen-img>
+            <img class="phone-screen-image" src="Logo/insta.jpg" alt="" data-phone-screen-img>
           </div>
           <div class="hero-phone-island"></div>
           <div class="hero-phone-btn hero-phone-btn--action"></div>
