@@ -453,83 +453,90 @@
     --bg-shade-c: #06060B;
   }
   /* Each section gets a soft, large radial glow using a brand color,
-     alternating left and right. The opacity of every glow pulses
-     gently between 0.10 (low) and 0.16 (peak) on an 8s cycle, with
-     each section's start time offset so the page doesn't breathe in
-     unison — natural, ambient, never distracting. */
+     alternating left and right. The glow lives on a ::before
+     pseudo-element so we can animate plain opacity (GPU-composited,
+     silky smooth) instead of interpolating between two gradient
+     definitions. Every section uses the SAME 12s sine-like pulse
+     keyframes; staggered animation-delays mean each section breathes
+     out of phase with the others. */
   #problem,
   #solution,
   #partners,
   #cases,
   #results,
   #about {
-    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
   }
-  #problem {
-    background-color: var(--bg-shade-a);
-    animation: glowPulseProblem 8s ease-in-out infinite;
+  /* Lift direct children above the ::before glow layer */
+  #problem > *,
+  #solution > *,
+  #partners > *,
+  #cases > *,
+  #results > *,
+  #about > * {
+    position: relative;
   }
-  #solution {
-    background-color: var(--bg-shade-b);
-    animation: glowPulseSolution 8s ease-in-out -1.3s infinite;
+  #problem::before,
+  #solution::before,
+  #partners::before,
+  #cases::before,
+  #results::before,
+  #about::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    /* Sine-approximation easing so the brightness rises and falls
+       smoothly with no visible plateau at the extremes. */
+    animation: glowPulse 12s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
   }
+  /* Section bg-color (under the glow) */
+  #problem  { background-color: var(--bg-shade-a); }
+  #solution { background-color: var(--bg-shade-b); }
+  #partners { background-color: var(--bg-shade-c); }
+  #cases    { background-color: var(--bg-shade-a); }
+  #results  { background-color: var(--bg-shade-b); }
+  #about    { background-color: var(--bg-shade-c); }
   /* #brand (white-band) stays white */
-  #partners {
-    background-color: var(--bg-shade-c);
-    animation: glowPulsePartners 8s ease-in-out -2.6s infinite;
-  }
-  #cases {
-    background-color: var(--bg-shade-a);
-    animation: glowPulseCases 8s ease-in-out -4s infinite;
-  }
-  /* #how-it-works: keeps its dual-glow pseudo-element AND anchors the
-     linear-gradient base to shade C so it visually separates from
-     #cases (shade A) above. */
+  /* #how-it-works: keeps its own ::before glow (defined further down)
+     AND anchors the linear-gradient base to shade C so it separates
+     from #cases (shade A) above. */
   #how-it-works {
     background: linear-gradient(180deg, var(--bg-shade-c) 0%, #050509 100%);
   }
-  #results {
-    background-color: var(--bg-shade-b);
-    animation: glowPulseResults 8s ease-in-out -5.3s infinite;
-  }
-  #about {
-    background-color: var(--bg-shade-c);
-    animation: glowPulseAbout 8s ease-in-out -6.6s infinite;
-  }
   /* #contact (final-cta) keeps its decorative gradient */
 
-  /* ----- Per-section glow pulse keyframes (0.10 ↔ 0.16 opacity) ----- */
-  @keyframes glowPulseProblem {
-    0%, 100% {
-      background-image:
-        radial-gradient(1100px 800px at 0% 30%, rgba(111, 227, 255, 0.10), transparent 72%),
-        radial-gradient(1000px 750px at 0% 75%, rgba(192, 132, 252, 0.10), transparent 72%);
-    }
-    50% {
-      background-image:
-        radial-gradient(1100px 800px at 0% 30%, rgba(111, 227, 255, 0.16), transparent 72%),
-        radial-gradient(1000px 750px at 0% 75%, rgba(192, 132, 252, 0.16), transparent 72%);
-    }
+  /* Per-section glow gradient (peak strength = 0.16; the pulse scales
+     opacity 0.625 → 1 → 0.625, so effective range = 0.10 ↔ 0.16) */
+  #problem::before {
+    background:
+      radial-gradient(1100px 800px at 0% 30%, rgba(111, 227, 255, 0.16), transparent 72%),
+      radial-gradient(1000px 750px at 0% 75%, rgba(192, 132, 252, 0.16), transparent 72%);
   }
-  @keyframes glowPulseSolution {
-    0%, 100% { background-image: radial-gradient(900px 620px at 100% 75%, rgba(192, 132, 252, 0.10), transparent 72%); }
-    50%      { background-image: radial-gradient(900px 620px at 100% 75%, rgba(192, 132, 252, 0.16), transparent 72%); }
+  #solution::before {
+    background: radial-gradient(900px 620px at 100% 75%, rgba(192, 132, 252, 0.16), transparent 72%);
+    animation-delay: -2s;
   }
-  @keyframes glowPulsePartners {
-    0%, 100% { background-image: radial-gradient(900px 620px at 0% 35%, rgba(217, 70, 239, 0.10), transparent 72%); }
-    50%      { background-image: radial-gradient(900px 620px at 0% 35%, rgba(217, 70, 239, 0.16), transparent 72%); }
+  #partners::before {
+    background: radial-gradient(900px 620px at 0% 35%, rgba(217, 70, 239, 0.16), transparent 72%);
+    animation-delay: -4s;
   }
-  @keyframes glowPulseCases {
-    0%, 100% { background-image: radial-gradient(900px 620px at 100% 60%, rgba(111, 227, 255, 0.10), transparent 72%); }
-    50%      { background-image: radial-gradient(900px 620px at 100% 60%, rgba(111, 227, 255, 0.16), transparent 72%); }
+  #cases::before {
+    background: radial-gradient(900px 620px at 100% 60%, rgba(111, 227, 255, 0.16), transparent 72%);
+    animation-delay: -6s;
   }
-  @keyframes glowPulseResults {
-    0%, 100% { background-image: radial-gradient(900px 620px at 0% 70%, rgba(192, 132, 252, 0.10), transparent 72%); }
-    50%      { background-image: radial-gradient(900px 620px at 0% 70%, rgba(192, 132, 252, 0.16), transparent 72%); }
+  #results::before {
+    background: radial-gradient(900px 620px at 0% 70%, rgba(192, 132, 252, 0.16), transparent 72%);
+    animation-delay: -8s;
   }
-  @keyframes glowPulseAbout {
-    0%, 100% { background-image: radial-gradient(900px 620px at 100% 30%, rgba(217, 70, 239, 0.10), transparent 72%); }
-    50%      { background-image: radial-gradient(900px 620px at 100% 30%, rgba(217, 70, 239, 0.16), transparent 72%); }
+  #about::before {
+    background: radial-gradient(900px 620px at 100% 30%, rgba(217, 70, 239, 0.16), transparent 72%);
+    animation-delay: -10s;
+  }
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.625; }   /* effective 0.10 */
+    50%      { opacity: 1; }       /* effective 0.16 */
   }
 
   /* ============================================================
@@ -1858,19 +1865,11 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    animation: glowPulseJourney 8s ease-in-out -3.3s infinite;
-  }
-  @keyframes glowPulseJourney {
-    0%, 100% {
-      background:
-        radial-gradient(700px 500px at 0% 20%, rgba(111, 227, 255, 0.10), transparent 70%),
-        radial-gradient(700px 500px at 100% 90%, rgba(217, 70, 239, 0.10), transparent 70%);
-    }
-    50% {
-      background:
-        radial-gradient(700px 500px at 0% 20%, rgba(111, 227, 255, 0.16), transparent 70%),
-        radial-gradient(700px 500px at 100% 90%, rgba(217, 70, 239, 0.16), transparent 70%);
-    }
+    background:
+      radial-gradient(700px 500px at 0% 20%, rgba(111, 227, 255, 0.16), transparent 70%),
+      radial-gradient(700px 500px at 100% 90%, rgba(217, 70, 239, 0.16), transparent 70%);
+    /* Same smooth pulse as the other sections, with its own phase offset */
+    animation: glowPulse 12s cubic-bezier(0.45, 0.05, 0.55, 0.95) -5s infinite;
   }
   .journey-section > * { position: relative; }
 
