@@ -1154,8 +1154,12 @@
     scale: 1.05;
     box-shadow: 0 16px 50px -8px rgba(192, 132, 252, 0.65), 0 4px 16px -4px rgba(111, 227, 255, 0.4);
   }
-  .cta-primary svg { transition: transform 0.2s ease; }
-  .cta-primary:hover svg { transform: translateX(2px); }
+  /* Arrow sways left/right continuously — same gentle motion as the
+     DIVE IN button so the CTA feels alive and ready to be clicked. */
+  .cta-primary svg {
+    animation: arrowSway 1.4s ease-in-out infinite;
+    will-change: transform;
+  }
 
   /* Periodic 3-second pulse on the conversion CTAs — same idea as the
      old DIVE-IN button vibrate. Uses individual `translate` so it doesn't
@@ -3680,7 +3684,7 @@
 
     <div class="partner-cta">
       <a class="cta-primary" href="#contact" data-open-contact>
-        I Want to Grow My Digital Authority
+        I Want To Grow My Digital Authority
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
