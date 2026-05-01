@@ -791,18 +791,17 @@
     50%      { transform: scale(1.12); opacity: 1; }
   }
 
-  /* Screen */
+  /* Screen — bg is permanently the dark "off" colour. The Instagram
+     screenshot above (img + statusbar plate) provides the visual
+     content; when those fade out during the deep zoom the screen is
+     already on a solid colour, so there's no gradient to band into
+     visible horizontal lines when scaled up to fill the viewport. */
   .hero-phone-screen {
     position: absolute;
     inset: 8px;
     border-radius: 44px;
-    background:
-      radial-gradient(ellipse at 50% 30%, rgba(192, 132, 252, 0.5), transparent 65%),
-      radial-gradient(ellipse at 30% 80%, rgba(111, 227, 255, 0.4), transparent 60%),
-      radial-gradient(ellipse at 70% 70%, rgba(232, 121, 249, 0.4), transparent 60%),
-      linear-gradient(180deg, #0a0a14 0%, #1a0a28 40%, #0a0a14 100%);
+    background: #0b0d12;
     overflow: hidden;
-    transition: background 0.18s ease-out;
   }
   .hero-phone-screen::before {
     content: '';
@@ -811,12 +810,9 @@
     background:
       linear-gradient(135deg, transparent 30%, rgba(255, 255, 255, 0.06) 50%, transparent 70%);
     pointer-events: none;
-    transition: opacity 0.18s ease-out;
   }
-  /* "Off" state — flat single colour, no reflection sheen, no radial glow */
-  .hero-phone-screen.is-off {
-    background: #0b0d12;
-  }
+  /* The .is-off class only controls the sheen reflection now; the
+     screen bg is already solid. */
   .hero-phone-screen.is-off::before {
     opacity: 0;
   }
