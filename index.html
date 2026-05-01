@@ -2169,6 +2169,11 @@
     display: grid;
     gap: 24px;
     transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    /* When the progress strip jumps the page to a card via anchor,
+       leave room at the top for the sticky site-header so the card's
+       heading isn't tucked behind it (which the browser then tries to
+       correct, causing the "scrolls too far then back" effect). */
+    scroll-margin-top: 90px;
   }
   .journey-card::before {
     content: '';
@@ -5310,6 +5315,33 @@
     });
 
     sections.forEach(function (s) { observer.observe(s); });
+  })();
+
+  /* ========== JOURNEY PROGRESS STRIP — clickable step circles ==========
+     Anchor href + browser smooth-scroll alone produced an overshoot/
+     correction wobble (caused by the sticky site-header at top). We
+     handle the click in JS and scroll explicitly with a measured
+     header offset, which is always pixel-perfect. */
+  (function setupJourneyProgressClicks() {
+    var nodes = document.querySelectorAll('.journey-progress-node');
+    if (!nodes.length) return;
+    var header = document.querySelector('.site-header');
+
+    nodes.forEach(function (node) {
+      node.addEventListener('click', function (e) {
+        var href = node.getAttribute('href') || '';
+        if (href.charAt(0) !== '#') return;
+        var target = document.getElementById(href.slice(1));
+        if (!target) return;
+        e.preventDefault();
+        var headerH = header ? header.getBoundingClientRect().height : 0;
+        var targetTop = target.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({
+          top: targetTop - headerH - 16, /* 16px breathing room below header */
+          behavior: 'smooth'
+        });
+      });
+    });
   })();
 </script>
 
