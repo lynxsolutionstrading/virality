@@ -2822,6 +2822,12 @@
     filter: drop-shadow(0 0 6px rgba(217, 70, 239, 0.85));
     text-shadow: 0 0 8px rgba(217, 70, 239, 0.6);
   }
+  /* Arrow sways left/right — same gentle motion as the dive-in and
+     primary CTA buttons. */
+  .cta-white svg {
+    animation: arrowSway 1.4s ease-in-out infinite;
+    will-change: transform;
+  }
   .trust-line {
     margin-top: 22px;
     display: flex;
@@ -4049,6 +4055,7 @@
       <a class="cta-white" href="#contact" data-open-contact>
         <span class="cta-bolt" aria-hidden="true">⚡</span>
         Get Your Free Strategy Audit
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
 
       <div class="trust-line">
