@@ -4615,10 +4615,46 @@
       }
     });
 
+    /* Tracks the phone's rotation at the moment the user clicked dive.
+       Used to know where to un-center back to on reverse, so the
+       rotation lands exactly where rotationTween paused (no jump
+       when rotationTween.resume() fires in onReverseComplete). */
+    var pausedRotation = { y: 0, x: 0 };
+    var centerTween = null;
+    var unCenterTween = null;
+    var settleWobble = null;
+
     var diveTl = gsap.timeline({
       paused: true,
       onStart: function () {
-        if (rotationTween) rotationTween.pause();
+        /* Capture the EXACT current rotation BEFORE pausing so we
+           can return to it precisely on reverse. */
+        if (rotationTween) {
+          pausedRotation.y = parseFloat(gsap.getProperty(phone, 'rotateY')) || 0;
+          pausedRotation.x = parseFloat(gsap.getProperty(phone, 'rotateX')) || 0;
+          rotationTween.pause();
+        }
+        /* Stop any rotation animations that might still be running
+           from a previous reverse (un-centering or settle wobble). */
+        if (unCenterTween) { unCenterTween.kill(); unCenterTween = null; }
+        if (centerTween) centerTween.kill();
+        if (settleWobble) {
+          settleWobble.kill();
+          /* Reset rotateZ in case the wobble was interrupted partway */
+          gsap.set(phone, { rotation: 0 });
+          settleWobble = null;
+        }
+        /* One-shot rotation centering — a fresh tween every dive so
+           there's no cached "from" value to glitch with. Runs during
+           the letters fade-out so by the time letters are gone the
+           phone is already perfectly centered. */
+        centerTween = gsap.to(phone, {
+          rotateY: 0,
+          rotateX: 0,
+          duration: 0.45,
+          ease: 'sine.inOut',
+          overwrite: 'auto'
+        });
         document.body.classList.remove('pre-dive');
         document.body.classList.add('diving');
         /* Keep scroll-locked active during the entire dive so the
@@ -4632,13 +4668,11 @@
         document.body.classList.add('pre-dive');
         window.scrollTo(0, 0);
         document.documentElement.classList.add('scroll-locked');
-        /* "Settle wobble" — a tiny damped oscillation on rotateZ that
-           plays only when the user has come back from a dive. Hides
-           the imperfect rotation centering by making it look like an
-           intentional bouncy settle effect. rotateZ is a separate
-           transform axis from rotationTween's rotateY/rotateX, so
-           this composes cleanly with the resumed continuous rotation. */
-        gsap.timeline()
+        /* "Settle wobble" — a tiny damped oscillation on rotateZ.
+           Tracked in settleWobble so it can be killed if the user
+           dives again while the wobble is still running. */
+        if (settleWobble) settleWobble.kill();
+        settleWobble = gsap.timeline()
           .to(phone, { rotation: 3.2, duration: 0.08, ease: 'power2.out' })
           .to(phone, { rotation: -2.2, duration: 0.09, ease: 'sine.inOut' })
           .to(phone, { rotation: 1.5,  duration: 0.07, ease: 'sine.inOut' })
@@ -4690,31 +4724,14 @@
       }, 0.20);
     }
 
-    /* ---- Phase 3a: Pre-center the phone tilt smoothly during the
-       letters fade-out, so that by the time the letters are gone the
-       phone is sitting perfectly centered (rotateY=0, rotateX=0) and
-       only the zoom-in remains. sine.inOut matches the original
-       rotationTween's easing, so there's no velocity jump where the
-       paused rotation hands off to this tween. ---- */
-    diveTl.to(phone, {
-      rotateY: 0,
-      rotateX: 0,
-      duration: 0.45,
-      ease: 'sine.inOut'
-    }, 0);
-
-    /* ---- Phase 4: Existing phone dive (T = 0.55 → 1.65s)
+    /* ---- Phase 4: Phone zoom in (scale + z only). Rotation is now
+       handled OUTSIDE the timeline by independent one-shot tweens
+       (see onStart for centering and attemptReverse for un-centering).
+       This decouples rotation from scale/z so each direction can have
+       its own duration/easing without timeline cache issues.
        NOTE: stage perspective is 1600px — z must stay BELOW it or the
-       phone passes the camera plane and clips, exposing the particle
-       background through the gap. scale 6 + z 1300 keeps it visible
-       AND huge (visual scale ≈ 32× → phone width ≈ 7700 px).
-       rotateY/X stay listed here for the reverse path (so the tween
-       reverses rotation back to 0 cleanly); since Phase 3a already
-       finished the rotation at t=0.45, the rotation portion of this
-       tween is a no-op going forward. */
+       phone passes the camera plane and clips. ---- */
     diveTl.to(phone, {
-      rotateY: 0,
-      rotateX: 0,
       scale: 6,
       z: 1300,
       duration: 1.1,
@@ -4806,6 +4823,19 @@
       document.body.classList.remove('post-dive');
       document.body.classList.add('reversing');
       window.scrollTo(0, 0);
+      /* Un-center the rotation BACK to where rotationTween was paused.
+         Runs concurrently with diveTl.reverse() (which only handles
+         scale/z) so the phone tilts back AS it shrinks — same coherent
+         feel as the original, but with proper centering on forward. */
+      if (centerTween) { centerTween.kill(); centerTween = null; }
+      if (unCenterTween) unCenterTween.kill();
+      unCenterTween = gsap.to(phone, {
+        rotateY: pausedRotation.y,
+        rotateX: pausedRotation.x,
+        duration: 0.92, /* matches scale/z reverse @ timescale 1.2 (1.1s/1.2) */
+        ease: 'sine.inOut',
+        overwrite: 'auto'
+      });
       diveTl.timeScale(1.2).reverse();
       setTimeout(function () {
         isReversing = false;
