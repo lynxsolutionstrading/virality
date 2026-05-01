@@ -2086,6 +2086,21 @@
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* Non-active nodes: subtle purple outline glow on hover so the user
+     knows they're clickable. The active (step 01) node keeps its solid
+     gradient look untouched on hover — only ONE node is ever "selected". */
+  .journey-progress-node:not(.active):hover .journey-progress-circle {
+    border-color: rgba(192, 132, 252, 0.85);
+    box-shadow: 0 0 14px rgba(192, 132, 252, 0.4),
+                0 0 0 3px rgba(192, 132, 252, 0.12);
+    color: #fff;
+  }
+  .journey-progress-node:not(.active):hover .journey-progress-label {
+    color: rgba(255, 255, 255, 0.78);
   }
   .journey-progress-circle {
     width: 40px;
@@ -3780,38 +3795,41 @@
         <p class="section-desc">A structured 5-step journey — from baseline audit to recognized authority. Every phase compounds on the previous one. No guesswork, no fluff.</p>
       </div>
 
-      <!-- Top progress strip -->
-      <div class="journey-progress" aria-hidden="true">
-        <div class="journey-progress-node active">
+      <!-- Top progress strip — each node is a link that smooth-scrolls
+           to its step card. Only step 01 stays styled as `active`; the
+           others rely on the :hover outline below to indicate they're
+           clickable. -->
+      <nav class="journey-progress" aria-label="Process steps">
+        <a class="journey-progress-node active" href="#journey-step-1" aria-label="Jump to step 1: Audit">
           <div class="journey-progress-circle">01</div>
           <div class="journey-progress-label">Audit</div>
-        </div>
-        <div class="journey-progress-line"></div>
-        <div class="journey-progress-node">
+        </a>
+        <div class="journey-progress-line" aria-hidden="true"></div>
+        <a class="journey-progress-node" href="#journey-step-2" aria-label="Jump to step 2: Plan">
           <div class="journey-progress-circle">02</div>
           <div class="journey-progress-label">Plan</div>
-        </div>
-        <div class="journey-progress-line"></div>
-        <div class="journey-progress-node">
+        </a>
+        <div class="journey-progress-line" aria-hidden="true"></div>
+        <a class="journey-progress-node" href="#journey-step-3" aria-label="Jump to step 3: Launch">
           <div class="journey-progress-circle">03</div>
           <div class="journey-progress-label">Launch</div>
-        </div>
-        <div class="journey-progress-line"></div>
-        <div class="journey-progress-node">
+        </a>
+        <div class="journey-progress-line" aria-hidden="true"></div>
+        <a class="journey-progress-node" href="#journey-step-4" aria-label="Jump to step 4: Tune">
           <div class="journey-progress-circle">04</div>
           <div class="journey-progress-label">Tune</div>
-        </div>
-        <div class="journey-progress-line"></div>
-        <div class="journey-progress-node">
+        </a>
+        <div class="journey-progress-line" aria-hidden="true"></div>
+        <a class="journey-progress-node" href="#journey-step-5" aria-label="Jump to step 5: Lead">
           <div class="journey-progress-circle">05</div>
           <div class="journey-progress-label">Lead</div>
-        </div>
-      </div>
+        </a>
+      </nav>
 
       <ol class="journey-cards">
 
         <!-- STEP 01 — Profile Analysis -->
-        <li class="journey-card">
+        <li class="journey-card" id="journey-step-1">
           <div class="journey-card-num" aria-hidden="true">01</div>
           <div class="journey-card-body">
             <div class="journey-card-meta">
@@ -3852,7 +3870,7 @@
         </li>
 
         <!-- STEP 02 — Strategic Planning -->
-        <li class="journey-card">
+        <li class="journey-card" id="journey-step-2">
           <div class="journey-card-num" aria-hidden="true">02</div>
           <div class="journey-card-body">
             <div class="journey-card-meta">
@@ -3894,7 +3912,7 @@
         </li>
 
         <!-- STEP 03 — Growth Campaigns -->
-        <li class="journey-card">
+        <li class="journey-card" id="journey-step-3">
           <div class="journey-card-num" aria-hidden="true">03</div>
           <div class="journey-card-body">
             <div class="journey-card-meta">
@@ -3922,7 +3940,7 @@
         </li>
 
         <!-- STEP 04 — Positioning Optimization -->
-        <li class="journey-card">
+        <li class="journey-card" id="journey-step-4">
           <div class="journey-card-num" aria-hidden="true">04</div>
           <div class="journey-card-body">
             <div class="journey-card-meta">
@@ -3956,7 +3974,7 @@
         </li>
 
         <!-- STEP 05 — Authority Building -->
-        <li class="journey-card">
+        <li class="journey-card" id="journey-step-5">
           <div class="journey-card-num" aria-hidden="true">05</div>
           <div class="journey-card-body">
             <div class="journey-card-meta">
