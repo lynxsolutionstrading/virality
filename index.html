@@ -4616,12 +4616,12 @@
     });
 
     /* Tracks the phone's rotation at the moment the user clicked dive.
-       Used to know where to un-center back to on reverse, so the
-       rotation lands exactly where rotationTween paused (no jump
-       when rotationTween.resume() fires in onReverseComplete). */
+       Used to know where to tilt back to AFTER reverse completes, so
+       the rotation lands exactly where rotationTween paused (no jump
+       when rotationTween.resume() fires). */
     var pausedRotation = { y: 0, x: 0 };
     var centerTween = null;
-    var unCenterTween = null;
+    var tiltBackTween = null;
     var settleWobble = null;
 
     var diveTl = gsap.timeline({
@@ -4635,8 +4635,8 @@
           rotationTween.pause();
         }
         /* Stop any rotation animations that might still be running
-           from a previous reverse (un-centering or settle wobble). */
-        if (unCenterTween) { unCenterTween.kill(); unCenterTween = null; }
+           from a previous reverse (tilt-back or settle wobble). */
+        if (tiltBackTween) { tiltBackTween.kill(); tiltBackTween = null; }
         if (centerTween) centerTween.kill();
         if (settleWobble) {
           settleWobble.kill();
@@ -4663,14 +4663,29 @@
       /* GSAP does not have an onReverseStart event — reverse setup is
          done imperatively in attemptReverse() before .reverse() is called. */
       onReverseComplete: function () {
-        if (rotationTween) rotationTween.resume();
         document.body.classList.remove('diving', 'post-dive', 'reversing');
         document.body.classList.add('pre-dive');
         window.scrollTo(0, 0);
         document.documentElement.classList.add('scroll-locked');
-        /* "Settle wobble" — a tiny damped oscillation on rotateZ.
-           Tracked in settleWobble so it can be killed if the user
-           dives again while the wobble is still running. */
+        /* Phone has been centered at rotation 0 for the entire reverse.
+           NOW (after the user has clearly seen the phone re-appear in a
+           centered state) we smoothly tilt it back to where rotationTween
+           was paused, so when rotationTween resumes there's no jump.
+           Elastic ease gives a satisfying "settle into place" feel. */
+        if (tiltBackTween) tiltBackTween.kill();
+        tiltBackTween = gsap.to(phone, {
+          rotateY: pausedRotation.y,
+          rotateX: pausedRotation.x,
+          duration: 0.7,
+          ease: 'power2.out',
+          overwrite: 'auto',
+          onComplete: function () {
+            if (rotationTween) rotationTween.resume();
+            tiltBackTween = null;
+          }
+        });
+        /* "Settle wobble" — tiny damped oscillation on rotateZ that
+           composes cleanly with the rotateY/X tilt-back above. */
         if (settleWobble) settleWobble.kill();
         settleWobble = gsap.timeline()
           .to(phone, { rotation: 3.2, duration: 0.08, ease: 'power2.out' })
@@ -4823,19 +4838,14 @@
       document.body.classList.remove('post-dive');
       document.body.classList.add('reversing');
       window.scrollTo(0, 0);
-      /* Un-center the rotation BACK to where rotationTween was paused.
-         Runs concurrently with diveTl.reverse() (which only handles
-         scale/z) so the phone tilts back AS it shrinks — same coherent
-         feel as the original, but with proper centering on forward. */
+      /* Phone stays at rotation 0 (centered) for the ENTIRE reverse —
+         the tilt-back happens in onReverseComplete, AFTER the user has
+         seen the phone appear cleanly centered. */
       if (centerTween) { centerTween.kill(); centerTween = null; }
-      if (unCenterTween) unCenterTween.kill();
-      unCenterTween = gsap.to(phone, {
-        rotateY: pausedRotation.y,
-        rotateX: pausedRotation.x,
-        duration: 0.92, /* matches scale/z reverse @ timescale 1.2 (1.1s/1.2) */
-        ease: 'sine.inOut',
-        overwrite: 'auto'
-      });
+      if (tiltBackTween) { tiltBackTween.kill(); tiltBackTween = null; }
+      /* Force-set rotation to exactly 0 so any rounding from centerTween
+         can't leave a fractional residual tilt visible at appearance. */
+      gsap.set(phone, { rotateY: 0, rotateX: 0 });
       diveTl.timeScale(1.2).reverse();
       setTimeout(function () {
         isReversing = false;
