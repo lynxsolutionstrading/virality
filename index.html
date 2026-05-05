@@ -1886,9 +1886,30 @@
     position: absolute;
     inset: 0;
   }
-  .partner-bg-1 { background: linear-gradient(160deg, #6B7280 0%, #374151 50%, #111827 100%); }
-  .partner-bg-2 { background: linear-gradient(160deg, #92400E 0%, #1F2937 50%, #0A0A10 100%); }
-  .partner-bg-3 { background: linear-gradient(160deg, #1E40AF 0%, #581C87 50%, #0A0A10 100%); }
+  /* Layered backgrounds:
+     1. Dark overlay at the bottom for text legibility
+     2. Person photo (drop into partners/ folder — auto-loads when present)
+     3. Brand-tinted gradient as fallback if the image isn't available yet
+     The fallback gradient is tuned per-person so the card looks
+     intentional even before the photo file is added. */
+  .partner-bg-1 {
+    background:
+      linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, 0.85) 100%),
+      url('partners/sido.jpg') center/cover no-repeat,
+      linear-gradient(160deg, #1a1a1a 0%, #4a0e0e 55%, #0a0a0a 100%);
+  }
+  .partner-bg-2 {
+    background:
+      linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, 0.85) 100%),
+      url('partners/alaba.jpg') center/cover no-repeat,
+      linear-gradient(160deg, #1E3A8A 0%, #c7d2fe40 50%, #0A0A10 100%);
+  }
+  .partner-bg-3 {
+    background:
+      linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, 0.85) 100%),
+      url('partners/montanablack.jpg') center/cover no-repeat,
+      linear-gradient(160deg, #1E40AF 0%, #581C87 50%, #0A0A10 100%);
+  }
   .partner-bg::after {
     content: '';
     position: absolute;
@@ -3682,29 +3703,29 @@
       <article class="partner-card">
         <div class="partner-bg partner-bg-1" aria-hidden="true"></div>
         <div class="partner-icon-overlay" aria-hidden="true">✻</div>
-        <div class="partner-followers">41.2M</div>
+        <div class="partner-followers">2.0M</div>
         <div class="partner-info">
-          <div class="partner-name">Jason Derulo</div>
-          <div class="partner-handle">@jasonderulo</div>
-          <div class="partner-bio">Bekannter Musiker und Entertainer. Riesige Social-Media-Reichweite. Begeistert Millionen Fans.</div>
+          <div class="partner-name">SIDO</div>
+          <div class="partner-handle">@sido_official</div>
+          <div class="partner-bio">Deutsche Rap-Legende und Musikproduzent. Eine der prägendsten Figuren der deutschen Hip-Hop-Szene.</div>
         </div>
       </article>
       <article class="partner-card">
         <div class="partner-bg partner-bg-2" aria-hidden="true"></div>
         <div class="partner-icon-overlay" aria-hidden="true">✻</div>
-        <div class="partner-followers">29.2M</div>
+        <div class="partner-followers">17M</div>
         <div class="partner-info">
-          <div class="partner-name">Floyd Mayweather</div>
-          <div class="partner-handle">@floydmayweather</div>
-          <div class="partner-bio">Internationale Sportboxlegende und Lifestyle-Ikone. Steht für Erfolg, Luxus und globale Aufmerksamkeit.</div>
+          <div class="partner-name">David Alaba</div>
+          <div class="partner-handle">@davidalaba</div>
+          <div class="partner-bio">Österreichischer Profifußballer bei Real Madrid. Mehrfacher Champions-League-Sieger und Sport-Ikone.</div>
         </div>
       </article>
       <article class="partner-card">
         <div class="partner-bg partner-bg-3" aria-hidden="true"></div>
         <div class="partner-icon-overlay" aria-hidden="true">✻</div>
-        <div class="partner-followers">3.1M</div>
+        <div class="partner-followers">3.4M</div>
         <div class="partner-info">
-          <div class="partner-name">GetOnMyLvL</div>
+          <div class="partner-name">MontanaBlack</div>
           <div class="partner-handle">@montanablack</div>
           <div class="partner-bio">Einer der beliebtesten Gaming-Streamer und YouTuber Deutschlands. Bekannt für seine Twitch-Streams.</div>
         </div>
