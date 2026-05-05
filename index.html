@@ -1879,9 +1879,25 @@
     position: relative;
     scroll-snap-align: start;
     border: 1px solid var(--border-card);
-    transition: transform 0.25s ease;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
   }
-  .partner-card:hover { transform: translateY(-3px); }
+  .partner-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(232, 121, 249, 0.5);
+    box-shadow: 0 16px 40px -12px rgba(232, 121, 249, 0.35);
+  }
+  .partner-card:focus-visible {
+    outline: none;
+    border-color: rgba(232, 121, 249, 0.85);
+    box-shadow: 0 0 0 3px rgba(232, 121, 249, 0.3);
+  }
+  .partner-card:hover .partner-icon-overlay {
+    background: rgba(232, 121, 249, 1);
+    transform: scale(1.1);
+    box-shadow: 0 0 18px rgba(232, 121, 249, 0.6);
+  }
   .partner-bg {
     position: absolute;
     inset: 0;
@@ -1951,7 +1967,6 @@
     left: 14px;
     width: 26px; height: 26px;
     background: rgba(217, 70, 239, 0.9);
-    border: none;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1959,16 +1974,9 @@
     z-index: 2;
     font-size: 13px;
     color: white;
-    cursor: pointer;
-    padding: 0;
+    pointer-events: none;
     transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   }
-  .partner-icon-overlay:hover {
-    background: rgba(232, 121, 249, 1);
-    transform: scale(1.1);
-    box-shadow: 0 0 18px rgba(232, 121, 249, 0.6);
-  }
-  .partner-icon-overlay:active { transform: scale(0.95); }
 
   .partner-cta {
     text-align: center;
@@ -3861,9 +3869,9 @@
     <h2 class="partners-title"><span class="grad">Partner</span> &amp; Creator Network</h2>
 
     <div class="partner-track" aria-label="Featured partners">
-      <article class="partner-card" data-image="partners/sido-bild.jpg" data-image-position="center 28%">
+      <article class="partner-card" data-partner-trigger tabindex="0" role="button" aria-label="Details zu SIDO anzeigen" data-image="partners/sido-bild.jpg" data-image-position="center 28%">
         <div class="partner-bg partner-bg-1" aria-hidden="true"></div>
-        <button type="button" class="partner-icon-overlay" data-partner-trigger aria-label="Details zu SIDO anzeigen">✻</button>
+        <div class="partner-icon-overlay" aria-hidden="true">✻</div>
         <div class="partner-followers">2.0M</div>
         <div class="partner-info">
           <div class="partner-name">SIDO</div>
@@ -3871,9 +3879,9 @@
           <div class="partner-bio">Deutsche Rap-Legende und Musikproduzent. Eine der prägendsten Figuren der deutschen Hip-Hop-Szene.</div>
         </div>
       </article>
-      <article class="partner-card" data-image="partners/fcb_bvb_1920_close_alaba.webp" data-image-position="center 22%">
+      <article class="partner-card" data-partner-trigger tabindex="0" role="button" aria-label="Details zu David Alaba anzeigen" data-image="partners/fcb_bvb_1920_close_alaba.webp" data-image-position="center 22%">
         <div class="partner-bg partner-bg-2" aria-hidden="true"></div>
-        <button type="button" class="partner-icon-overlay" data-partner-trigger aria-label="Details zu David Alaba anzeigen">✻</button>
+        <div class="partner-icon-overlay" aria-hidden="true">✻</div>
         <div class="partner-followers">17M</div>
         <div class="partner-info">
           <div class="partner-name">David Alaba</div>
@@ -3881,9 +3889,9 @@
           <div class="partner-bio">Österreichischer Profifußballer bei Real Madrid. Mehrfacher Champions-League-Sieger und Sport-Ikone.</div>
         </div>
       </article>
-      <article class="partner-card" data-image="partners/montanablack_portrait-3c0ae726.png" data-image-position="center 25%">
+      <article class="partner-card" data-partner-trigger tabindex="0" role="button" aria-label="Details zu MontanaBlack anzeigen" data-image="partners/montanablack_portrait-3c0ae726.png" data-image-position="center 25%">
         <div class="partner-bg partner-bg-3" aria-hidden="true"></div>
-        <button type="button" class="partner-icon-overlay" data-partner-trigger aria-label="Details zu MontanaBlack anzeigen">✻</button>
+        <div class="partner-icon-overlay" aria-hidden="true">✻</div>
         <div class="partner-followers">3.4M</div>
         <div class="partner-info">
           <div class="partner-name">MontanaBlack</div>
@@ -5470,7 +5478,9 @@
   (function setupPartnerModal() {
     var modal = document.getElementById('partnerModal');
     if (!modal) return;
-    var triggers = document.querySelectorAll('[data-partner-trigger]');
+    /* The whole card is the trigger (entire surface clickable),
+       not just the small star icon. */
+    var cards = document.querySelectorAll('[data-partner-trigger]');
     var closers = modal.querySelectorAll('[data-close-partner]');
     var imgEl       = modal.querySelector('[data-partner-modal-image]');
     var followersEl = modal.querySelector('[data-partner-modal-followers]');
@@ -5512,11 +5522,17 @@
       document.body.style.overflow = '';
     }
 
-    triggers.forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        openFromCard(btn.closest('.partner-card'));
+    cards.forEach(function (card) {
+      /* Click anywhere on the card opens the modal */
+      card.addEventListener('click', function () {
+        openFromCard(card);
+      });
+      /* Keyboard: Enter or Space when the card is focused */
+      card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault();
+          openFromCard(card);
+        }
       });
     });
     closers.forEach(function (btn) { btn.addEventListener('click', close); });
