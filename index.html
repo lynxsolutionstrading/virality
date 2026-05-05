@@ -1886,29 +1886,35 @@
     position: absolute;
     inset: 0;
   }
-  /* Layered backgrounds:
-     1. Dark overlay at the bottom for text legibility
-     2. Person photo (drop into partners/ folder — auto-loads when present)
-     3. Brand-tinted gradient as fallback if the image isn't available yet
-     The fallback gradient is tuned per-person so the card looks
-     intentional even before the photo file is added. */
+  /* Each partner card uses the actual photo as its background. The
+     ::after pseudo-element (defined right below) provides the dark
+     bottom-gradient for text legibility, so we don't add an overlay
+     here. background-size:cover + a face-friendly background-position
+     keeps aspect ratio (no distortion) and ensures faces sit in the
+     visible area regardless of how the card is sized. The grayscale
+     filter renders all three uniformly black & white. */
+  .partner-bg-1,
+  .partner-bg-2,
+  .partner-bg-3 {
+    background-size: cover;
+    background-repeat: no-repeat;
+    /* Black & white treatment for all three partners */
+    filter: grayscale(100%) contrast(1.05);
+  }
   .partner-bg-1 {
-    background:
-      linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, 0.85) 100%),
-      url('partners/sido.jpg') center/cover no-repeat,
-      linear-gradient(160deg, #1a1a1a 0%, #4a0e0e 55%, #0a0a0a 100%);
+    background-image: url('partners/sido-bild.jpg');
+    background-position: center 28%;
+    background-color: #1a1a1a; /* fallback if image fails */
   }
   .partner-bg-2 {
-    background:
-      linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, 0.85) 100%),
-      url('partners/alaba.jpg') center/cover no-repeat,
-      linear-gradient(160deg, #1E3A8A 0%, #c7d2fe40 50%, #0A0A10 100%);
+    background-image: url('partners/fcb_bvb_1920_close_alaba.webp');
+    background-position: center 22%;
+    background-color: #1E3A8A;
   }
   .partner-bg-3 {
-    background:
-      linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, 0.85) 100%),
-      url('partners/montanablack.jpg') center/cover no-repeat,
-      linear-gradient(160deg, #1E40AF 0%, #581C87 50%, #0A0A10 100%);
+    background-image: url('partners/montanablack_portrait-3c0ae726.png');
+    background-position: center 25%;
+    background-color: #1E40AF;
   }
   .partner-bg::after {
     content: '';
