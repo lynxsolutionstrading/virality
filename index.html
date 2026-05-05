@@ -1949,8 +1949,9 @@
     position: absolute;
     top: 14px;
     left: 14px;
-    width: 24px; height: 24px;
+    width: 26px; height: 26px;
     background: rgba(217, 70, 239, 0.9);
+    border: none;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1958,7 +1959,16 @@
     z-index: 2;
     font-size: 13px;
     color: white;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   }
+  .partner-icon-overlay:hover {
+    background: rgba(232, 121, 249, 1);
+    transform: scale(1.1);
+    box-shadow: 0 0 18px rgba(232, 121, 249, 0.6);
+  }
+  .partner-icon-overlay:active { transform: scale(0.95); }
 
   .partner-cta {
     text-align: center;
@@ -2986,6 +2996,151 @@
   }
 
   /* ============================================================
+     PARTNER MODAL — shown when a star icon is clicked on a card
+     ============================================================ */
+  .partner-modal {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 16px;
+    background: transparent;
+    border: none;
+    color: inherit;
+    overflow: auto;
+    display: none;
+  }
+  .partner-modal[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: contactModalIn 0.32s ease-out;
+  }
+  .partner-modal::backdrop {
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(111, 227, 255, 0.14), transparent 60%),
+      radial-gradient(ellipse at 70% 80%, rgba(217, 70, 239, 0.14), transparent 60%),
+      rgba(5, 5, 7, 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    animation: contactBackdropIn 0.32s ease-out;
+  }
+  .partner-modal-card {
+    position: relative;
+    width: 100%;
+    max-width: 460px;
+    background:
+      radial-gradient(80% 60% at 50% 0%, rgba(192, 132, 252, 0.18), transparent 60%),
+      linear-gradient(180deg, rgba(20, 20, 26, 0.96), rgba(15, 15, 22, 0.98));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 0 0 26px;
+    box-shadow:
+      0 30px 80px -10px rgba(0, 0, 0, 0.7),
+      0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+      0 0 60px -10px rgba(192, 132, 252, 0.25);
+    overflow: hidden;
+    animation: cardScaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .partner-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 3;
+    backdrop-filter: blur(6px);
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .partner-modal-close:hover {
+    background: rgba(0, 0, 0, 0.75);
+    transform: scale(1.06);
+  }
+  .partner-modal-image {
+    width: 100%;
+    height: 320px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center 25%;
+    /* Same B&W treatment as the cards for visual continuity */
+    filter: grayscale(100%) contrast(1.05);
+    position: relative;
+  }
+  .partner-modal-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(15, 15, 22, 0.95) 100%);
+    pointer-events: none;
+  }
+  .partner-modal-body {
+    padding: 22px 28px 4px;
+    margin-top: -28px;
+    position: relative;
+    z-index: 2;
+  }
+  .partner-modal-followers {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+    backdrop-filter: blur(6px);
+  }
+  .partner-modal-followers::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: #34D399;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+    box-shadow: 0 0 8px rgba(52, 211, 153, 0.6);
+  }
+  .partner-modal-name {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+    color: white;
+  }
+  .partner-modal-handle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: rgba(192, 132, 252, 0.9);
+    margin-bottom: 16px;
+  }
+  .partner-modal-bio {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.78);
+  }
+  @media (max-width: 520px) {
+    .partner-modal { padding: 12px; }
+    .partner-modal-image { height: 260px; }
+    .partner-modal-body { padding: 18px 20px 4px; }
+    .partner-modal-name { font-size: 22px; }
+  }
+
+  /* ============================================================
      CONTACT MODAL
      ============================================================ */
   .contact-modal {
@@ -3706,9 +3861,9 @@
     <h2 class="partners-title"><span class="grad">Partner</span> &amp; Creator Network</h2>
 
     <div class="partner-track" aria-label="Featured partners">
-      <article class="partner-card">
+      <article class="partner-card" data-image="partners/sido-bild.jpg" data-image-position="center 28%">
         <div class="partner-bg partner-bg-1" aria-hidden="true"></div>
-        <div class="partner-icon-overlay" aria-hidden="true">✻</div>
+        <button type="button" class="partner-icon-overlay" data-partner-trigger aria-label="Details zu SIDO anzeigen">✻</button>
         <div class="partner-followers">2.0M</div>
         <div class="partner-info">
           <div class="partner-name">SIDO</div>
@@ -3716,9 +3871,9 @@
           <div class="partner-bio">Deutsche Rap-Legende und Musikproduzent. Eine der prägendsten Figuren der deutschen Hip-Hop-Szene.</div>
         </div>
       </article>
-      <article class="partner-card">
+      <article class="partner-card" data-image="partners/fcb_bvb_1920_close_alaba.webp" data-image-position="center 22%">
         <div class="partner-bg partner-bg-2" aria-hidden="true"></div>
-        <div class="partner-icon-overlay" aria-hidden="true">✻</div>
+        <button type="button" class="partner-icon-overlay" data-partner-trigger aria-label="Details zu David Alaba anzeigen">✻</button>
         <div class="partner-followers">17M</div>
         <div class="partner-info">
           <div class="partner-name">David Alaba</div>
@@ -3726,9 +3881,9 @@
           <div class="partner-bio">Österreichischer Profifußballer bei Real Madrid. Mehrfacher Champions-League-Sieger und Sport-Ikone.</div>
         </div>
       </article>
-      <article class="partner-card">
+      <article class="partner-card" data-image="partners/montanablack_portrait-3c0ae726.png" data-image-position="center 25%">
         <div class="partner-bg partner-bg-3" aria-hidden="true"></div>
-        <div class="partner-icon-overlay" aria-hidden="true">✻</div>
+        <button type="button" class="partner-icon-overlay" data-partner-trigger aria-label="Details zu MontanaBlack anzeigen">✻</button>
         <div class="partner-followers">3.4M</div>
         <div class="partner-info">
           <div class="partner-name">MontanaBlack</div>
@@ -4179,6 +4334,29 @@
     </div>
   </div>
 </footer>
+
+<!-- ============================================================
+     PARTNER MODAL
+     Shows the photo + full data of a partner when their star icon
+     is clicked. Content is populated dynamically from the card the
+     user interacted with.
+     ============================================================ -->
+<dialog class="partner-modal" id="partnerModal" aria-labelledby="partnerModalName">
+  <div class="partner-modal-card">
+    <button type="button" class="partner-modal-close" aria-label="Close" data-close-partner>
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="partner-modal-image" data-partner-modal-image aria-hidden="true"></div>
+    <div class="partner-modal-body">
+      <div class="partner-modal-followers" data-partner-modal-followers></div>
+      <h2 class="partner-modal-name" id="partnerModalName" data-partner-modal-name></h2>
+      <div class="partner-modal-handle" data-partner-modal-handle></div>
+      <p class="partner-modal-bio" data-partner-modal-bio></p>
+    </div>
+  </div>
+</dialog>
 
 <!-- ============================================================
      CONTACT MODAL
@@ -5281,6 +5459,76 @@
       // Defer to next tick so the page can finish layout first
       setTimeout(open, 50);
     }
+  })();
+</script>
+
+<script>
+  /* ========== PARTNER MODAL ==========
+     Star icon on a partner card → opens a modal with the photo +
+     full data of that partner. The modal is a single shared element
+     populated dynamically based on which card was clicked. */
+  (function setupPartnerModal() {
+    var modal = document.getElementById('partnerModal');
+    if (!modal) return;
+    var triggers = document.querySelectorAll('[data-partner-trigger]');
+    var closers = modal.querySelectorAll('[data-close-partner]');
+    var imgEl       = modal.querySelector('[data-partner-modal-image]');
+    var followersEl = modal.querySelector('[data-partner-modal-followers]');
+    var nameEl      = modal.querySelector('[data-partner-modal-name]');
+    var handleEl    = modal.querySelector('[data-partner-modal-handle]');
+    var bioEl       = modal.querySelector('[data-partner-modal-bio]');
+
+    function openFromCard(card) {
+      if (!card) return;
+      var image    = card.getAttribute('data-image') || '';
+      var imgPos   = card.getAttribute('data-image-position') || 'center 25%';
+      var followers = (card.querySelector('.partner-followers') || {}).textContent || '';
+      var name     = (card.querySelector('.partner-name')      || {}).textContent || '';
+      var handle   = (card.querySelector('.partner-handle')    || {}).textContent || '';
+      var bio      = (card.querySelector('.partner-bio')       || {}).textContent || '';
+
+      if (imgEl) {
+        imgEl.style.backgroundImage = image ? "url('" + image + "')" : '';
+        imgEl.style.backgroundPosition = imgPos;
+      }
+      if (followersEl) followersEl.textContent = followers;
+      if (nameEl)      nameEl.textContent      = name;
+      if (handleEl)    handleEl.textContent    = handle;
+      if (bioEl)       bioEl.textContent       = bio;
+
+      if (typeof modal.showModal === 'function') {
+        modal.showModal();
+      } else {
+        modal.setAttribute('open', '');
+      }
+      document.body.style.overflow = 'hidden';
+    }
+    function close() {
+      if (typeof modal.close === 'function') {
+        modal.close();
+      } else {
+        modal.removeAttribute('open');
+      }
+      document.body.style.overflow = '';
+    }
+
+    triggers.forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openFromCard(btn.closest('.partner-card'));
+      });
+    });
+    closers.forEach(function (btn) { btn.addEventListener('click', close); });
+
+    /* Click outside the card (on the backdrop area) closes */
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) close();
+    });
+    /* Native dialog close event (ESC key) — release body scroll lock */
+    modal.addEventListener('close', function () {
+      document.body.style.overflow = '';
+    });
   })();
 </script>
 
