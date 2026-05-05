@@ -1961,20 +1961,29 @@
   .partner-name { font-size: 16px; font-weight: 700; margin-bottom: 2px; color: white; }
   .partner-handle { font-size: 11px; color: rgba(255, 255, 255, 0.7); margin-bottom: 8px; }
   .partner-bio { font-size: 12px; line-height: 1.4; color: rgba(255, 255, 255, 0.7); }
+  /* Pill-style "Erfahre mehr.." indicator on each card. The card itself
+     is the click target; this is purely a visual cue, hence
+     pointer-events:none. */
   .partner-icon-overlay {
     position: absolute;
     top: 14px;
     left: 14px;
-    width: 26px; height: 26px;
+    padding: 7px 14px;
     background: rgba(217, 70, 239, 0.9);
-    border-radius: 50%;
-    display: flex;
+    border-radius: 999px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     z-index: 2;
-    font-size: 13px;
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
     color: white;
+    white-space: nowrap;
     pointer-events: none;
+    transform-origin: left center;
+    box-shadow: 0 6px 18px -6px rgba(217, 70, 239, 0.55);
     transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   }
 
@@ -3871,7 +3880,7 @@
     <div class="partner-track" aria-label="Featured partners">
       <article class="partner-card" data-partner-trigger tabindex="0" role="button" aria-label="Details zu SIDO anzeigen" data-image="partners/sido-bild.jpg" data-image-position="center 28%">
         <div class="partner-bg partner-bg-1" aria-hidden="true"></div>
-        <div class="partner-icon-overlay" aria-hidden="true">✻</div>
+        <div class="partner-icon-overlay" aria-hidden="true">Erfahre mehr..</div>
         <div class="partner-followers">2.0M</div>
         <div class="partner-info">
           <div class="partner-name">SIDO</div>
@@ -3881,7 +3890,7 @@
       </article>
       <article class="partner-card" data-partner-trigger tabindex="0" role="button" aria-label="Details zu David Alaba anzeigen" data-image="partners/fcb_bvb_1920_close_alaba.webp" data-image-position="center 22%">
         <div class="partner-bg partner-bg-2" aria-hidden="true"></div>
-        <div class="partner-icon-overlay" aria-hidden="true">✻</div>
+        <div class="partner-icon-overlay" aria-hidden="true">Erfahre mehr..</div>
         <div class="partner-followers">17M</div>
         <div class="partner-info">
           <div class="partner-name">David Alaba</div>
@@ -3891,7 +3900,7 @@
       </article>
       <article class="partner-card" data-partner-trigger tabindex="0" role="button" aria-label="Details zu MontanaBlack anzeigen" data-image="partners/montanablack_portrait-3c0ae726.png" data-image-position="center 25%">
         <div class="partner-bg partner-bg-3" aria-hidden="true"></div>
-        <div class="partner-icon-overlay" aria-hidden="true">✻</div>
+        <div class="partner-icon-overlay" aria-hidden="true">Erfahre mehr..</div>
         <div class="partner-followers">3.4M</div>
         <div class="partner-info">
           <div class="partner-name">MontanaBlack</div>
