@@ -3149,12 +3149,52 @@
     font-size: 14.5px;
     line-height: 1.6;
     color: rgba(255, 255, 255, 0.78);
+    margin-bottom: 22px;
+  }
+  /* Stats list — 2-column grid for short fields, full-row for highlights */
+  .partner-modal-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+    padding-top: 18px;
+    margin: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .partner-modal-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .partner-modal-stat--full {
+    grid-column: 1 / -1;
+  }
+  .partner-modal-stat dt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(192, 132, 252, 0.85);
+  }
+  .partner-modal-stat dd {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    line-height: 1.45;
+  }
+  .partner-modal-stat--full dd {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.55;
   }
   @media (max-width: 520px) {
     .partner-modal { padding: 12px; }
     .partner-modal-image { height: 260px; }
     .partner-modal-body { padding: 18px 20px 4px; }
     .partner-modal-name { font-size: 22px; }
+    .partner-modal-stats { grid-template-columns: 1fr 1fr; gap: 10px 14px; }
   }
 
   /* ============================================================
@@ -3878,7 +3918,15 @@
     <h2 class="partners-title"><span class="grad">Partner</span> &amp; Creator Network</h2>
 
     <div class="partner-track" aria-label="Featured partners">
-      <article class="partner-card" data-partner-trigger tabindex="0" role="button" aria-label="Details zu SIDO anzeigen" data-image="partners/sido-bild.jpg" data-image-position="center 28%">
+      <article class="partner-card" data-partner-trigger tabindex="0" role="button"
+               aria-label="Details zu SIDO anzeigen"
+               data-image="partners/sido-bild.jpg"
+               data-image-position="center 28%"
+               data-age="45 Jahre"
+               data-origin="Berlin, Deutschland"
+               data-occupation="Rapper & Musikproduzent"
+               data-active-since="1997"
+               data-highlights="Bambi 2017, mehrfacher Echo-Preisträger, multi-platinum-zertifizierte Alben, Coach bei The Voice of Germany.">
         <div class="partner-bg partner-bg-1" aria-hidden="true"></div>
         <div class="partner-icon-overlay" aria-hidden="true">Erfahre mehr..</div>
         <div class="partner-followers">2.0M</div>
@@ -3888,7 +3936,15 @@
           <div class="partner-bio">Deutsche Rap-Legende und Musikproduzent. Eine der prägendsten Figuren der deutschen Hip-Hop-Szene.</div>
         </div>
       </article>
-      <article class="partner-card" data-partner-trigger tabindex="0" role="button" aria-label="Details zu David Alaba anzeigen" data-image="partners/fcb_bvb_1920_close_alaba.webp" data-image-position="center 22%">
+      <article class="partner-card" data-partner-trigger tabindex="0" role="button"
+               aria-label="Details zu David Alaba anzeigen"
+               data-image="partners/fcb_bvb_1920_close_alaba.webp"
+               data-image-position="center 22%"
+               data-age="33 Jahre"
+               data-origin="Wien, Österreich"
+               data-occupation="Profifußballer (Innenverteidiger), Real Madrid CF"
+               data-active-since="2008"
+               data-highlights="Mehrfacher Champions-League-Sieger, deutscher Meister, österreichischer Fußballer des Jahres, A-Nationalspieler Österreichs.">
         <div class="partner-bg partner-bg-2" aria-hidden="true"></div>
         <div class="partner-icon-overlay" aria-hidden="true">Erfahre mehr..</div>
         <div class="partner-followers">17M</div>
@@ -3898,7 +3954,15 @@
           <div class="partner-bio">Österreichischer Profifußballer bei Real Madrid. Mehrfacher Champions-League-Sieger und Sport-Ikone.</div>
         </div>
       </article>
-      <article class="partner-card" data-partner-trigger tabindex="0" role="button" aria-label="Details zu MontanaBlack anzeigen" data-image="partners/montanablack_portrait-3c0ae726.png" data-image-position="center 25%">
+      <article class="partner-card" data-partner-trigger tabindex="0" role="button"
+               aria-label="Details zu MontanaBlack anzeigen"
+               data-image="partners/montanablack_portrait-3c0ae726.png"
+               data-image-position="center 25%"
+               data-age="38 Jahre"
+               data-origin="Buxtehude, Deutschland"
+               data-occupation="Twitch-Streamer & YouTuber"
+               data-active-since="2012"
+               data-highlights="Einer der reichweitenstärksten deutschsprachigen Twitch-Streamer, Bestseller-Autor (Buch &quot;Vom Junkie zum Youtube-Star&quot;), millionenfache YouTube-Abrufe.">
         <div class="partner-bg partner-bg-3" aria-hidden="true"></div>
         <div class="partner-icon-overlay" aria-hidden="true">Erfahre mehr..</div>
         <div class="partner-followers">3.4M</div>
@@ -4371,6 +4435,28 @@
       <h2 class="partner-modal-name" id="partnerModalName" data-partner-modal-name></h2>
       <div class="partner-modal-handle" data-partner-modal-handle></div>
       <p class="partner-modal-bio" data-partner-modal-bio></p>
+      <dl class="partner-modal-stats">
+        <div class="partner-modal-stat">
+          <dt>Alter</dt>
+          <dd data-partner-modal-age></dd>
+        </div>
+        <div class="partner-modal-stat">
+          <dt>Herkunft</dt>
+          <dd data-partner-modal-origin></dd>
+        </div>
+        <div class="partner-modal-stat">
+          <dt>Tätigkeit</dt>
+          <dd data-partner-modal-occupation></dd>
+        </div>
+        <div class="partner-modal-stat">
+          <dt>Aktiv seit</dt>
+          <dd data-partner-modal-active></dd>
+        </div>
+        <div class="partner-modal-stat partner-modal-stat--full">
+          <dt>Highlights</dt>
+          <dd data-partner-modal-highlights></dd>
+        </div>
+      </dl>
     </div>
   </div>
 </dialog>
@@ -5496,6 +5582,11 @@
     var nameEl      = modal.querySelector('[data-partner-modal-name]');
     var handleEl    = modal.querySelector('[data-partner-modal-handle]');
     var bioEl       = modal.querySelector('[data-partner-modal-bio]');
+    var ageEl        = modal.querySelector('[data-partner-modal-age]');
+    var originEl     = modal.querySelector('[data-partner-modal-origin]');
+    var occupationEl = modal.querySelector('[data-partner-modal-occupation]');
+    var activeEl     = modal.querySelector('[data-partner-modal-active]');
+    var highlightsEl = modal.querySelector('[data-partner-modal-highlights]');
 
     function openFromCard(card) {
       if (!card) return;
@@ -5505,15 +5596,25 @@
       var name     = (card.querySelector('.partner-name')      || {}).textContent || '';
       var handle   = (card.querySelector('.partner-handle')    || {}).textContent || '';
       var bio      = (card.querySelector('.partner-bio')       || {}).textContent || '';
+      var age        = card.getAttribute('data-age')          || '—';
+      var origin     = card.getAttribute('data-origin')       || '—';
+      var occupation = card.getAttribute('data-occupation')   || '—';
+      var active     = card.getAttribute('data-active-since') || '—';
+      var highlights = card.getAttribute('data-highlights')   || '—';
 
       if (imgEl) {
         imgEl.style.backgroundImage = image ? "url('" + image + "')" : '';
         imgEl.style.backgroundPosition = imgPos;
       }
-      if (followersEl) followersEl.textContent = followers;
-      if (nameEl)      nameEl.textContent      = name;
-      if (handleEl)    handleEl.textContent    = handle;
-      if (bioEl)       bioEl.textContent       = bio;
+      if (followersEl)  followersEl.textContent  = followers;
+      if (nameEl)       nameEl.textContent       = name;
+      if (handleEl)     handleEl.textContent     = handle;
+      if (bioEl)        bioEl.textContent        = bio;
+      if (ageEl)        ageEl.textContent        = age;
+      if (originEl)     originEl.textContent     = origin;
+      if (occupationEl) occupationEl.textContent = occupation;
+      if (activeEl)     activeEl.textContent     = active;
+      if (highlightsEl) highlightsEl.textContent = highlights;
 
       if (typeof modal.showModal === 'function') {
         modal.showModal();
