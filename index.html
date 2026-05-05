@@ -1762,12 +1762,16 @@
   .press-logo.serif {
     font-family: 'Playfair Display', Georgia, serif;
     font-style: italic;
+    /* Forbes: +50px on top of the base press-logo size */
+    font-size: clamp(80px, calc(4.46vw + 50px), 99px);
     animation: pressDrift 16.94s ease-in-out infinite;
     will-change: translate;
   }
   .press-logo.purple {
     color: #6B21A8;
     font-weight: 800;
+    /* yahoo: +25px on top of the base press-logo size */
+    font-size: clamp(55px, calc(4.46vw + 25px), 74px);
     animation: pressDrift 16.94s ease-in-out infinite;
     will-change: translate;
   }
