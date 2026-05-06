@@ -6334,8 +6334,16 @@
 
     var answered = false;
 
+    /* Suppress ringtone + shake until the dive-in animation has finished.
+       During the dive, page-level transforms can shift the feature section
+       into the viewport calculation even though the user cannot see it,
+       which would otherwise leak the ringtone audio while diving. */
+    function diveDone() {
+      return document.body.classList.contains('post-dive');
+    }
+
     function startRingingVisual() {
-      if (answered) return;
+      if (answered || !diveDone()) return;
       /* Toggle-with-reflow restarts the keyframe timeline so the shake
          is in step with the ringtone whenever it (re)starts. */
       trigger.classList.remove('is-ringing');
@@ -6346,7 +6354,7 @@
       trigger.classList.remove('is-ringing');
     }
     function tryPlayRingtone() {
-      if (!ringtone || answered) return;
+      if (!ringtone || answered || !diveDone()) return;
       var p = ringtone.play();
       if (p && typeof p.catch === 'function') p.catch(function () {});
     }
