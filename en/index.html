@@ -4213,9 +4213,11 @@
                aria-label="Show SIDO details"
                data-image="partners/sido-bild.jpg"
                data-image-position="center 28%"
+               data-modal-image="/partners/sido-modal.jpg"
+               data-modal-image-position="center 35%"
                data-age="45 years old"
                data-origin="Berlin, Germany"
-               data-occupation="Rapper & Musikproduzent"
+               data-occupation="Rapper & music producer"
                data-active-since="1997"
                data-highlights="Bambi Award 2017, multi-time Echo Award winner, multi-platinum-certified albums, coach on The Voice of Germany.">
         <div class="partner-bg partner-bg-1" aria-hidden="true"></div>
@@ -5899,8 +5901,13 @@
 
     function openFromCard(card) {
       if (!card) return;
-      var image    = card.getAttribute('data-image') || '';
-      var imgPos   = card.getAttribute('data-image-position') || 'center 25%';
+      /* Use the dedicated modal image if the card has one; otherwise
+         fall back to the same image used on the card itself. Same for
+         positioning. */
+      var image    = card.getAttribute('data-modal-image')
+                  || card.getAttribute('data-image') || '';
+      var imgPos   = card.getAttribute('data-modal-image-position')
+                  || card.getAttribute('data-image-position') || 'center 25%';
       var followers = (card.querySelector('.partner-followers') || {}).textContent || '';
       var name     = (card.querySelector('.partner-name')      || {}).textContent || '';
       var handle   = (card.querySelector('.partner-handle')    || {}).textContent || '';

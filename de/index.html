@@ -4213,6 +4213,8 @@
                aria-label="Details zu SIDO anzeigen"
                data-image="partners/sido-bild.jpg"
                data-image-position="center 28%"
+               data-modal-image="/partners/sido-modal.jpg"
+               data-modal-image-position="center 35%"
                data-age="45 Jahre"
                data-origin="Berlin, Deutschland"
                data-occupation="Rapper & Musikproduzent"
@@ -5899,8 +5901,13 @@
 
     function openFromCard(card) {
       if (!card) return;
-      var image    = card.getAttribute('data-image') || '';
-      var imgPos   = card.getAttribute('data-image-position') || 'center 25%';
+      /* Use the dedicated modal image if the card has one; otherwise
+         fall back to the same image used on the card itself. Same for
+         positioning. */
+      var image    = card.getAttribute('data-modal-image')
+                  || card.getAttribute('data-image') || '';
+      var imgPos   = card.getAttribute('data-modal-image-position')
+                  || card.getAttribute('data-image-position') || 'center 25%';
       var followers = (card.querySelector('.partner-followers') || {}).textContent || '';
       var name     = (card.querySelector('.partner-name')      || {}).textContent || '';
       var handle   = (card.querySelector('.partner-handle')    || {}).textContent || '';
