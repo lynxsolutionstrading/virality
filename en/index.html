@@ -1878,30 +1878,30 @@
   @keyframes featurePhoneShake {
     /* Lead-in silence */
     0%, 6%   { transform: translate3d(0, 0, 0) rotate(0deg); }
-    /* Burst 1 (6% - 27% = ~357ms, ~10 oscillations) */
-    7.5%     { transform: translate3d(-4px,  0px, 0) rotate(-0.7deg); }
-    9.5%     { transform: translate3d( 4px,  1px, 0) rotate( 0.8deg); }
-    11.5%    { transform: translate3d(-5px, -1px, 0) rotate(-0.9deg); }
-    13.5%    { transform: translate3d( 5px,  0px, 0) rotate( 0.9deg); }
-    15.5%    { transform: translate3d(-4px,  1px, 0) rotate(-0.8deg); }
-    17.5%    { transform: translate3d( 4px, -1px, 0) rotate( 0.7deg); }
-    19.5%    { transform: translate3d(-4px,  0px, 0) rotate(-0.6deg); }
-    21.5%    { transform: translate3d( 3px,  1px, 0) rotate( 0.5deg); }
-    23.5%    { transform: translate3d(-2px,  0px, 0) rotate(-0.3deg); }
-    25.5%    { transform: translate3d( 1px,  0px, 0) rotate( 0.1deg); }
+    /* Burst 1 (6% - 27% = ~357ms, ~10 oscillations) — amplitudes at 80% */
+    7.5%     { transform: translate3d(-3.2px,  0,    0) rotate(-0.56deg); }
+    9.5%     { transform: translate3d( 3.2px,  0.8px, 0) rotate( 0.64deg); }
+    11.5%    { transform: translate3d(-4px,   -0.8px, 0) rotate(-0.72deg); }
+    13.5%    { transform: translate3d( 4px,    0,    0) rotate( 0.72deg); }
+    15.5%    { transform: translate3d(-3.2px,  0.8px, 0) rotate(-0.64deg); }
+    17.5%    { transform: translate3d( 3.2px, -0.8px, 0) rotate( 0.56deg); }
+    19.5%    { transform: translate3d(-3.2px,  0,    0) rotate(-0.48deg); }
+    21.5%    { transform: translate3d( 2.4px,  0.8px, 0) rotate( 0.40deg); }
+    23.5%    { transform: translate3d(-1.6px,  0,    0) rotate(-0.24deg); }
+    25.5%    { transform: translate3d( 0.8px,  0,    0) rotate( 0.08deg); }
     /* Inter-burst rest */
     27%, 41% { transform: translate3d(0, 0, 0) rotate(0deg); }
     /* Burst 2 (41% - 62%) */
-    42.5%    { transform: translate3d(-4px,  0px, 0) rotate(-0.7deg); }
-    44.5%    { transform: translate3d( 4px,  1px, 0) rotate( 0.8deg); }
-    46.5%    { transform: translate3d(-5px, -1px, 0) rotate(-0.9deg); }
-    48.5%    { transform: translate3d( 5px,  0px, 0) rotate( 0.9deg); }
-    50.5%    { transform: translate3d(-4px,  1px, 0) rotate(-0.8deg); }
-    52.5%    { transform: translate3d( 4px, -1px, 0) rotate( 0.7deg); }
-    54.5%    { transform: translate3d(-4px,  0px, 0) rotate(-0.6deg); }
-    56.5%    { transform: translate3d( 3px,  1px, 0) rotate( 0.5deg); }
-    58.5%    { transform: translate3d(-2px,  0px, 0) rotate(-0.3deg); }
-    60.5%    { transform: translate3d( 1px,  0px, 0) rotate( 0.1deg); }
+    42.5%    { transform: translate3d(-3.2px,  0,    0) rotate(-0.56deg); }
+    44.5%    { transform: translate3d( 3.2px,  0.8px, 0) rotate( 0.64deg); }
+    46.5%    { transform: translate3d(-4px,   -0.8px, 0) rotate(-0.72deg); }
+    48.5%    { transform: translate3d( 4px,    0,    0) rotate( 0.72deg); }
+    50.5%    { transform: translate3d(-3.2px,  0.8px, 0) rotate(-0.64deg); }
+    52.5%    { transform: translate3d( 3.2px, -0.8px, 0) rotate( 0.56deg); }
+    54.5%    { transform: translate3d(-3.2px,  0,    0) rotate(-0.48deg); }
+    56.5%    { transform: translate3d( 2.4px,  0.8px, 0) rotate( 0.40deg); }
+    58.5%    { transform: translate3d(-1.6px,  0,    0) rotate(-0.24deg); }
+    60.5%    { transform: translate3d( 0.8px,  0,    0) rotate( 0.08deg); }
     /* Trailing silence */
     62%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
   }
