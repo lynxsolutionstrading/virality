@@ -1870,6 +1870,29 @@
     outline-offset: 14px;
     border-radius: 56px;
   }
+  /* Phone shake while the FaceTime ringtone is playing. Animation period
+     matches the 1.7s ringtone loop exactly. Two shake bursts per loop with
+     stillness at the start (matches 0.18s lead-in silence) and end
+     (matches 0.35s post-ring silence). */
+  @keyframes featurePhoneShake {
+    0%, 6%, 27%, 41%, 62%, 100% { transform: translateX(0); }
+    9%   { transform: translateX(-4px); }
+    12%  { transform: translateX(4px); }
+    15%  { transform: translateX(-4px); }
+    18%  { transform: translateX(4px); }
+    21%  { transform: translateX(-4px); }
+    24%  { transform: translateX(4px); }
+    44%  { transform: translateX(-4px); }
+    47%  { transform: translateX(4px); }
+    50%  { transform: translateX(-4px); }
+    53%  { transform: translateX(4px); }
+    56%  { transform: translateX(-4px); }
+    59%  { transform: translateX(4px); }
+  }
+  .feature-phone.is-ringing { animation: featurePhoneShake 1.7s linear infinite; }
+  @media (prefers-reduced-motion: reduce) {
+    .feature-phone.is-ringing { animation: none; }
+  }
 
   .press-section {
     /* Top padding mirrors the bottom padding of .brand-section so the
@@ -6281,7 +6304,8 @@
       ringtone.currentTime = 0;
     }
     function playVideo() {
-      if (video.ended) video.currentTime = 0;
+      /* Once the video has played through, screen stays black — no replay. */
+      if (video.ended) return;
       video.muted = false;
       var p = video.play();
       if (p && typeof p.catch === 'function') {
@@ -6295,6 +6319,8 @@
       }
     }
     function answer() {
+      /* Already played through: clicking does nothing — black screen stays. */
+      if (video.ended) return;
       answered = true;
       stopRingtone();
       if (video.paused) playVideo(); else video.pause();
@@ -6305,13 +6331,37 @@
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); answer(); }
     });
 
+    /* Phone shake animation locks onto the actual ringtone playback so the
+       visual vibration is always in sync with the audio. Restart-trick on
+       'play' (toggle class via reflow) re-syncs the keyframe timeline. */
+    if (ringtone) {
+      ringtone.addEventListener('play', function () {
+        trigger.classList.remove('is-ringing');
+        void trigger.offsetWidth;
+        trigger.classList.add('is-ringing');
+      });
+      ringtone.addEventListener('pause', function () {
+        trigger.classList.remove('is-ringing');
+      });
+    }
+
     if (section && 'IntersectionObserver' in window) {
+      /* Tracks whether the video was playing when the user last scrolled
+         out, so we can auto-resume on scroll-back. Reset to false once
+         we resume (and stays false if user paused manually). */
+      var wasPlayingBeforeScrollOut = false;
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
             tryPlayRingtone();
+            if (answered && wasPlayingBeforeScrollOut && !video.ended) {
+              wasPlayingBeforeScrollOut = false;
+              var p = video.play();
+              if (p && typeof p.catch === 'function') p.catch(function () {});
+            }
           } else {
             stopRingtone();
+            wasPlayingBeforeScrollOut = !video.paused && !video.ended;
             if (!video.paused) video.pause();
           }
         });
