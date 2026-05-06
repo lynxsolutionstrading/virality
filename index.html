@@ -1762,8 +1762,10 @@
   .press-logo.serif {
     font-family: 'Playfair Display', Georgia, serif;
     font-style: italic;
-    /* Forbes: +50px on top of the base press-logo size */
-    font-size: clamp(80px, calc(4.46vw + 50px), 99px);
+    /* Forbes: +50px bigger than base, then 10% smaller — and pulled
+       7px closer to the yahoo logo below it. */
+    font-size: clamp(72px, calc(4.01vw + 45px), 89px);
+    margin-bottom: -7px;
     animation: pressDrift 16.94s ease-in-out infinite;
     will-change: translate;
   }
