@@ -322,16 +322,16 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    /* Matches .nav-cta vertical padding + font-size for equal height with
-       the Kontakt/Contact button. Horizontal padding is slightly wider
-       so the DE/EN button reads as a clear pill, not a tight badge. */
-    padding: 8px 16px;
+    /* Padding + font-size mirror .nav-cta exactly so the DE/EN button has
+       the same dimensions as Kontakt/Contact at every breakpoint
+       (font-size inherits .nav-menu's 13px desktop / 11px mobile). */
+    padding: 8px 14px;
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 999px;
     color: var(--text-secondary);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
+    font-size: inherit;
     font-weight: 700;
     letter-spacing: 0.08em;
     cursor: pointer;
@@ -402,8 +402,12 @@
 
   @media (max-width: 640px) {
     .nav-menu { gap: 12px; font-size: 11px; }
-    .nav-menu a:not(.nav-cta) { display: none; }
-    .nav-menu a.always-show { display: inline; }
+    /* Hide direct nav links on mobile, but NOT links nested inside the
+       lang-switcher dropdown (those are .lang-option entries — without
+       the > combinator they were caught by this rule and the dropdown
+       appeared empty when opened on mobile). */
+    .nav-menu > a:not(.nav-cta) { display: none; }
+    .nav-menu > a.always-show { display: inline; }
     /* Mobile dropdown menu stays roomier for touch — button itself uses
        the base sizing so it visually matches .nav-cta height. */
     .lang-menu { min-width: 180px; padding: 6px; }
@@ -2333,6 +2337,9 @@
   .case-brand.gymtastic::after { content: '®'; font-size: 8px; vertical-align: super; }
 
   .case-divider { height: 1px; background: rgba(255, 255, 255, 0.08); }
+  /* Uniform mockup tile — placeholder until real graphics ship. Slightly
+     lighter than the section background (--bg-shade-a) so the tile is
+     readable without competing with the rest of the case card. */
   .case-mockup {
     aspect-ratio: 1 / 1.05;
     border-radius: 10px;
@@ -2342,18 +2349,12 @@
     align-items: center;
     justify-content: center;
     font-size: 11px;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.5);
     text-align: center;
     padding: 8px;
-    background: linear-gradient(135deg, #1F1F28, #0F0F18);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: var(--bg-card-elevated);
+    border: 1px solid rgba(255, 255, 255, 0.06);
   }
-  .case-mockup.fg { background: linear-gradient(160deg, #1E3A8A, #0F172A); }
-  .case-mockup.lvl { background: linear-gradient(160deg, #DC2626, #FBBF24); color: #1F2937; }
-  .case-mockup.dubai { background: linear-gradient(160deg, #FBBF24, #DC2626); color: #1F2937; font-weight: 700; }
-  .case-mockup.momox { background: linear-gradient(160deg, #FFFFFF, #F3F4F6); color: #1F2937; }
-  .case-mockup.wildbrau { background: linear-gradient(160deg, #92400E, #1F2937); }
-  .case-mockup.gymtastic { background: linear-gradient(160deg, #FBBF24, #1F2937); color: #1F2937; }
 
   .case-stats { display: flex; flex-direction: column; gap: 4px; padding-top: 4px; }
   .case-stat {
@@ -4406,7 +4407,7 @@
         <article class="case-card">
           <div class="case-brand finanzguru">Finanzguru</div>
           <div class="case-divider" aria-hidden="true"></div>
-          <div class="case-mockup fg">App Promo Ads</div>
+          <div class="case-mockup fg">Grafik benötigt</div>
           <div class="case-stats">
             <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 8€</span></div>
             <div class="case-stat"><span class="case-stat-label">CPI</span><span class="case-stat-value">: 7€</span></div>
@@ -4416,7 +4417,7 @@
         <article class="case-card">
           <div class="case-brand getlvl">GET ON MY LVL</div>
           <div class="case-divider" aria-hidden="true"></div>
-          <div class="case-mockup lvl">PS5 Giveaway</div>
+          <div class="case-mockup lvl">Grafik benötigt</div>
           <div class="case-stats">
             <div class="case-stat"><span class="case-stat-label">Posts</span><span class="case-stat-value">: 15</span></div>
             <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 4€</span></div>
@@ -4426,7 +4427,7 @@
         <article class="case-card">
           <div class="case-brand dubai">DUBAI STORE</div>
           <div class="case-divider" aria-hidden="true"></div>
-          <div class="case-mockup dubai">Schokolade Direct</div>
+          <div class="case-mockup dubai">Grafik benötigt</div>
           <div class="case-stats">
             <div class="case-stat"><span class="case-stat-label">Posts</span><span class="case-stat-value">: 1</span></div>
             <div class="case-stat"><span class="case-stat-label">Besucher</span><span class="case-stat-value">: 1.700</span></div>
@@ -4436,7 +4437,7 @@
         <article class="case-card">
           <div class="case-brand momox">momox</div>
           <div class="case-divider" aria-hidden="true"></div>
-          <div class="case-mockup momox">Reseller App</div>
+          <div class="case-mockup momox">Grafik benötigt</div>
           <div class="case-stats">
             <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 4€</span></div>
             <div class="case-stat"><span class="case-stat-label">CPI</span><span class="case-stat-value">: 1€</span></div>
@@ -4446,7 +4447,7 @@
         <article class="case-card">
           <div class="case-brand wildbrau">WILD BRÄU</div>
           <div class="case-divider" aria-hidden="true"></div>
-          <div class="case-mockup wildbrau">1 Jahr Freibier</div>
+          <div class="case-mockup wildbrau">Grafik benötigt</div>
           <div class="case-stats">
             <div class="case-stat"><span class="case-stat-label">Posts</span><span class="case-stat-value">: 1</span></div>
             <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 4€</span></div>
@@ -4456,7 +4457,7 @@
         <article class="case-card">
           <div class="case-brand gymtastic">GYMTASTIC</div>
           <div class="case-divider" aria-hidden="true"></div>
-          <div class="case-mockup gymtastic">Rabatt Promo</div>
+          <div class="case-mockup gymtastic">Grafik benötigt</div>
           <div class="case-stats">
             <div class="case-stat"><span class="case-stat-label">Posts</span><span class="case-stat-value">: 10</span></div>
             <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 6€</span></div>
