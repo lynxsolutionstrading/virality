@@ -322,13 +322,16 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 10px;
+    /* Matches .nav-cta vertical padding + font-size for equal height with
+       the Kontakt/Contact button. Horizontal padding is slightly wider
+       so the DE/EN button reads as a clear pill, not a tight badge. */
+    padding: 8px 16px;
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 999px;
     color: var(--text-secondary);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.08em;
     cursor: pointer;
@@ -401,9 +404,8 @@
     .nav-menu { gap: 12px; font-size: 11px; }
     .nav-menu a:not(.nav-cta) { display: none; }
     .nav-menu a.always-show { display: inline; }
-    /* Bigger language-switcher touch target on mobile so tapping is
-       reliable (≥44px Apple HIG / Google Material recommendation). */
-    .lang-current { padding: 9px 14px; font-size: 12px; }
+    /* Mobile dropdown menu stays roomier for touch — button itself uses
+       the base sizing so it visually matches .nav-cta height. */
     .lang-menu { min-width: 180px; padding: 6px; }
     .lang-option { padding: 12px 14px; font-size: 14px; }
   }
@@ -6402,34 +6404,12 @@
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); answer(); }
     });
 
-    /* Mobile autoplay primer: iOS Safari and some mobile Chromes require
-       an audio element to be triggered from a real user gesture at least
-       once before .play() can be called from anywhere else (e.g. from an
-       IntersectionObserver). On the first touch/pointer/click anywhere,
-       silently play+pause the ringtone to "unlock" it. */
-    if (ringtone) {
-      var primed = false;
-      var prime = function () {
-        if (primed) return;
-        primed = true;
-        var origMuted = ringtone.muted;
-        ringtone.muted = true;
-        var p = ringtone.play();
-        function restore() {
-          ringtone.pause();
-          ringtone.currentTime = 0;
-          ringtone.muted = origMuted;
-        }
-        if (p && typeof p.then === 'function') {
-          p.then(restore).catch(function () { ringtone.muted = origMuted; });
-        } else {
-          restore();
-        }
-      };
-      ['touchstart', 'pointerdown', 'click'].forEach(function (evt) {
-        document.addEventListener(evt, prime, { once: true, passive: true });
-      });
-    }
+    /* No audio primer: the previous play+pause unlock leaked an audible
+       blip on iOS even with muted=true (well-known iOS quirk). On mobile
+       we accept that the ringtone may be blocked by the autoplay policy —
+       the visual shake still fires when the section enters view, and
+       tapping the phone always works because that click is its own user
+       gesture and unlocks the video element directly. */
 
     if (section && 'IntersectionObserver' in window) {
       var wasPlayingBeforeScrollOut = false;
