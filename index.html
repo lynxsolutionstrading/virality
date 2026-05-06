@@ -18,8 +18,8 @@
 <meta property="og:type" content="website" />
 <meta property="og:image" content="Logo/Logo.png" />
 <title>Virality — Grow Your Digital Authority</title>
-<link rel="icon" type="image/svg+xml" href="Logo/Logo.svg" />
-<link rel="alternate icon" type="image/png" href="Logo/Logo.png" />
+<link rel="icon" type="image/png" href="Logo/favicon.png" sizes="any" />
+<link rel="alternate icon" type="image/svg+xml" href="Logo/Logo.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;0,800&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet" />
@@ -1369,18 +1369,28 @@
   @media (min-width: 1024px) { .problem-cards { grid-template-columns: repeat(3, 1fr); } }
 
   .problem-card {
+    position: relative;
     background: var(--bg-card);
     border: 1px solid var(--border-card);
     border-radius: var(--radius-lg);
     padding: 18px;
+    padding-right: 100px; /* room for the Read more.. pill at top-right */
     display: flex;
     align-items: center;
     gap: 14px;
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   }
   .problem-card:hover {
     transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.16);
+    border-color: rgba(192, 132, 252, 0.5);
+    box-shadow: 0 12px 32px -16px rgba(192, 132, 252, 0.5);
+  }
+  .problem-card:focus-visible {
+    outline: none;
+    border-color: rgba(192, 132, 252, 0.85);
+    box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.3);
   }
   .problem-icon {
     flex-shrink: 0;
@@ -1397,6 +1407,31 @@
     font-weight: 500;
     line-height: 1.35;
     color: white;
+  }
+  /* "Read more.." pill — purely visual cue at the top-right of each
+     card. The whole card is the click target. */
+  .problem-card-pill {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: rgba(192, 132, 252, 0.16);
+    border: 1px solid rgba(192, 132, 252, 0.32);
+    color: rgba(232, 220, 255, 0.95);
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    pointer-events: none;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  .problem-card:hover .problem-card-pill,
+  .problem-card:focus-visible .problem-card-pill {
+    background: rgba(217, 70, 239, 0.95);
+    border-color: rgba(217, 70, 239, 1);
+    color: #fff;
   }
   .problem-callout {
     background: linear-gradient(180deg, rgba(192, 132, 252, 0.08), rgba(217, 70, 239, 0.04));
@@ -3241,6 +3276,114 @@
   }
 
   /* ============================================================
+     PROBLEM MODAL — small popup with icon centered at top
+     ============================================================ */
+  .problem-modal {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 16px;
+    background: transparent;
+    border: none;
+    color: inherit;
+    overflow: auto;
+    display: none;
+  }
+  .problem-modal[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: contactModalIn 0.32s ease-out;
+  }
+  .problem-modal::backdrop {
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(111, 227, 255, 0.14), transparent 60%),
+      radial-gradient(ellipse at 70% 80%, rgba(217, 70, 239, 0.14), transparent 60%),
+      rgba(5, 5, 7, 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    animation: contactBackdropIn 0.32s ease-out;
+  }
+  .problem-modal-card {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    background:
+      radial-gradient(80% 60% at 50% 0%, rgba(192, 132, 252, 0.18), transparent 60%),
+      linear-gradient(180deg, rgba(20, 20, 26, 0.96), rgba(15, 15, 22, 0.98));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 22px;
+    padding: 36px 26px 26px;
+    box-shadow:
+      0 30px 80px -10px rgba(0, 0, 0, 0.7),
+      0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+      0 0 60px -10px rgba(192, 132, 252, 0.25);
+    text-align: center;
+    animation: cardScaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .problem-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .problem-modal-close:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+  }
+  .problem-modal-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 18px;
+    background: var(--bg-card-elevated);
+    border: 1px solid rgba(192, 132, 252, 0.35);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 22px -6px rgba(192, 132, 252, 0.5);
+  }
+  /* Scale up the icon SVG inside the larger modal slot (cards use 20×20) */
+  .problem-modal-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+  .problem-modal-title {
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: white;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+  .problem-modal-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.78);
+    margin: 0;
+  }
+  @media (max-width: 520px) {
+    .problem-modal { padding: 12px; }
+    .problem-modal-card { padding: 30px 22px 22px; }
+    .problem-modal-icon { width: 56px; height: 56px; }
+  }
+
+  /* ============================================================
      CONTACT MODAL
      ============================================================ */
   .contact-modal {
@@ -3765,41 +3908,53 @@
       </div>
 
       <div class="problem-cards">
-        <div class="problem-card">
+        <div class="problem-card" data-problem-trigger tabindex="0" role="button" aria-label="Mehr zu Slow growth"
+             data-problem-desc="Du postest regelmäßig, aber die Followerzahlen bewegen sich kaum nach oben. Ohne klare Strategie und Reichweiten-Hebel bleibt jeder Beitrag in der eigenen Bubble hängen. Echtes Wachstum entsteht nur, wenn dein Profil systematisch mit den richtigen Nutzern, Touchpoints und Algorithmus-Signalen verbunden wird.">
           <div class="problem-icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5l5 5 3-3 6 6m0 0V8m0 5h-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
           <div class="problem-card-text">Slow growth</div>
+          <span class="problem-card-pill" aria-hidden="true">Read more..</span>
         </div>
-        <div class="problem-card">
+        <div class="problem-card" data-problem-trigger tabindex="0" role="button" aria-label="Mehr zu Low engagement"
+             data-problem-desc="Likes, Kommentare und Saves bleiben weit hinter den Erwartungen — der Content erreicht zwar Menschen, aber sie reagieren nicht. Niedriges Engagement ist meistens ein Symptom: falsche Zielgruppe, schwache Hooks oder Posting-Zeiten am Algorithmus vorbei. Wir analysieren genau, an welchem Hebel es klemmt, und drehen ihn so, dass deine Reichweite endlich Resonanz erzeugt.">
           <div class="problem-icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 17s-6-3.5-6-9a4 4 0 0 1 6-3.5A4 4 0 0 1 16 8c0 5.5-6 9-6 9z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 9l1 1.5L11 7l1 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
           <div class="problem-card-text">Low engagement</div>
+          <span class="problem-card-pill" aria-hidden="true">Read more..</span>
         </div>
-        <div class="problem-card">
+        <div class="problem-card" data-problem-trigger tabindex="0" role="button" aria-label="Mehr zu fehlender Autorität"
+             data-problem-desc="Du lieferst inhaltlich starke Arbeit — wirst in deiner Nische aber nicht als die Stimme wahrgenommen, die du eigentlich sein könntest. Autorität entsteht nicht durch mehr Posts, sondern durch Positionierung, konsistentes Messaging und Sichtbarkeit an den richtigen Stellen. Wir bauen systematisch daran, dass dein Name automatisch fällt, wenn jemand an dein Thema denkt.">
           <div class="problem-icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L3 5v5c0 4 3 7 7 8 4-1 7-4 7-8V5l-7-3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 7v3m0 2v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </div>
           <div class="problem-card-text">Difficulty becoming a recognized authority in the niche</div>
+          <span class="problem-card-pill" aria-hidden="true">Read more..</span>
         </div>
-        <div class="problem-card">
+        <div class="problem-card" data-problem-trigger tabindex="0" role="button" aria-label="Mehr zu Limited reach"
+             data-problem-desc="Deine Reichweite stagniert oder schrumpft, obwohl die Inhalte qualitativ stimmen. Der Algorithmus bevorzugt Profile mit klarem Signal-Profil, hoher Watchtime und externen Trust-Signalen — drei Dinge, die ohne strategischen Plan selten zustande kommen. Wir öffnen die Türen, die der Algorithmus aktuell für dich verschlossen hält.">
           <div class="problem-icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3l14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M2 10s3-5 8-5c1.7 0 3.2.6 4.5 1.5M18 10s-3 5-8 5c-1.7 0-3.2-.6-4.5-1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
           <div class="problem-card-text">Limited reach</div>
+          <span class="problem-card-pill" aria-hidden="true">Read more..</span>
         </div>
-        <div class="problem-card">
+        <div class="problem-card" data-problem-trigger tabindex="0" role="button" aria-label="Mehr zu Followers ohne Conversion"
+             data-problem-desc="Du hast Tausende Follower — aber daraus werden weder Kunden, noch Kollaborationen oder konkrete Anfragen. Eine Audience ist nur so wertvoll wie die Conversion-Pfade dahinter, und genau die fehlen bei den meisten Profilen komplett. Wir entwickeln klare Funnels, die aus passiven Zuschauern qualifizierte Leads und echte Geschäftschancen machen.">
           <div class="problem-icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="7" cy="6" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 17c0-3 2-5 5-5s5 2 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="14" cy="7" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M12 13c2-1 5 0 6 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </div>
           <div class="problem-card-text">Followers that don't turn into real opportunities</div>
+          <span class="problem-card-pill" aria-hidden="true">Read more..</span>
         </div>
-        <div class="problem-card">
+        <div class="problem-card" data-problem-trigger tabindex="0" role="button" aria-label="Mehr zu verschwendeter Zeit"
+             data-problem-desc="Stunden, Tage, manchmal Monate fließen in Content-Erstellung — und am Ende fehlt der messbare Output. Strategien, die in der Theorie funktionieren, scheitern oft an Umsetzungs-Lücken oder fehlenden Daten zur Steuerung. Wir setzen auf Methoden mit nachweisbarem ROI: weniger raten, mehr skalieren auf Basis dessen, was bei deinem Profil wirklich greift.">
           <div class="problem-icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10M5 17h10M6 3v2.2L10 10l-4 4.8V17M14 3v2.2L10 10l4 4.8V17"/><path d="M7.6 14.6h4.8L10 11.6z" fill="currentColor" stroke="none"/></svg>
           </div>
           <div class="problem-card-text">Time wasted on strategies that don't deliver</div>
+          <span class="problem-card-pill" aria-hidden="true">Read more..</span>
         </div>
       </div>
 
@@ -4461,6 +4616,24 @@
     </div>
   </div>
 </footer>
+
+<!-- ============================================================
+     PROBLEM MODAL
+     Compact popup shown when a problem card is clicked.
+     Icon (centered top), title, 3-5 sentences explaining the problem.
+     ============================================================ -->
+<dialog class="problem-modal" id="problemModal" aria-labelledby="problemModalTitle">
+  <div class="problem-modal-card">
+    <button type="button" class="problem-modal-close" aria-label="Close" data-close-problem>
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="problem-modal-icon" data-problem-modal-icon aria-hidden="true"></div>
+    <h3 class="problem-modal-title" id="problemModalTitle" data-problem-modal-title></h3>
+    <p class="problem-modal-desc" data-problem-modal-desc></p>
+  </div>
+</dialog>
 
 <!-- ============================================================
      PARTNER MODAL
@@ -5698,6 +5871,64 @@
       if (e.target === modal) close();
     });
     /* Native dialog close event (ESC key) — release body scroll lock */
+    modal.addEventListener('close', function () {
+      document.body.style.overflow = '';
+    });
+  })();
+</script>
+
+<script>
+  /* ========== PROBLEM MODAL ==========
+     Click on a problem card → small popup with the icon centered at
+     the top + a 3–5 sentence description of that specific problem. */
+  (function setupProblemModal() {
+    var modal = document.getElementById('problemModal');
+    if (!modal) return;
+    var cards = document.querySelectorAll('[data-problem-trigger]');
+    var closers = modal.querySelectorAll('[data-close-problem]');
+    var iconEl  = modal.querySelector('[data-problem-modal-icon]');
+    var titleEl = modal.querySelector('[data-problem-modal-title]');
+    var descEl  = modal.querySelector('[data-problem-modal-desc]');
+
+    function openFromCard(card) {
+      if (!card) return;
+      var iconSrc = card.querySelector('.problem-icon');
+      var title   = (card.querySelector('.problem-card-text') || {}).textContent || '';
+      var desc    = card.getAttribute('data-problem-desc') || '';
+
+      if (iconEl)  iconEl.innerHTML = iconSrc ? iconSrc.innerHTML : '';
+      if (titleEl) titleEl.textContent = title;
+      if (descEl)  descEl.textContent  = desc;
+
+      if (typeof modal.showModal === 'function') {
+        modal.showModal();
+      } else {
+        modal.setAttribute('open', '');
+      }
+      document.body.style.overflow = 'hidden';
+    }
+    function close() {
+      if (typeof modal.close === 'function') {
+        modal.close();
+      } else {
+        modal.removeAttribute('open');
+      }
+      document.body.style.overflow = '';
+    }
+
+    cards.forEach(function (card) {
+      card.addEventListener('click', function () { openFromCard(card); });
+      card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault();
+          openFromCard(card);
+        }
+      });
+    });
+    closers.forEach(function (btn) { btn.addEventListener('click', close); });
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) close();
+    });
     modal.addEventListener('close', function () {
       document.body.style.overflow = '';
     });
