@@ -332,6 +332,10 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
     transition: background 0.2s ease, color 0.2s ease;
   }
   .lang-current:hover {
@@ -341,6 +345,9 @@
   .lang-chevron {
     transition: transform 0.2s ease;
     flex-shrink: 0;
+    /* Without this the SVG sometimes absorbs the tap on mobile and the
+       click never reaches the button, leaving the menu unresponsive. */
+    pointer-events: none;
   }
   .lang-switcher.is-open .lang-chevron {
     transform: rotate(180deg);
@@ -349,7 +356,7 @@
     position: absolute;
     top: calc(100% + 6px);
     right: 0;
-    min-width: 140px;
+    min-width: 168px;
     background: rgba(15, 15, 22, 0.96);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
@@ -394,6 +401,11 @@
     .nav-menu { gap: 12px; font-size: 11px; }
     .nav-menu a:not(.nav-cta) { display: none; }
     .nav-menu a.always-show { display: inline; }
+    /* Bigger language-switcher touch target on mobile so tapping is
+       reliable (≥44px Apple HIG / Google Material recommendation). */
+    .lang-current { padding: 9px 14px; font-size: 12px; }
+    .lang-menu { min-width: 180px; padding: 6px; }
+    .lang-option { padding: 12px 14px; font-size: 14px; }
   }
 
   /* ============================================================
