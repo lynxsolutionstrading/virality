@@ -1870,26 +1870,45 @@
     outline-offset: 14px;
     border-radius: 56px;
   }
-  /* Phone shake while the FaceTime ringtone is playing. Animation period
-     matches the 1.7s ringtone loop exactly. Two shake bursts per loop with
-     stillness at the start (matches 0.18s lead-in silence) and end
-     (matches 0.35s post-ring silence). */
+  /* Phone shake during the FaceTime ringtone. Animation period locked to
+     the 1.7s ringtone loop — two buzz bursts that match the audio's two
+     ring pulses. Each burst combines fast ±X jitter, micro Y-bob, and
+     small rotation, with a decaying amplitude at the burst end to feel
+     like a real vibrator settling — not a mechanical metronome. */
   @keyframes featurePhoneShake {
-    0%, 6%, 27%, 41%, 62%, 100% { transform: translateX(0); }
-    9%   { transform: translateX(-4px); }
-    12%  { transform: translateX(4px); }
-    15%  { transform: translateX(-4px); }
-    18%  { transform: translateX(4px); }
-    21%  { transform: translateX(-4px); }
-    24%  { transform: translateX(4px); }
-    44%  { transform: translateX(-4px); }
-    47%  { transform: translateX(4px); }
-    50%  { transform: translateX(-4px); }
-    53%  { transform: translateX(4px); }
-    56%  { transform: translateX(-4px); }
-    59%  { transform: translateX(4px); }
+    /* Lead-in silence */
+    0%, 6%   { transform: translate3d(0, 0, 0) rotate(0deg); }
+    /* Burst 1 (6% - 27% = ~357ms, ~10 oscillations) */
+    7.5%     { transform: translate3d(-4px,  0px, 0) rotate(-0.7deg); }
+    9.5%     { transform: translate3d( 4px,  1px, 0) rotate( 0.8deg); }
+    11.5%    { transform: translate3d(-5px, -1px, 0) rotate(-0.9deg); }
+    13.5%    { transform: translate3d( 5px,  0px, 0) rotate( 0.9deg); }
+    15.5%    { transform: translate3d(-4px,  1px, 0) rotate(-0.8deg); }
+    17.5%    { transform: translate3d( 4px, -1px, 0) rotate( 0.7deg); }
+    19.5%    { transform: translate3d(-4px,  0px, 0) rotate(-0.6deg); }
+    21.5%    { transform: translate3d( 3px,  1px, 0) rotate( 0.5deg); }
+    23.5%    { transform: translate3d(-2px,  0px, 0) rotate(-0.3deg); }
+    25.5%    { transform: translate3d( 1px,  0px, 0) rotate( 0.1deg); }
+    /* Inter-burst rest */
+    27%, 41% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    /* Burst 2 (41% - 62%) */
+    42.5%    { transform: translate3d(-4px,  0px, 0) rotate(-0.7deg); }
+    44.5%    { transform: translate3d( 4px,  1px, 0) rotate( 0.8deg); }
+    46.5%    { transform: translate3d(-5px, -1px, 0) rotate(-0.9deg); }
+    48.5%    { transform: translate3d( 5px,  0px, 0) rotate( 0.9deg); }
+    50.5%    { transform: translate3d(-4px,  1px, 0) rotate(-0.8deg); }
+    52.5%    { transform: translate3d( 4px, -1px, 0) rotate( 0.7deg); }
+    54.5%    { transform: translate3d(-4px,  0px, 0) rotate(-0.6deg); }
+    56.5%    { transform: translate3d( 3px,  1px, 0) rotate( 0.5deg); }
+    58.5%    { transform: translate3d(-2px,  0px, 0) rotate(-0.3deg); }
+    60.5%    { transform: translate3d( 1px,  0px, 0) rotate( 0.1deg); }
+    /* Trailing silence */
+    62%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
   }
-  .feature-phone.is-ringing { animation: featurePhoneShake 1.7s linear infinite; }
+  .feature-phone.is-ringing {
+    animation: featurePhoneShake 1.7s linear infinite;
+    will-change: transform;
+  }
   @media (prefers-reduced-motion: reduce) {
     .feature-phone.is-ringing { animation: none; }
   }
