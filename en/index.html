@@ -1823,6 +1823,36 @@
     position: relative;
   }
 
+  /* ========================================================
+     FEATURE SECTION (white band, phone left-of-center)
+     ======================================================== */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    min-height: 1000px;
+    gap: 40px;
+    padding: 80px 0;
+  }
+  @media (min-width: 960px) {
+    .feature-grid { grid-template-columns: 0.9fr 1.1fr; gap: 64px; padding: 0; }
+  }
+  .feature-phone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  @media (min-width: 960px) {
+    .feature-phone { justify-content: flex-end; padding-right: 40px; }
+  }
+  /* Phone sits in normal flow here (no absolute hero-stage), so size/scale
+     applies directly to .hero-phone. Slight scale-down vs hero version. */
+  .feature-phone .hero-phone {
+    transform: scale(0.95);
+    transform-origin: center center;
+  }
+
   .press-section {
     /* Top padding mirrors the bottom padding of .brand-section so the
        gap above and below the divider matches. */
@@ -3911,7 +3941,7 @@
         <div class="hero-phone-frame">
           <div class="hero-phone-screen" data-hero-phone-screen>
             <div class="phone-screen-fallback"></div>
-            <img class="phone-screen-image" src="../Logo/insta.jpg" alt="" data-phone-screen-img>
+            <img class="phone-screen-image" src="../assets/insta.jpg" alt="" data-phone-screen-img>
             <div class="phone-screen-statusbar"></div>
           </div>
           <div class="hero-phone-island"></div>
@@ -4344,8 +4374,24 @@
   <!-- ========== NEW WHITE SECTION (content TBD) ========== -->
   <section class="white-band" id="feature" style="min-height: 1000px;">
     <div class="white-band-decor" aria-hidden="true"></div>
-    <div class="container">
-      <!-- TODO: content -->
+    <div class="container feature-grid">
+      <!-- Phone (same visual frame as hero, no JS hooks, empty screen) -->
+      <div class="feature-phone" aria-hidden="true">
+        <div class="hero-phone">
+          <div class="hero-phone-glow"></div>
+          <div class="hero-phone-frame">
+            <div class="hero-phone-screen"></div>
+            <div class="hero-phone-island"></div>
+            <div class="hero-phone-btn hero-phone-btn--action"></div>
+            <div class="hero-phone-btn hero-phone-btn--lock"></div>
+            <div class="hero-phone-btn hero-phone-btn--vol-up"></div>
+            <div class="hero-phone-btn hero-phone-btn--vol-down"></div>
+          </div>
+        </div>
+      </div>
+      <div class="feature-content">
+        <!-- TODO: content -->
+      </div>
     </div>
   </section>
 
