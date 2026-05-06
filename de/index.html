@@ -4408,61 +4408,31 @@
           <div class="case-brand finanzguru">Finanzguru</div>
           <div class="case-divider" aria-hidden="true"></div>
           <div class="case-mockup fg">Grafik benötigt</div>
-          <div class="case-stats">
-            <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 8€</span></div>
-            <div class="case-stat"><span class="case-stat-label">CPI</span><span class="case-stat-value">: 7€</span></div>
-            <div class="case-stat"><span class="case-stat-label">Downloads</span><span class="case-stat-value green">: +1.000</span></div>
-          </div>
         </article>
         <article class="case-card">
           <div class="case-brand getlvl">GET ON MY LVL</div>
           <div class="case-divider" aria-hidden="true"></div>
           <div class="case-mockup lvl">Grafik benötigt</div>
-          <div class="case-stats">
-            <div class="case-stat"><span class="case-stat-label">Posts</span><span class="case-stat-value">: 15</span></div>
-            <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 4€</span></div>
-            <div class="case-stat"><span class="case-stat-label">Follower</span><span class="case-stat-value green">: +8.500</span></div>
-          </div>
         </article>
         <article class="case-card">
           <div class="case-brand dubai">DUBAI STORE</div>
           <div class="case-divider" aria-hidden="true"></div>
           <div class="case-mockup dubai">Grafik benötigt</div>
-          <div class="case-stats">
-            <div class="case-stat"><span class="case-stat-label">Posts</span><span class="case-stat-value">: 1</span></div>
-            <div class="case-stat"><span class="case-stat-label">Besucher</span><span class="case-stat-value">: 1.700</span></div>
-            <div class="case-stat"><span class="case-stat-label">Sales</span><span class="case-stat-value green">: +100</span></div>
-          </div>
         </article>
         <article class="case-card">
           <div class="case-brand momox">momox</div>
           <div class="case-divider" aria-hidden="true"></div>
           <div class="case-mockup momox">Grafik benötigt</div>
-          <div class="case-stats">
-            <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 4€</span></div>
-            <div class="case-stat"><span class="case-stat-label">CPI</span><span class="case-stat-value">: 1€</span></div>
-            <div class="case-stat"><span class="case-stat-label">Installs</span><span class="case-stat-value green">: +10.000</span></div>
-          </div>
         </article>
         <article class="case-card">
           <div class="case-brand wildbrau">WILD BRÄU</div>
           <div class="case-divider" aria-hidden="true"></div>
           <div class="case-mockup wildbrau">Grafik benötigt</div>
-          <div class="case-stats">
-            <div class="case-stat"><span class="case-stat-label">Posts</span><span class="case-stat-value">: 1</span></div>
-            <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 4€</span></div>
-            <div class="case-stat"><span class="case-stat-label">Follower</span><span class="case-stat-value green">: +1.500</span></div>
-          </div>
         </article>
         <article class="case-card">
           <div class="case-brand gymtastic">GYMTASTIC</div>
           <div class="case-divider" aria-hidden="true"></div>
           <div class="case-mockup gymtastic">Grafik benötigt</div>
-          <div class="case-stats">
-            <div class="case-stat"><span class="case-stat-label">Posts</span><span class="case-stat-value">: 10</span></div>
-            <div class="case-stat"><span class="case-stat-label">CPM</span><span class="case-stat-value">: 6€</span></div>
-            <div class="case-stat"><span class="case-stat-label">Sales</span><span class="case-stat-value green">: 45×99€</span></div>
-          </div>
         </article>
       </div>
     </div>
@@ -6405,12 +6375,36 @@
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); answer(); }
     });
 
-    /* No audio primer: the previous play+pause unlock leaked an audible
-       blip on iOS even with muted=true (well-known iOS quirk). On mobile
-       we accept that the ringtone may be blocked by the autoplay policy —
-       the visual shake still fires when the section enters view, and
-       tapping the phone always works because that click is its own user
-       gesture and unlocks the video element directly. */
+    /* iOS audio-element unlock without sound leak: on the first user
+       gesture, swap the ringtone's src to a tiny silent MP3, play+pause
+       to unlock the element, then restore the real src. Because the
+       actual play during the unlock is silent (not the FaceTime ring),
+       no audio leaks anywhere on the page. The element is now unlocked
+       so future IntersectionObserver-triggered play() works. */
+    if (ringtone) {
+      var primed = false;
+      var realSrc = ringtone.getAttribute('src');
+      var prime = function () {
+        if (primed) return;
+        primed = true;
+        ringtone.setAttribute('src', '../assets/silent.mp3');
+        var p = ringtone.play();
+        var restore = function () {
+          ringtone.pause();
+          ringtone.currentTime = 0;
+          ringtone.setAttribute('src', realSrc);
+          ringtone.load();
+        };
+        if (p && typeof p.then === 'function') {
+          p.then(restore, restore);
+        } else {
+          restore();
+        }
+      };
+      ['touchstart', 'pointerdown', 'click'].forEach(function (evt) {
+        document.addEventListener(evt, prime, { once: true, passive: true });
+      });
+    }
 
     if (section && 'IntersectionObserver' in window) {
       var wasPlayingBeforeScrollOut = false;
