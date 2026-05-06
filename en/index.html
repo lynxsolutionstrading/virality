@@ -6329,6 +6329,17 @@
 
     var answered = false;
 
+    function startRingingVisual() {
+      if (answered) return;
+      /* Toggle-with-reflow restarts the keyframe timeline so the shake
+         is in step with the ringtone whenever it (re)starts. */
+      trigger.classList.remove('is-ringing');
+      void trigger.offsetWidth;
+      trigger.classList.add('is-ringing');
+    }
+    function stopRingingVisual() {
+      trigger.classList.remove('is-ringing');
+    }
     function tryPlayRingtone() {
       if (!ringtone || answered) return;
       var p = ringtone.play();
@@ -6340,14 +6351,11 @@
       ringtone.currentTime = 0;
     }
     function playVideo() {
-      /* Once the video has played through, screen stays black — no replay. */
       if (video.ended) return;
       video.muted = false;
       var p = video.play();
       if (p && typeof p.catch === 'function') {
         p.catch(function () {
-          /* Browser blocked unmuted autoplay → start muted so something
-             visible happens; user can unmute manually later. */
           video.muted = true;
           var p2 = video.play();
           if (p2 && typeof p2.catch === 'function') p2.catch(function () {});
@@ -6355,9 +6363,9 @@
       }
     }
     function answer() {
-      /* Already played through: clicking does nothing — black screen stays. */
       if (video.ended) return;
       answered = true;
+      stopRingingVisual();
       stopRingtone();
       if (video.paused) playVideo(); else video.pause();
     }
@@ -6367,41 +6375,60 @@
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); answer(); }
     });
 
-    /* Phone shake animation locks onto the actual ringtone playback so the
-       visual vibration is always in sync with the audio. Restart-trick on
-       'play' (toggle class via reflow) re-syncs the keyframe timeline. */
+    /* Mobile autoplay primer: iOS Safari and some mobile Chromes require
+       an audio element to be triggered from a real user gesture at least
+       once before .play() can be called from anywhere else (e.g. from an
+       IntersectionObserver). On the first touch/pointer/click anywhere,
+       silently play+pause the ringtone to "unlock" it. */
     if (ringtone) {
-      ringtone.addEventListener('play', function () {
-        trigger.classList.remove('is-ringing');
-        void trigger.offsetWidth;
-        trigger.classList.add('is-ringing');
-      });
-      ringtone.addEventListener('pause', function () {
-        trigger.classList.remove('is-ringing');
+      var primed = false;
+      var prime = function () {
+        if (primed) return;
+        primed = true;
+        var origMuted = ringtone.muted;
+        ringtone.muted = true;
+        var p = ringtone.play();
+        function restore() {
+          ringtone.pause();
+          ringtone.currentTime = 0;
+          ringtone.muted = origMuted;
+        }
+        if (p && typeof p.then === 'function') {
+          p.then(restore).catch(function () { ringtone.muted = origMuted; });
+        } else {
+          restore();
+        }
+      };
+      ['touchstart', 'pointerdown', 'click'].forEach(function (evt) {
+        document.addEventListener(evt, prime, { once: true, passive: true });
       });
     }
 
     if (section && 'IntersectionObserver' in window) {
-      /* Tracks whether the video was playing when the user last scrolled
-         out, so we can auto-resume on scroll-back. Reset to false once
-         we resume (and stays false if user paused manually). */
       var wasPlayingBeforeScrollOut = false;
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
-            tryPlayRingtone();
+            /* Visual shake fires regardless of whether audio play()
+               succeeds — so even when mobile blocks ringtone audio,
+               the phone still vibrates as a visual hint. */
+            if (!answered) {
+              startRingingVisual();
+              tryPlayRingtone();
+            }
             if (answered && wasPlayingBeforeScrollOut && !video.ended) {
               wasPlayingBeforeScrollOut = false;
               var p = video.play();
               if (p && typeof p.catch === 'function') p.catch(function () {});
             }
           } else {
+            stopRingingVisual();
             stopRingtone();
             wasPlayingBeforeScrollOut = !video.paused && !video.ended;
             if (!video.paused) video.pause();
           }
         });
-      }, { threshold: 0.5 });
+      }, { threshold: 0.4 });
       io.observe(section);
     }
   })();
