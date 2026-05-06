@@ -4422,6 +4422,8 @@
         <p class="brand-desc">Klicke auf das iPhone um den Anruf anzunehmen!</p>
       </div>
     </div>
+    <!-- Looping FaceTime ringtone — plays only while section is in view and unanswered. -->
+    <audio data-feature-ringtone src="../assets/ringtone.mp3" preload="auto" loop></audio>
   </section>
 
   <!-- ========== JOURNEY (HOW IT WORKS) ========== -->
@@ -6254,32 +6256,70 @@
 </script>
 
 <script>
-  /* Feature-section iPhone: click anywhere on the phone to start playback
-     with sound. Click again to pause. After natural end, the next click
-     restarts from the first frame. */
-  (function setupFeatureVideo() {
-    var triggers = document.querySelectorAll('[data-feature-video-trigger]');
-    triggers.forEach(function (trigger) {
-      var video = trigger.querySelector('[data-feature-video]');
-      if (!video) return;
-      function toggle() {
-        if (video.paused) {
-          if (video.ended) video.currentTime = 0;
-          video.muted = false;
-          var p = video.play();
-          if (p && typeof p.catch === 'function') p.catch(function () {});
-        } else {
-          video.pause();
-        }
+  /* Feature-section iPhone:
+     - Looping FaceTime ringtone plays only while the section is on-screen
+       and the call has not yet been answered.
+     - Clicking the iPhone "answers" the call: ringtone stops, video starts
+       with sound. Clicking again pauses. Scrolling out pauses everything.
+     - Robust play(): tries unmuted first; on autoplay-block falls back
+       to muted so the visual still starts. */
+  (function setupFeatureSection() {
+    var section = document.getElementById('feature');
+    var trigger = document.querySelector('[data-feature-video-trigger]');
+    var video = document.querySelector('[data-feature-video]');
+    var ringtone = document.querySelector('[data-feature-ringtone]');
+    if (!trigger || !video) return;
+
+    var answered = false;
+
+    function tryPlayRingtone() {
+      if (!ringtone || answered) return;
+      var p = ringtone.play();
+      if (p && typeof p.catch === 'function') p.catch(function () {});
+    }
+    function stopRingtone() {
+      if (!ringtone) return;
+      ringtone.pause();
+      ringtone.currentTime = 0;
+    }
+    function playVideo() {
+      if (video.ended) video.currentTime = 0;
+      video.muted = false;
+      var p = video.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(function () {
+          /* Browser blocked unmuted autoplay → start muted so something
+             visible happens; user can unmute manually later. */
+          video.muted = true;
+          var p2 = video.play();
+          if (p2 && typeof p2.catch === 'function') p2.catch(function () {});
+        });
       }
-      trigger.addEventListener('click', toggle);
-      trigger.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          toggle();
-        }
-      });
+    }
+    function answer() {
+      answered = true;
+      stopRingtone();
+      if (video.paused) playVideo(); else video.pause();
+    }
+
+    trigger.addEventListener('click', answer);
+    trigger.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); answer(); }
     });
+
+    if (section && 'IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            tryPlayRingtone();
+          } else {
+            stopRingtone();
+            if (!video.paused) video.pause();
+          }
+        });
+      }, { threshold: 0.5 });
+      io.observe(section);
+    }
   })();
 </script>
 
