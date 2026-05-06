@@ -1824,18 +1824,27 @@
   }
 
   /* ========================================================
-     FEATURE SECTION (white band, phone left-of-center)
+     FEATURE SECTION (white band, phone left-of-center on desktop,
+     stacked phone-then-text on mobile)
      ======================================================== */
   .feature-grid {
     display: grid;
     grid-template-columns: 1fr;
     align-items: center;
-    min-height: 800px;
-    gap: 40px;
-    padding: 80px 0;
+    justify-items: center;
+    gap: 32px;
+    padding: 56px 0 64px;
+    text-align: center;
   }
   @media (min-width: 960px) {
-    .feature-grid { grid-template-columns: 0.9fr 1.1fr; gap: 64px; padding: 0; }
+    .feature-grid {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 64px;
+      padding: 0;
+      min-height: 800px;
+      justify-items: stretch;
+      text-align: left;
+    }
   }
   .feature-phone {
     display: flex;
@@ -1846,15 +1855,23 @@
   @media (min-width: 960px) {
     .feature-phone { justify-content: flex-end; padding-right: 40px; }
   }
-  /* Phone sits in normal flow here (no absolute hero-stage), so size/scale
-     applies directly to .hero-phone. Slight scale-down vs hero version. */
+  /* Phone scale: keep it dialled back on mobile so it doesn't overwhelm
+     the small viewport; bump to 1.1875 with a left nudge on desktop. */
   .feature-phone .hero-phone {
-    transform: scale(1.1875);
+    transform: scale(1);
     transform-origin: center center;
   }
   @media (min-width: 960px) {
     .feature-phone .hero-phone { transform: translateX(-80px) scale(1.1875); }
     .feature-content { transform: translateX(-30px); }
+  }
+  .feature-content { max-width: 50ch; }
+  @media (min-width: 960px) {
+    .feature-content { max-width: none; }
+  }
+  .feature-content .brand-desc { margin-left: auto; margin-right: auto; }
+  @media (min-width: 960px) {
+    .feature-content .brand-desc { margin-left: 0; margin-right: 0; }
   }
   /* Video fills the phone screen; click handler is on .feature-phone wrapper. */
   .feature-phone-video {
@@ -4432,7 +4449,7 @@
   </section>
 
   <!-- ========== NEW WHITE SECTION (content TBD) ========== -->
-  <section class="white-band" id="feature" style="min-height: 800px;">
+  <section class="white-band" id="feature">
     <div class="white-band-decor" aria-hidden="true"></div>
     <div class="container feature-grid">
       <!-- Phone with click-to-play video. First frame visible via preload="metadata". -->
