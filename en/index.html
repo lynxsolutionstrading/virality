@@ -6163,6 +6163,18 @@
         }
       });
     });
+    /* Compute target URL from the current pathname so the subpath
+       prefix (e.g. /virality/ on GitHub Pages) is always preserved,
+       regardless of trailing slash or static href. */
+    document.querySelectorAll('a[data-lang]').forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        var target = link.getAttribute('data-lang');
+        if (!target) return;
+        e.preventDefault();
+        var newPath = window.location.pathname.replace(/\/(de|en)(\/.*)?$/, '/' + target + '/');
+        window.location.assign(newPath + window.location.search + window.location.hash);
+      });
+    });
   })();
 </script>
 
